@@ -1,0 +1,215 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    label {
+        margin-bottom: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-weight: $font-weight-bold;
+        font-size: $font-sm;
+        line-height: 20px;
+        letter-spacing: 0.4px;
+        color: var(--primary-green);
+        width: fit-content;
+        position: relative;
+        top: 12px;
+        height: 24px;
+        left: 18px;
+        background: white;
+        z-index: 1;
+        border-radius: $border-radius-xb;
+        padding: 0 $padding-xs;
+
+        &.required::after {
+            content: " *";
+            color: var(--primary-purple);
+        }
+    }
+
+    .textarea-container {
+        position: relative;
+        display: flex;
+        align-items: flex-start; // Alinha no topo para textarea
+        min-height: 80px; // Altura mínima para o container
+
+        .textarea-field {
+            width: 100%;
+            padding: $padding-s;
+            border: none;
+            border-radius: $border-radius-sm;
+            outline: none;
+            border: 2px solid var(--primary-green);
+            background-color: inherit;
+            color: var(--primary-green);
+            font-size: $font-md;
+            font-family: "DM Sans", sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            min-height: 80px; // Altura mínima
+            line-height: 1.5;
+
+            &.invalid {
+                border: 2px solid var(--primary-purple);
+                // Ajustar padding para compensar a borda extra
+                padding: $padding-xxsm $padding-s;
+            }
+
+            &::placeholder {
+                color: var(--placeholder);
+                font-weight: $font-weight-md;
+                font-size: $font-md;
+                line-height: 1.5;
+                font-family: "DM Sans", sans-serif;
+                letter-spacing: 0px;
+            }
+
+            &:focus {
+                border-color: var(--primary-green);
+                box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+            }
+
+            &:disabled {
+                background-color: var(--secondary-white);
+                color: var(--disabled-text, #999);
+                cursor: not-allowed;
+                opacity: 0.6;
+
+                &::placeholder {
+                    color: var(--disabled-text, #999);
+                }
+            }
+
+            &:readonly {
+                background-color: var(--readonly-bg, #f9f9f9);
+                cursor: default;
+            }
+
+            // Controles de redimensionamento
+            &.resize-none {
+                resize: none;
+            }
+
+            &.resize-vertical {
+                resize: vertical;
+            }
+
+            &.resize-horizontal {
+                resize: horizontal;
+            }
+
+            &.resize-both {
+                resize: both;
+            }
+
+            // Estados com ícone - ajustar padding
+            &.has-icon-left {
+                padding-left: $padding-xxsmmmm;
+
+                &.invalid {
+                    padding-left: $padding-xbg;
+                    padding-top: $padding-xxsm;
+                    padding-bottom: $padding-xxsm;
+                    padding-right: $padding-xxsm;
+                }
+            }
+
+            &.has-icon-right {
+                padding-right: $padding-xxsmmmm;
+
+                &.invalid {
+                    padding-right: $padding-xbg;
+                    padding-top: $padding-xxsm;
+                    padding-bottom: $padding-xxsm;
+                    padding-left: $padding-xxsm;
+                }
+            }
+        }
+
+        // Ícones - posicionados no topo para textarea
+        ds-icon {
+            position: absolute;
+            top: 14px; // Posição fixa no topo (12px padding + 2px ajuste)
+            z-index: 1;
+            pointer-events: none;
+            transition: color 0.3s;
+
+            &.icon-left {
+                left: 12px;
+            }
+
+            &.icon-right {
+                right: 12px;
+            }
+        }
+
+        // Quando o textarea está focado, muda a cor do ícone
+        &:focus-within ds-icon {
+            color: var(--primary-green);
+        }
+    }
+
+    // Character count
+    .character-count {
+        margin-top: 4px;
+        text-align: right;
+        color: var(--placeholder);
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+    }
+
+    // Mensagens de erro e ajuda
+    .error-message {
+        margin-top: 4px;
+        color: var(--primary-purple);
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        line-height: 1.4;
+    }
+
+    .helper-text {
+        margin-top: 4px;
+        color: var(--placeholder);
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        line-height: 1.4;
+    }
+
+    // Quando há character count, ajustar margem das mensagens
+    .character-count+.error-message,
+    .character-count+.helper-text {
+        margin-top: 2px;
+    }
+}
+
+// Estados especiais
+.form-group.invalid {
+    ds-icon {
+        color: var(--primary-purple);
+    }
+
+    .character-count {
+        color: var(--primary-purple);
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .form-group {
+        .textarea-field {
+            font-size: $font-md; // Evita zoom no iOS
+            min-height: 60px; // Altura menor em mobile
+        }
+
+        .textarea-container {
+            min-height: 60px;
+        }
+
+        ds-icon {
+            top: 12px; // Ajuste para mobile
+        }
+    }
+}

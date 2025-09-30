@@ -1,0 +1,28 @@
+
+<div class="modal-backdrop" (click)="onBackdropClick($event)" *ngIf="shouldShowModal">
+
+    <div [class]="getModalClasses()" [@fade]="animationState" (@fade.done)="onAnimationDone($event)"
+        (click)="onModalContentClick($event)">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header" *ngIf="modalConfig?.showHeader">
+
+                <h4 class="modal-title" *ngIf="modalConfig?.title">
+                    {{ modalConfig?.title }}
+                </h4>
+
+                <ds-icon (click)="closeModal()" cursorType="pointer" *ngIf="modalConfig?.showCloseButton"
+                    aria-label="Fechar modal" icon="fa-solid fa-xmark" fontSize="24px" color="white">
+                </ds-icon>
+
+            </div>
+
+
+            <div class="modal-body" *ngIf="isVisible && animationState === 'in'">
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </div>
+</div>

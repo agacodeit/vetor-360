@@ -1,0 +1,254 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+.form-group {
+    label {
+        width: fit-content;
+        position: relative;
+        top: 18px;
+        left: 18px;
+        background: white;
+        z-index: 1;
+        border-radius: $border-radius-xb;
+        padding: 0 $padding-xs;
+        font-size: $font-md;
+    }
+}
+
+
+.calendar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-family: $font-primary;
+
+    .calendar-field {
+        width: 100%;
+        padding: $padding-s $padding-xxsmmm $padding-s $padding-md;
+        border: none;
+        border-radius: $border-radius-sm;
+        outline: none;
+        border: 2px solid var(--primary-green);
+        background-color: inherit;
+        color: var(--primary-blue);
+        font-size: $font-xl;
+        font-family: $font-primary;
+        box-sizing: border-box;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+
+        &::disabled {
+            color: var(--primary-green);
+        }
+
+        &.invalid {
+            border: 2px solid var(--primary-purple);
+        }
+
+        &.disabled {
+            background-color: var(--secondary-white);
+            color: var(--disabled);
+            cursor: not-allowed;
+        }
+
+        &.focused {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+        }
+
+        &.calendar-open {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+        }
+
+        &::placeholder {
+            color: var(--primary-green);
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    .icon-left {
+        position: absolute;
+        left: 5px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .icon-right {
+        position: absolute;
+        right: 5px; // Espaço para o ícone de toggle
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .icon-toggle {
+        position: absolute;
+        right: 12px;
+        z-index: 2;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    // Suporte para iconPosition
+    &.has-icon-left .calendar-field {
+        padding-left: $padding-xxsmmm; // Ícone à esquerda
+        padding-right: $padding-xxsmmm; // Toggle à direita
+    }
+
+    &.has-icon-right .calendar-field {
+        padding-left: $padding-md; // Sem ícone à esquerda
+        padding-right: $padding-xxsmmm; // Ícone + toggle à direita
+    }
+}
+
+.calendar-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 3px solid var(--primary-green);
+    border-radius: $border-radius-sm;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 4px;
+    min-width: 280px;
+    font-family: $font-primary;
+    background-color: var(--secondary-white);
+
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $padding-md;
+        padding-bottom: $padding-ssm;
+
+        .month-year {
+            font-weight: $font-weight-black;
+            font-size: $font-md;
+            color: var(--primary-blue);
+            font-family: $font-primary;
+            font-size: $font-xxxl;
+        }
+
+        .nav-icon {
+            cursor: pointer;
+            padding: $padding-xsm;
+            border-radius: $border-radius-sm;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: rgba(21, 147, 187, 0.1);
+            }
+        }
+    }
+
+    .calendar-grid {
+        padding: $padding-md;
+        padding-top: 0;
+
+        .day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+
+            .day-name {
+                text-align: center;
+                font-size: $font-xl;
+                font-weight: $font-weight-xbold;
+                color: var(--primary-blue);
+                padding: $padding-xs $padding-xsm;
+                font-family: $font-primary;
+            }
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+
+            .calendar-day {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 44px;
+                width: 44px;
+                padding: $padding-s;
+                font-size: $font-xl;
+                cursor: pointer;
+                border-radius: $border-radius-sm;
+                transition: all 0.3s ease;
+                color: var(--primary-blue);
+                font-family: $font-primary;
+
+                &:hover:not(.disabled) {
+                    background-color: rgba(21, 147, 187, 0.1);
+                }
+
+                &.today {
+                    background-color: var(--primary-green);
+                    color: var(--white);
+                    font-weight: $font-weight-md;
+                    border-radius: $border-radius-max;
+                }
+
+                &.selected {
+                    background-color: transparent;
+                    color: var(--primary-blue);
+                    font-weight: $font-weight-md;
+                    border: 3px solid var(--primary-purple);
+                    border-radius: $border-radius-max;
+                }
+
+                &.other-month {
+                    color: var(--disabled);
+                }
+
+                &.disabled {
+                    color: var(--disabled);
+                    cursor: not-allowed;
+                    opacity: 0.5;
+
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.error-message {
+    color: var(--primary-purple);
+    font-size: $font-xs;
+    margin-top: 4px;
+    line-height: 1.4;
+    font-family: $font-primary;
+}
+
+.helper-text {
+    color: var(--label);
+    font-size: $font-xs;
+    margin-top: 4px;
+    line-height: 1.4;
+    font-family: $font-primary;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+    .calendar-dropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 320px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}

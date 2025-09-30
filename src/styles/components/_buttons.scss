@@ -1,0 +1,131 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+// Componentes base
+.btn {
+    font-size: $font-md;
+    padding: $padding-s $padding-ssm;
+    border: none;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    font-weight: $font-weight-bold;
+    transition: background-color 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s, scale 0.2s;
+    outline: 0;
+    min-height: 44px;
+    box-shadow: var(--shadow-box);
+
+    &:hover {
+        transition: background-color 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s;
+    }
+
+    &:active {
+        scale: 0.98;
+        transition: scale 0.2s;
+    }
+
+    i:not(:empty) {
+        margin-right: 6px;
+    }
+
+    i:empty {
+        display: none;
+    }
+
+    &.fill {
+        background-color: var(--primary-blue);
+        color: white;
+
+        &:hover {
+            background-color: var(--primary-blue-hover-dark);
+        }
+
+        i {
+            color: white;
+        }
+
+        &.primary-green {
+            background-color: var(--primary-green);
+
+            &:hover {
+                background-color: var(--primary-green-hover-dark);
+            }
+
+            i {
+                color: var(--primary-green);
+            }
+        }
+
+
+
+
+    }
+
+    &.outline {
+        color: var(--primary-blue);
+        border: 1px solid var(--primary-blue);
+        background-color: var(--white);
+
+        &:hover {
+            opacity: 0.9;
+            background-color: var(--primary-blue-hover-light);
+        }
+
+        i {
+            color: var(--primary-blue);
+        }
+
+        &.primary-green {
+            background-color: var(--secondary-white);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+
+
+            &:hover {
+                background-color: var(--primary-green-hover-light);
+            }
+
+            i {
+                color: var(--primary-green);
+            }
+        }
+
+    }
+
+    &.ghost {
+        background-color: transparent;
+        border: none;
+        color: var(--primary-blue);
+
+        &:hover {
+            opacity: 0.9;
+            background-color: var(--primary-blue-hover-light);
+        }
+
+        i {
+            color: var(--primary-blue);
+        }
+
+        &.primary-green {
+            background-color: var(--primary-green);
+
+            &:hover {
+                background-color: var(--primary-green-hover-dark);
+            }
+
+            i {
+                color: var(--primary-green);
+            }
+        }
+
+
+    }
+
+    &.rounded {
+        border-radius: $border-radius-max;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}

@@ -1,0 +1,66 @@
+
+<div class="view-toggle-container" *ngIf="config.showToggle !== false">
+    <div class="view-toggle">
+        <button type="button" class="toggle-btn" [class.active]="currentViewMode === 'table'"
+            (click)="setViewMode('table')" title="Visualização em Tabela">
+            <ds-icon icon="fa-solid fa-table" fontSize="16px" color="primary-dark" />
+        </button>
+
+        <button type="button" class="toggle-btn" [class.active]="currentViewMode === 'cards'"
+            (click)="setViewMode('cards')" title="Visualização em Cards">
+            <ds-icon icon="fa-solid fa-grip" fontSize="16px" color="primary-dark" />
+        </button>
+    </div>
+</div>
+
+
+<div *ngIf="currentViewMode === 'table'" class="table-view">
+    <ng-content select="[slot=table]"></ng-content>
+</div>
+
+
+<div *ngIf="currentViewMode === 'cards'" class="cards-view">
+
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-content">
+            <ds-icon icon="fa-solid fa-spinner" fontSize="32px" color="primary" class="spinning"></ds-icon>
+            <span class="body label mt-16">Carregando...</span>
+        </div>
+    </div>
+
+
+    <div *ngIf="isEmpty" class="empty-state">
+        <div class="empty-content">
+            <ds-icon icon="fa-solid fa-inbox" fontSize="48px" color="label"></ds-icon>
+            <h3 class="title-modal primary-dark mt-16 mb-8">{{ emptyMessage }}</h3>
+            <p class="body label">Não há itens para exibir no momento.</p>
+        </div>
+    </div>
+
+
+    <div *ngIf="hasItems && !loading" class="cards-grid" [style]="getGridStyles()">
+
+        <div *ngFor="let item of items; trackBy: trackByFn;let i = index" class="card-wrapper"
+            [style.animation-delay]="getAnimationDelay(i)">
+
+            <ds-card [clickable]="true" [elevated]="true" size="md" class="list-item-card" padding="24px"
+                (click)="onItemClick(item)">
+
+
+                <ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: item, index: i }">
+                </ng-container>
+
+
+                <div slot="footer" class="card-footer" *ngIf="showActions">
+                    <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: item, index: i }">
+                    </ng-container>
+                </div>
+            </ds-card>
+        </div>
+    </div>
+
+
+    <div class="pagination-container mt-32" *ngIf="showPagination && pagination && hasItems">
+        <ng-content select="[slot=pagination]"></ng-content>
+    </div>
+</div>

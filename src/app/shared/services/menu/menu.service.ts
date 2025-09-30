@@ -1,0 +1,273 @@
+
+import { computed, Injectable, signal, inject } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { MenuItem } from '../../../models/menu/menu';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MenuService {
+  private readonly router = inject(Router);
+
+  private readonly _isCollapsed = signal(false);
+  private readonly _isAnimating = signal(false);
+  private readonly _menuItems = signal<MenuItem[]>([]);
+  private readonly _activeItem = signal<string | null>(null);
+
+
+  readonly isCollapsed = this._isCollapsed.asReadonly();
+  readonly isAnimating = this._isAnimating.asReadonly();
+  readonly menuItems = this._menuItems.asReadonly();
+  readonly activeItem = this._activeItem.asReadonly();
+
+
+  readonly canInteract = computed(() => !this._isAnimating());
+  readonly menuState = computed(() => ({
+    isCollapsed: this._isCollapsed(),
+    isAnimating: this._isAnimating(),
+    canInteract: this.canInteract()
+  }));
+
+  constructor() {
+    this.initializeDefaultItems();
+    this.loadCollapsedState();
+    this.setupRouterListener();
+    this.setActiveItemFromCurrentRoute(); // 🔧 CORREÇÃO: Definir item ativo na inicialização
+  }
+
+  /**
+   * 🔧 CORREÇÃO: Configura listener para mudanças de rota
+   */
+  private setupRouterListener(): void {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.setActiveItemFromRoute(event.url);
+      });
+  }
+
+  /**
+   * 🔧 CORREÇÃO: Define item ativo baseado na rota atual (para F5)
+   */
+  private setActiveItemFromCurrentRoute(): void {
+    const currentUrl = this.router.url;
+    this.setActiveItemFromRoute(currentUrl);
+  }
+
+  /**
+   * 🔧 CORREÇÃO: Define item ativo baseado na URL
+   */
+  private setActiveItemFromRoute(url: string): void {
+
+    const menuItems = this._menuItems();
+    const activeItem = menuItems.find(item => {
+      if (!item.route) return false;
+
+
+      if (item.route === url) return true;
+
+
+      if (url.startsWith(item.route) && url.charAt(item.route.length) === '/') {
+        return true;
+      }
+
+      return false;
+    });
+
+    if (activeItem) {
+      this._activeItem.set(activeItem.id);
+    } else {
+      this._activeItem.set(null);
+    }
+  }
+
+  /**
+   * Alterna o estado do menu (colapsado/expandido)
+   */
+  toggle(): void {
+    if (this._isAnimating()) return;
+
+    this._isAnimating.set(true);
+    this._isCollapsed.update(current => !current);
+
+
+    this.saveCollapsedState();
+
+
+    setTimeout(() => {
+      this._isAnimating.set(false);
+    }, 500);
+  }
+
+  /**
+   * Expande o menu
+   */
+  expand(): void {
+    if (!this._isCollapsed() || this._isAnimating()) return;
+    this.toggle();
+  }
+
+  /**
+   * Colapsa o menu
+   */
+  collapse(): void {
+    if (this._isCollapsed() || this._isAnimating()) return;
+    this.toggle();
+  }
+
+  /**
+   * Define se o menu está colapsado
+   */
+  setCollapsed(collapsed: boolean): void {
+    if (this._isCollapsed() === collapsed || this._isAnimating()) return;
+    this.toggle();
+  }
+
+  /**
+   * Define os itens do menu
+   */
+  setMenuItems(items: MenuItem[]): void {
+    this._menuItems.set(items);
+
+    this.setActiveItemFromCurrentRoute();
+  }
+
+  /**
+   * Adiciona um item ao menu
+   */
+  addMenuItem(item: MenuItem): void {
+    this._menuItems.update(items => [...items, item]);
+
+    this.setActiveItemFromCurrentRoute();
+  }
+
+  /**
+   * Remove um item do menu
+   */
+  removeMenuItem(id: string): void {
+    this._menuItems.update(items =>
+      items.filter(item => item.id !== id)
+    );
+  }
+
+  /**
+   * Define o item ativo (para cliques manuais)
+   */
+  setActiveItem(id: string | null): void {
+    this._activeItem.set(id);
+  }
+
+  /**
+   * Executa a ação de um item do menu
+   */
+  executeMenuItem(item: MenuItem): void {
+    if (item.disabled) return;
+
+
+    if (item.action) {
+      item.action();
+    }
+  }
+
+  /**
+   * 🔧 CORREÇÃO: Método público para forçar atualização baseada na rota
+   */
+  updateActiveItemFromCurrentRoute(): void {
+    this.setActiveItemFromCurrentRoute();
+  }
+
+  /**
+   * Inicializa itens padrão do menu
+   */
+  private initializeDefaultItems(): void {
+    const defaultItems: MenuItem[] = [
+      {
+        id: 'clients',
+        label: 'Clientes',
+        icon: 'fa-solid fa-users',
+        route: '/authorized/clients'
+      },
+      {
+        id: 'developments',
+        label: 'Desenvolvimentos',
+        icon: 'fa-solid fa-palette',
+        route: '/authorized/developments'
+      },
+      {
+        id: 'production-orders',
+        label: 'Ordens de produção',
+        icon: 'fa-solid fa-print',
+        route: '/authorized/production-orders'
+      },
+      {
+        id: 'production-sheets',
+        label: 'Fichas de produção',
+        icon: 'fa-solid fa-file',
+        route: '/authorized/production-sheets'
+      },
+      {
+        id: 'production-receipt',
+        label: 'Recibos de produção',
+        icon: 'fa-solid fa-sack-dollar',
+        route: '/authorized/production-receipt'
+      }
+    ];
+
+    this.setMenuItems(defaultItems);
+  }
+
+  /**
+   * Salva o estado colapsado no localStorage
+   */
+  private saveCollapsedState(): void {
+    try {
+      localStorage.setItem('menuCollapsed', JSON.stringify(this._isCollapsed()));
+    } catch (error) {
+    }
+  }
+
+  /**
+   * Carrega o estado colapsado do localStorage
+   */
+  private loadCollapsedState(): void {
+    try {
+      const saved = localStorage.getItem('menuCollapsed');
+      if (saved !== null) {
+        this._isCollapsed.set(JSON.parse(saved));
+      }
+    } catch (error) {
+    }
+  }
+
+  /**
+   * Reseta o menu para o estado inicial
+   */
+  reset(): void {
+    this._isCollapsed.set(false);
+    this._isAnimating.set(false);
+    this._activeItem.set(null);
+  }
+
+
+  /**
+   * @deprecated Use isCollapsed() ao invés de isOpen()
+   */
+  isOpen() {
+    return !this._isCollapsed();
+  }
+
+  /**
+   * @deprecated Use collapse() ao invés de close()
+   */
+  close(): void {
+    this.collapse();
+  }
+
+  /**
+   * @deprecated Use expand() ao invés de open()
+   */
+  open(): void {
+    this.expand();
+  }
+}

@@ -1,0 +1,21 @@
+:root {
+    --white: #FFFFFF;
+    --stroke: rgb(180, 171, 171);
+    --secondary-white: #F9FFFF;
+    --primary-green: #15ACAB;
+    --secondary-green: #15ACABB2;
+    --primary-blue: #1877C9;
+    --secondary-blue: #1877C9B2;
+
+    --primary-blue-hover-dark: #0C3B63;
+    --primary-blue-hover-light: #0c3a6320;
+
+    --primary-green-hover-dark: #15acacc2;
+    --primary-green-hover-light: #1d9e9e2a;
+
+    --primary-gradient: linear-gradient(180deg, #1877C9 0%, #0C3B63 100%);
+    --secondary-gradient: linear-gradient(90deg, rgba(21, 172, 164, 0.7) 0%, #15ACAB 44.5%, #F9FFFF 100%);
+    --primary-purple: #9515AC;
+    --disabled: rgb(182, 179, 179);
+    --shadow-box: 3px 4px 4px 0px #00000040;
+}

@@ -1,0 +1,448 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: visible !important; // Garantir que o dropdown não seja cortado
+
+    .select-label {
+        margin-bottom: 8px;
+        font-size: $font-md;
+        line-height: 30px;
+        letter-spacing: 0.4px;
+        color: var(--primary-green);
+        position: relative;
+        top: 12px;
+        height: 24px;
+        left: 18px;
+        background: white;
+        z-index: 1;
+        border-radius: $border-radius-xb;
+        padding: 0 $padding-xs;
+
+        &.required::after {
+            content: " *";
+            color: var(--primary-purple);
+        }
+    }
+
+    .select-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: visible !important; // Garantir que o dropdown não seja cortado
+
+        &.has-icon {
+            .select-field {
+                &.has-icon-left {
+                    padding-left: $padding-xxsmmm;
+                }
+
+                &.has-icon-right {
+                    padding-right: $padding-xxsmmm;
+                }
+            }
+
+            .icon-left {
+                position: absolute;
+                left: 12px;
+                z-index: 2;
+                pointer-events: none;
+            }
+
+            .icon-right {
+                position: absolute;
+                right: 40px;
+                z-index: 2;
+                pointer-events: none;
+            }
+        }
+
+        .select-field {
+            width: 100%;
+            min-height: 44px;
+            padding: $padding-xsm $padding-xs $padding-xsm $padding-sm;
+            border: 2px solid var(--primary-green);
+            border-radius: $border-radius-sm;
+            background-color: inherit;
+            color: var(--primary-blue);
+            font-size: $font-md;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: none;
+
+            &:hover:not(.disabled) {
+                border-color: var(--primary-green);
+            }
+
+            &.focused,
+            &.open {
+                border-color: var(--primary-green);
+                box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+            }
+
+            &.invalid {
+                border: 2px solid var(--primary-purple);
+                padding: $padding-xxsm $padding-xxsmm $padding-xxsm $padding-xxsm;
+
+                &.has-icon-left {
+                    padding-left: $padding-xxsmm;
+                }
+            }
+
+            &.disabled {
+                background-color: rgba(248, 248, 248, 0.7);
+                color: var(--placeholder);
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+            &.readonly {
+                background-color: rgba(248, 248, 248, 0.5);
+                cursor: default;
+            }
+
+            .select-value {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                min-height: 20px;
+                overflow: hidden;
+
+                .selected-chips {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 4px;
+
+                    .chip {
+                        display: inline-flex;
+                        align-items: center;
+                        background-color: var(--primary-green);
+                        color: white;
+                        padding: $padding-xsm $padding-xs;
+                        border-radius: $border-radius-sm;
+                        font-size: $font-md;
+                        max-width: 150px;
+
+                        .chip-remove {
+                            background: none;
+                            border: none;
+                            color: white;
+                            margin-left: 4px;
+                            cursor: pointer;
+                            font-size: $font-md;
+                            line-height: 1;
+                            padding: 0;
+                            width: 24px;
+                            height: 24px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            &:hover {
+                                background-color: rgba(255, 255, 255, 0.2);
+                                border-radius: 50%;
+                            }
+
+                            &:disabled {
+                                cursor: not-allowed;
+                                opacity: 0.5;
+                            }
+                        }
+                    }
+                }
+
+                .select-display-text {
+                    font-size: $font-md;
+                    color: var(--primary-blue);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    &.primary-green {
+                        color: var(--primary-green);
+                    }
+
+                    &.placeholder {
+                        color: var(--placeholder);
+                        font-weight: $font-weight-md;
+                    }
+                }
+            }
+
+            .select-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+
+                .clear-button {
+                    background: none;
+                    border: none;
+                    color: var(--placeholder);
+                    cursor: pointer;
+                    font-size: $font-xmd;
+                    line-height: 1;
+                    padding: $padding-xxs;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background-color: rgba(97, 132, 149, 0.1);
+                        color: var(--primary-green);
+                    }
+                }
+
+                .dropdown-arrow {
+                    transition: transform 0.3s ease;
+                    pointer-events: none;
+
+                    &.rotated {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+
+        .select-dropdown {
+            position: absolute;
+            left: 0;
+            right: 0;
+            min-width: fit-content;
+            z-index: 99999 !important;
+            background: white;
+            border: 2px solid var(--primary-green);
+            border-radius: $border-radius-sm;
+            box-shadow: 0 4px 12px rgba(1, 48, 71, 0.15);
+            max-height: 300px;
+            overflow: hidden;
+
+            // Posicionamento padrão (bottom)
+            &.placement-bottom {
+                top: 100%;
+                margin-top: 4px;
+            }
+
+            // Posicionamento superior (top)
+            &.placement-top {
+                bottom: 100%;
+                margin-bottom: 4px;
+            }
+
+            .search-container {
+                position: relative;
+                padding: $padding-xs;
+                border-bottom: 1px solid var(--stroke);
+
+                .search-input {
+                    width: 100%;
+                    padding: $padding-xs $padding-bg $padding-xs $padding-s;
+                    border: 1px solid var(--stroke);
+                    border-radius: $border-radius-sm;
+                    font-size: $font-sm;
+                    outline: none;
+
+                    &:focus {
+                        border-color: var(--primary-green);
+                    }
+                }
+
+                .search-icon {
+                    position: absolute;
+                    right: 24px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                }
+            }
+
+            .options-container {
+                max-height: 250px;
+                overflow-y: auto;
+
+                .option-item {
+                    display: flex;
+                    align-items: center;
+                    padding: $padding-s;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
+                    font-size: $font-xl;
+                    border-bottom: 1px solid rgba(216, 216, 216, 0.3);
+                    font-family: 'DM Sans', sans-serif;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    &:hover:not(.disabled):not(.loading):not(.no-options) {
+                        background-color: rgba(1, 80, 120, 0.05);
+                    }
+
+                    &.selected {
+                        background-color: rgba(1, 80, 120, 0.1);
+                        color: var(--primary-blue);
+                    }
+
+                    &.disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        background-color: transparent !important;
+                    }
+
+                    &.loading,
+                    &.no-options {
+                        cursor: default;
+                        color: var(--placeholder);
+                        font-style: italic;
+                        justify-content: center;
+                    }
+
+                    .option-checkbox {
+                        margin-right: 8px;
+                        cursor: pointer;
+                    }
+
+                    .option-label {
+                        flex: 1;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .selected-icon {
+                        margin-left: 8px;
+                    }
+
+                    .spinning {
+                        animation: spin 1s linear infinite;
+                        margin-right: 8px;
+                    }
+                }
+            }
+        }
+    }
+
+    .form-feedback {
+        margin-top: 4px;
+        min-height: 20px;
+
+        .error-message {
+            color: var(--primary-purple);
+            font-size: $font-xs;
+            line-height: 24px;
+            margin: 0;
+        }
+
+        .helper-text {
+            color: var(--label);
+            font-size: $font-xs;
+            line-height: 24px;
+            margin: 0;
+        }
+    }
+
+    // Responsividade
+    @media (max-width: 768px) {
+        .select-container {
+            .select-dropdown {
+                .options-container {
+                    max-height: 200px;
+                }
+            }
+        }
+
+        .select-value {
+            .selected-chips {
+                .chip {
+                    max-width: 120px;
+                    font-size: $font-xs;
+                }
+            }
+        }
+    }
+}
+
+// Animações
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Scrollbar customizada para dropdown
+.options-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(1, 48, 71, 0.3) transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(1, 48, 71, 0.3);
+        border-radius: $border-radius-xxs;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(1, 48, 71, 0.5);
+    }
+}
+
+// ============================================
+// OVERRIDES PARA MODAIS E CONTAINERS COM OVERFLOW
+// ============================================
+
+// Garantir que o dropdown sempre apareça sobre modais
+.ds-modal .select-dropdown,
+.modal .select-dropdown,
+[class*="modal"] .select-dropdown {
+    z-index: 999999 !important;
+    position: absolute !important;
+}
+
+// Abordagem cirúrgica: só afetar containers de select em modais
+.ds-modal,
+.modal,
+[class*="modal"] {
+
+    // Só aplicar overflow visible para containers de select
+    .select-container {
+        overflow: visible !important;
+        z-index: 99998; // Garantir que o container também tenha z-index alto
+    }
+
+    // Para form-groups que contêm selects, vamos usar uma classe específica
+    .form-group.has-select {
+        overflow: visible !important;
+        z-index: 99998;
+    }
+}
+
+// Garantir que containers de select não afetem o dropdown
+.select-container {
+    overflow: visible !important;
+}
+
+// Para form-groups com selects (aplicada via JavaScript)
+.form-group.has-select {
+    overflow: visible !important;
+}

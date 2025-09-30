@@ -1,0 +1,36 @@
+// Main SCSS file - Entry point for all styles
+// This file imports all other SCSS files in the correct order
+
+// 1. Abstracts (Variables, Functions, Mixins)
+@use './abstracts/_index' as abstracts;
+
+// 2. Base (Reset, Typography, Base styles)
+@use './base/_index' as base;
+
+// 3. Layout (Grid, Header, Footer, etc.)
+@use './layout/_index' as layout;
+
+// 4. Components (Buttons, Cards, Forms, etc.)
+@use './components/_index' as components;
+
+// 5. Themes (Dark mode, Light mode, etc.)
+@use './themes/_index' as themes;
+
+// 6. Utils (Helpers, Utilities)
+@use './utils/_index' as utils;
+
+// Google Fonts - deve vir depois dos @use
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+// Global styles can be added here
+
+* {
+    font-family: 'DM Sans', sans-serif;
+
+    &::placeholder {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: abstracts.$font-weight-md !important;
+    }
+}
+
+// Font Awesome - será carregado via angular.json

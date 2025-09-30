@@ -1,0 +1,33 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+@use '../abstracts/spacing' as *;
+
+// Aplicar apenas ao componente ds-header
+ds-header header {
+    position: fixed;
+    top: 0;
+    left: 0; // Largura do menu expandido
+    right: 0;
+    height: 120px;
+    z-index: 100;
+    background: var(--secondary-gradient);
+    border-bottom: 1px solid var(--secondary-gray);
+    padding: $padding-sm;
+    transition: left 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom-right-radius: $border-radius-lg;
+
+    .logo {
+        position: absolute;
+        right: 64px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: -1;
+    }
+
+    .action-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-50%);
+    }
+}

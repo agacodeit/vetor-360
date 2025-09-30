@@ -1,0 +1,138 @@
+/* modal.component.scss */
+@use '../../../../../styles/abstracts/variables' as *;
+@use '../../../../../styles/abstracts/typography' as *;
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 48, 71, 0.6); // Usando primary-dark com opacidade
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.modal-dialog {
+    background: var(--white);
+    border-radius: $border-radius-md; // 12px do design system
+    box-shadow: 0 $size-xxxxxxxxxxl $size-xxxxxxxxxxxl rgba(1, 48, 71, 0.15),
+        0 $size-xxxxxxxxxl $size-xxxxxxxxl rgba(1, 48, 71, 0.1),
+        0 0 0 $size-xs rgba(1, 48, 71, 0.05); // Múltiplas sombras para profundidade
+    max-height: 90vh;
+    overflow: hidden;
+    margin: 1rem;
+    border: $size-xs solid var(--stroke);
+    will-change: transform, opacity, filter; // Otimização para animações Angular
+
+    // Hover effect sutil
+    &:hover {
+        box-shadow: 0 $size-xxxxxxxxl $size-xxxxxxxxxxxxl rgba(1, 48, 71, 0.2),
+            0 $size-xxxxxxxxxl $size-xxxxxxxxxxl rgba(1, 48, 71, 0.15),
+            0 0 0 $size-xs rgba(1, 48, 71, 0.1);
+    }
+
+    // Tamanhos do modal
+    &.modal-sm {
+        max-width: $size-xxxxxxxxxxxxxxxxxxxxxl;
+        width: 100%;
+    }
+
+    &.modal-md {
+        max-width: $size-xxxxxxxxxxxxxxxxxxxxxxxxxl;
+        width: 100%;
+    }
+
+    &.modal-lg {
+        max-width: $size-xxxxxxxxxxxxxxxxxxxxxxxxxxl;
+        width: 100%;
+    }
+
+    &.modal-xl {
+        max-width: $size-xxxxxxxxxxxxxxxxxxxxxxxxxxxl;
+        width: 100%;
+    }
+
+    &.modal-fullscreen {
+        max-width: none;
+        width: 95vw;
+        height: 95vh;
+        max-height: none;
+        margin: 2.5vh 2.5vw;
+    }
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $padding-sm $padding-md; // 20px 24px do design system
+    border-bottom: $size-xs solid var(--stroke);
+    background-color: var(--tertiary);
+
+    .modal-title {
+        margin: 0;
+        font-size: $font-xl;
+        font-weight: $font-weight-xbold;
+        color: var(--white);
+    }
+}
+
+.modal-body {
+    padding: $padding-md; // 24px
+    flex: 1;
+    overflow-y: scroll;
+    background-color: var(--white);
+    max-height: calc(100vh - $size-xxxxxxxxxxxxxxxxxxxl);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(1, 48, 71, 0.3) transparent;
+
+    &::-webkit-scrollbar {
+        width: $size-md;
+        height: $size-md;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(1, 48, 71, 0.3);
+        border-radius: $border-radius-max;
+        border: $size-xs solid transparent;
+        background-clip: content-box;
+
+        &:hover {
+            background-color: rgba(1, 48, 71, 0.5);
+        }
+    }
+}
+
+// Estado de foco para acessibilidade usando cores do sistema
+.modal-dialog:focus {
+    outline: $size-xs solid var(--primary-medium);
+    outline-offset: $size-xs;
+}
+
+// Acessibilidade
+@media (prefers-reduced-motion: reduce) {
+
+    .modal-backdrop,
+    .modal-dialog {
+        transition: none;
+    }
+}
+
+// Estado de foco para acessibilidade usando cores do sistema
+.modal-dialog:focus {
+    outline: $size-xs solid var(--primary-medium);
+    outline-offset: $size-xs;
+}

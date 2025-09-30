@@ -1,0 +1,11 @@
+<button [type]="type" [disabled]="disabled" class="btn {{variant}}" [ngStyle]="{
+    'width': fullWidth ? '100%' : 'fit-content',
+    'white-space': 'nowrap'
+}" [ngClass]="{'rounded': rounded}" (click)="emitAction()">
+    <i *ngIf="!isLoading; else loading" class="{{icon}}"></i>
+    {{label}}
+</button>
+
+<ng-template #loading>
+    <ds-spinner size="12px" [variant]="variant" color="primary"></ds-spinner>
+</ng-template>
