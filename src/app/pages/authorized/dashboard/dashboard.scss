@@ -1,0 +1,35 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/typography' as *;
+@use '../../../../styles/themes/default' as *;
+
+.dashboard {
+    padding: $padding-md;
+    height: 100vh;
+    background: var(--secondary-white);
+
+    &__header {
+        margin-bottom: $padding-md;
+        text-align: center;
+    }
+
+    &__title {
+        font-family: $font-primary;
+        font-size: $font-xxxl;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        margin: 0 0 $padding-xs 0;
+    }
+
+    &__subtitle {
+        font-family: $font-primary;
+        font-size: $font-md;
+        font-weight: $font-weight-md;
+        color: var(--label);
+        margin: 0;
+    }
+
+    &__content {
+        height: calc(100vh - 120px);
+        overflow: hidden;
+    }
+}
