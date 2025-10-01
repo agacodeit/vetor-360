@@ -28,9 +28,9 @@
         border: none;
         border-radius: $border-radius-sm;
         outline: none;
-        border: 2px solid var(--primary-green);
+        border: 2px solid var(--primary-dark);
         background-color: inherit;
-        color: var(--primary-blue);
+        color: var(--secondary);
         font-size: $font-xl;
         font-family: $font-primary;
         box-sizing: border-box;
@@ -38,11 +38,11 @@
         cursor: pointer;
 
         &::disabled {
-            color: var(--primary-green);
+            color: var(--primary-dark);
         }
 
         &.invalid {
-            border: 2px solid var(--primary-purple);
+            border: 2px solid var(--tertiary);
         }
 
         &.disabled {
@@ -52,17 +52,17 @@
         }
 
         &.focused {
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
             box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
         }
 
         &.calendar-open {
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
             box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
         }
 
         &::placeholder {
-            color: var(--primary-green);
+            color: var(--primary-dark);
             font-weight: $font-weight-bold;
         }
     }
@@ -111,7 +111,7 @@
     left: 0;
     right: 0;
     background: var(--white);
-    border: 3px solid var(--primary-green);
+    border: 3px solid var(--primary-dark);
     border-radius: $border-radius-sm;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -130,7 +130,7 @@
         .month-year {
             font-weight: $font-weight-black;
             font-size: $font-md;
-            color: var(--primary-blue);
+            color: var(--secondary);
             font-family: $font-primary;
             font-size: $font-xxxl;
         }
@@ -161,7 +161,7 @@
                 text-align: center;
                 font-size: $font-xl;
                 font-weight: $font-weight-xbold;
-                color: var(--primary-blue);
+                color: var(--secondary);
                 padding: $padding-xs $padding-xsm;
                 font-family: $font-primary;
             }
@@ -183,7 +183,7 @@
                 cursor: pointer;
                 border-radius: $border-radius-sm;
                 transition: all 0.3s ease;
-                color: var(--primary-blue);
+                color: var(--secondary);
                 font-family: $font-primary;
 
                 &:hover:not(.disabled) {
@@ -191,7 +191,7 @@
                 }
 
                 &.today {
-                    background-color: var(--primary-green);
+                    background-color: var(--primary-dark);
                     color: var(--white);
                     font-weight: $font-weight-md;
                     border-radius: $border-radius-max;
@@ -199,9 +199,9 @@
 
                 &.selected {
                     background-color: transparent;
-                    color: var(--primary-blue);
+                    color: var(--secondary);
                     font-weight: $font-weight-md;
-                    border: 3px solid var(--primary-purple);
+                    border: 3px solid var(--tertiary);
                     border-radius: $border-radius-max;
                 }
 
@@ -224,7 +224,7 @@
 }
 
 .error-message {
-    color: var(--primary-purple);
+    color: var(--tertiary);
     font-size: $font-xs;
     margin-top: 4px;
     line-height: 1.4;

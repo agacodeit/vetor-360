@@ -32,26 +32,26 @@
     }
 
     &.fill {
-        background-color: var(--primary-blue);
+        background-color: var(--secondary);
         color: white;
 
         &:hover {
-            background-color: var(--primary-blue-hover-dark);
+            background-color: var(--secondary-hover-dark);
         }
 
         i {
             color: white;
         }
 
-        &.primary-green {
-            background-color: var(--primary-green);
+        &.primary-dark {
+            background-color: var(--primary-dark);
 
             &:hover {
-                background-color: var(--primary-green-hover-dark);
+                background-color: var(--primary-dark-hover-dark);
             }
 
             i {
-                color: var(--primary-green);
+                color: var(--primary-dark);
             }
         }
 
@@ -61,31 +61,31 @@
     }
 
     &.outline {
-        color: var(--primary-blue);
-        border: 1px solid var(--primary-blue);
+        color: var(--secondary);
+        border: 1px solid var(--secondary);
         background-color: var(--white);
 
         &:hover {
             opacity: 0.9;
-            background-color: var(--primary-blue-hover-light);
+            background-color: var(--secondary-hover-light);
         }
 
         i {
-            color: var(--primary-blue);
+            color: var(--secondary);
         }
 
-        &.primary-green {
+        &.primary-dark {
             background-color: var(--secondary-white);
-            border: 1px solid var(--primary-green);
-            color: var(--primary-green);
+            border: 1px solid var(--primary-dark);
+            color: var(--primary-dark);
 
 
             &:hover {
-                background-color: var(--primary-green-hover-light);
+                background-color: var(--primary-dark-hover-light);
             }
 
             i {
-                color: var(--primary-green);
+                color: var(--primary-dark);
             }
         }
 
@@ -94,26 +94,26 @@
     &.ghost {
         background-color: transparent;
         border: none;
-        color: var(--primary-blue);
+        color: var(--secondary);
 
         &:hover {
             opacity: 0.9;
-            background-color: var(--primary-blue-hover-light);
+            background-color: var(--secondary-hover-light);
         }
 
         i {
-            color: var(--primary-blue);
+            color: var(--secondary);
         }
 
-        &.primary-green {
-            background-color: var(--primary-green);
+        &.primary-dark {
+            background-color: var(--primary-dark);
 
             &:hover {
-                background-color: var(--primary-green-hover-dark);
+                background-color: var(--primary-dark-hover-dark);
             }
 
             i {
-                color: var(--primary-green);
+                color: var(--primary-dark);
             }
         }
 

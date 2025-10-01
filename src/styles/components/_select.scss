@@ -12,7 +12,7 @@
         font-size: $font-md;
         line-height: 30px;
         letter-spacing: 0.4px;
-        color: var(--primary-green);
+        color: var(--label);
         position: relative;
         top: 12px;
         height: 24px;
@@ -24,7 +24,7 @@
 
         &.required::after {
             content: " *";
-            color: var(--primary-purple);
+            color: var(--tertiary);
         }
     }
 
@@ -64,10 +64,10 @@
             width: 100%;
             min-height: 44px;
             padding: $padding-xsm $padding-xs $padding-xsm $padding-sm;
-            border: 2px solid var(--primary-green);
+            border: 2px solid var(--stroke);
             border-radius: $border-radius-sm;
             background-color: inherit;
-            color: var(--primary-blue);
+            color: var(--secondary);
             font-size: $font-md;
             box-sizing: border-box;
             cursor: pointer;
@@ -78,17 +78,17 @@
             outline: none;
 
             &:hover:not(.disabled) {
-                border-color: var(--primary-green);
+                border-color: var(--primary-dark);
             }
 
             &.focused,
             &.open {
-                border-color: var(--primary-green);
+                border-color: var(--primary-dark);
                 box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
             }
 
             &.invalid {
-                border: 2px solid var(--primary-purple);
+                border: 2px solid var(--tertiary);
                 padding: $padding-xxsm $padding-xxsmm $padding-xxsm $padding-xxsm;
 
                 &.has-icon-left {
@@ -123,7 +123,7 @@
                     .chip {
                         display: inline-flex;
                         align-items: center;
-                        background-color: var(--primary-green);
+                        background-color: var(--primary-dark);
                         color: white;
                         padding: $padding-xsm $padding-xs;
                         border-radius: $border-radius-sm;
@@ -160,13 +160,13 @@
 
                 .select-display-text {
                     font-size: $font-md;
-                    color: var(--primary-blue);
+                    color: var(--secondary);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
 
-                    &.primary-green {
-                        color: var(--primary-green);
+                    &.primary-dark {
+                        color: var(--primary-dark);
                     }
 
                     &.placeholder {
@@ -200,7 +200,7 @@
 
                     &:hover {
                         background-color: rgba(97, 132, 149, 0.1);
-                        color: var(--primary-green);
+                        color: var(--primary-dark);
                     }
                 }
 
@@ -222,7 +222,7 @@
             min-width: fit-content;
             z-index: 99999 !important;
             background: white;
-            border: 2px solid var(--primary-green);
+            border: 2px solid var(--primary-dark);
             border-radius: $border-radius-sm;
             box-shadow: 0 4px 12px rgba(1, 48, 71, 0.15);
             max-height: 300px;
@@ -254,7 +254,7 @@
                     outline: none;
 
                     &:focus {
-                        border-color: var(--primary-green);
+                        border-color: var(--primary-dark);
                     }
                 }
 
@@ -279,7 +279,7 @@
                     transition: background-color 0.2s ease;
                     font-size: $font-xl;
                     border-bottom: 1px solid rgba(216, 216, 216, 0.3);
-                    font-family: 'DM Sans', sans-serif;
+                    font-family: 'Work Sans', sans-serif;
 
                     &:last-child {
                         border-bottom: none;
@@ -291,7 +291,7 @@
 
                     &.selected {
                         background-color: rgba(1, 80, 120, 0.1);
-                        color: var(--primary-blue);
+                        color: var(--secondary);
                     }
 
                     &.disabled {
@@ -338,7 +338,7 @@
         min-height: 20px;
 
         .error-message {
-            color: var(--primary-purple);
+            color: var(--tertiary);
             font-size: $font-xs;
             line-height: 24px;
             margin: 0;

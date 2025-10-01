@@ -4,7 +4,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 @Component({
   selector: 'ds-button',
   standalone: true,
-  imports: [NgStyle, NgClass, SpinnerComponent, NgIf],
+  imports: [NgStyle, NgClass, SpinnerComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.None

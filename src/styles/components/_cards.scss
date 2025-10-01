@@ -91,7 +91,7 @@
 
         &:hover {
             transform: translateY(-2px);
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
         }
 
         &:active {
@@ -119,7 +119,7 @@
 
     &__title {
         margin: 0 0 $padding-xs 0;
-        color: var(--primary-blue);
+        color: var(--secondary);
         font-size: 1.125rem;
         font-weight: $font-weight-xbold;
         line-height: 1.4;
@@ -178,7 +178,7 @@
             width: 24px;
             height: 24px;
             border: 2px solid var(--stroke);
-            border-top: 2px solid var(--primary-green);
+            border-top: 2px solid var(--primary-dark);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
