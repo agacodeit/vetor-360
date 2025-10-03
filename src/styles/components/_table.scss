@@ -129,7 +129,7 @@ ds-table-row {
         transition: all 0.2s ease;
 
         &:hover:not(:disabled) {
-            background-color: var(--secondary-white);
+            background-color: var(--white);
             border-color: $primary-medium;
         }
 

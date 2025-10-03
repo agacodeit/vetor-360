@@ -8,27 +8,18 @@
     height: 100%;
 
     label {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        font-size: $font-md;
-        line-height: 30px;
-        letter-spacing: 0.4px;
-        color: var(--primary-green);
-        width: fit-content;
-        position: relative;
-        height: 100%;
+     
 
         &.required::after {
             content: " *";
-            color: var(--primary-purple);
+            color: var(--tertiary);
         }
 
         .checkbox-field {
             appearance: none;
             width: 40px;
             height: 40px;
-            border: 2px solid var(--primary-green);
+            border: 2px solid var(--primary-dark);
             border-radius: $border-radius-xxsm;
             background-color: white;
             cursor: pointer;
@@ -37,8 +28,8 @@
             transition: all 0.3s ease;
 
             &:checked {
-                background-color: var(--primary-green);
-                border-color: var(--primary-green);
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
 
                 &::after {
                     content: '';
@@ -54,8 +45,8 @@
             }
 
             &:indeterminate {
-                background-color: var(--primary-green);
-                border-color: var(--primary-green);
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
 
                 &::after {
                     content: '';
@@ -86,11 +77,11 @@
             }
 
             &.invalid {
-                border-color: var(--primary-purple);
+                border-color: var(--tertiary);
 
                 &:checked {
-                    background-color: var(--primary-purple);
-                    border-color: var(--primary-purple);
+                    background-color: var(--tertiary);
+                    border-color: var(--tertiary);
                 }
             }
         }
@@ -110,7 +101,7 @@
     // Mensagens de erro e ajuda
     .error-message {
         margin-top: 4px;
-        color: var(--primary-purple);
+        color: var(--tertiary);
         font-size: $font-xs;
         font-weight: $font-weight-md;
         line-height: 1.4;
@@ -118,7 +109,7 @@
 
     .helper-text {
         margin-top: 4px;
-        color: var(--primary-green);
+        color: var(--primary-dark);
         font-size: $font-xs;
         font-weight: $font-weight-md;
         line-height: 1.4;
@@ -128,7 +119,7 @@
 // Estados especiais
 .form-group.invalid {
     label {
-        color: var(--primary-purple);
+        color: var(--tertiary);
     }
 }
 
@@ -136,7 +127,7 @@
 @media (max-width: 768px) {
     .form-group {
         label {
-            font-size: $font-md; // Evita zoom no iOS
+            font-size: $font-sm; // Evita zoom no iOS
         }
     }
 }

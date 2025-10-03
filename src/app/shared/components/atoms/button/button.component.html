@@ -2,10 +2,10 @@
     'width': fullWidth ? '100%' : 'fit-content',
     'white-space': 'nowrap'
 }" [ngClass]="{'rounded': rounded}" (click)="emitAction()">
-    <i *ngIf="!isLoading; else loading" class="{{icon}}"></i>
+    @if(!isLoading){
+    <i class="{{icon}}"></i>
+    } @else {
+    <ds-spinner size="12px" [variant]="variant" color="primary"></ds-spinner>
+    }
     {{label}}
 </button>
-
-<ng-template #loading>
-    <ds-spinner size="12px" [variant]="variant" color="primary"></ds-spinner>
-</ng-template>
