@@ -20,15 +20,14 @@
 @use './utils/_index' as utils;
 
 // Google Fonts - deve vir depois dos @use
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 // Global styles can be added here
 
 * {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Work Sans', sans-serif;
 
     &::placeholder {
-        font-family: 'DM Sans', sans-serif;
+        font-family: 'Work Sans', sans-serif;
         font-weight: abstracts.$font-weight-md !important;
     }
 }

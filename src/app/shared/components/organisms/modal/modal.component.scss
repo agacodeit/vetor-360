@@ -118,7 +118,7 @@
 
 // Estado de foco para acessibilidade usando cores do sistema
 .modal-dialog:focus {
-    outline: $size-xs solid var(--primary-medium);
+    outline: $size-xs solid var(--secondary);
     outline-offset: $size-xs;
 }
 
@@ -133,6 +133,6 @@
 
 // Estado de foco para acessibilidade usando cores do sistema
 .modal-dialog:focus {
-    outline: $size-xs solid var(--primary-medium);
+    outline: $size-xs solid var(--secondary);
     outline-offset: $size-xs;
 }
