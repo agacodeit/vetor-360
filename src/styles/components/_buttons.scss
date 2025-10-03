@@ -3,16 +3,16 @@
 
 // Componentes base
 .btn {
-    font-size: $font-md;
+    font-size: $font-sm;
     padding: $padding-s $padding-ssm;
     border: none;
     border-radius: $border-radius-sm;
     cursor: pointer;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-md;
     transition: background-color 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s, scale 0.2s;
     outline: 0;
     min-height: 44px;
-    box-shadow: var(--shadow-box);
+   // box-shadow: var(--shadow-box);
 
     &:hover {
         transition: background-color 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s;
@@ -35,27 +35,42 @@
         background-color: var(--secondary);
         color: white;
 
-        &:hover {
-            background-color: var(--secondary-hover-dark);
-        }
 
         i {
             color: white;
         }
 
         &.primary-dark {
-            background-color: var(--primary-dark);
+            background-color: var(--secondary);
 
-            &:hover {
-                background-color: var(--primary-dark-hover-dark);
-            }
 
             i {
-                color: var(--primary-dark);
+                color: var(--secondary);
             }
         }
 
 
+
+
+    }
+
+    &.secondary {
+        background-color: var(--secondary-light);
+        color: var(--primary-dark);
+
+
+        i {
+            color: white;
+        }
+
+        &.primary-dark {
+            background-color: var(--secondary);
+
+
+            i {
+                color: var(--secondary);
+            }
+        }
 
 
     }
@@ -65,17 +80,13 @@
         border: 1px solid var(--secondary);
         background-color: var(--white);
 
-        &:hover {
-            opacity: 0.9;
-            background-color: var(--secondary-hover-light);
-        }
 
         i {
             color: var(--secondary);
         }
 
         &.primary-dark {
-            background-color: var(--secondary-white);
+            background-color: var(--white);
             border: 1px solid var(--primary-dark);
             color: var(--primary-dark);
 
@@ -95,11 +106,6 @@
         background-color: transparent;
         border: none;
         color: var(--secondary);
-
-        &:hover {
-            opacity: 0.9;
-            background-color: var(--secondary-hover-light);
-        }
 
         i {
             color: var(--secondary);

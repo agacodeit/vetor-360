@@ -3,15 +3,7 @@
 
 .form-group {
     label {
-        width: fit-content;
-        position: relative;
-        top: 18px;
-        left: 18px;
-        background: white;
-        z-index: 1;
-        border-radius: $border-radius-xb;
-        padding: 0 $padding-xs;
-        font-size: $font-md;
+      
     }
 }
 
@@ -46,7 +38,7 @@
         }
 
         &.disabled {
-            background-color: var(--secondary-white);
+            background-color: var(--background);
             color: var(--disabled);
             cursor: not-allowed;
         }
@@ -118,7 +110,7 @@
     margin-top: 4px;
     min-width: 280px;
     font-family: $font-primary;
-    background-color: var(--secondary-white);
+    background-color: var(--white);
 
     .calendar-header {
         display: flex;

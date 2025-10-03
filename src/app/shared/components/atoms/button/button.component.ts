@@ -12,7 +12,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 export class ButtonComponent {
 
   @Input() label: string = '';
-  @Input() variant: 'fill' | 'outline' | 'ghost' = 'fill';
+  @Input() variant: 'fill' | 'secondary' | 'outline' | 'ghost' = 'fill';
   @Input() icon: string = '';
   @Input() iconSize: string = '';
   @Input() fullWidth: boolean = false;

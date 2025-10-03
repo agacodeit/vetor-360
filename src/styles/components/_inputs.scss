@@ -8,22 +8,10 @@
 
     label {
         margin-bottom: 8px;
-        font-size: $font-sm;
-        line-height: 30px;
-        letter-spacing: 0.4px;
-        color: var(--label);
+        font-family: "Work Sans", sans-serif;
         font-weight: $font-weight-md;
-        width: fit-content;
-        position: relative;
-        top: 12px;
-        height: 24px;
-        left: 18px;
-        background: white;
-        z-index: 1;
-        border-radius: $border-radius-xb;
-        padding: 0 $padding-xs;
-        margin-bottom: 0 !important;
-
+        font-size: $font-sm;
+        color: var(--label);
         &.required::after {
             content: " *";
             color: var(--tertiary);
@@ -39,13 +27,13 @@
 
         .input-field {
             width: 100%;
-            padding: $padding-xs $padding-md;
+            padding: $padding-s;
             border-radius: $border-radius-sm;
             outline: none;
             border: 1px solid var(--stroke);
             min-height: 44px;
             background-color: inherit;
-            color: var(--secondary);
+            color: var(--gray-medium);
             font-size: $font-sm;
             box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
@@ -57,7 +45,7 @@
 
             &::placeholder {
                 color: var(--placeholder);
-                font-weight: $font-weight-md;
+                font-weight: $font-weight-lt;
                 font-size: $font-md;
                 line-height: 100%;
                 letter-spacing: 0px;
@@ -65,7 +53,7 @@
 
             &:focus {
                 border-color: var(--primary-dark);
-                box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+                box-shadow: 0 0 0 3px #F7F5FF;
             }
 
             &:disabled {
