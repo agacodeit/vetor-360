@@ -32,7 +32,8 @@
     "mask-directive": "^0.2.33",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "@fortawesome/fontawesome-free": "^7.0.1"
   },
   "devDependencies": {
     "@angular/build": "^20.2.2",

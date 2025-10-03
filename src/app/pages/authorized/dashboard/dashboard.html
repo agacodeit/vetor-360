@@ -1,1 +1,13 @@
-<p>dashboard works!</p>
+<div class="container">
+
+    <div class="welcome-msg">
+        <h2>Bem-vindo, Advisor!</h2>
+        <p>Aqui você acompanha todas as solicitações de crédito de seus clientes. Vamos começar?</p>
+        <i class="fa-regular fa-file"></i>
+
+        <p class="bold">Ainda não há solicitações cadastradas.</p>
+
+        <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20" (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
+
+    </div>
+</div>
