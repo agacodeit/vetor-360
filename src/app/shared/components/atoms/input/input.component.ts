@@ -1,8 +1,7 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation, Optional, Self } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
-import { MaskDirective } from 'mask-directive';
+import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -38,8 +37,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() fullWidth: boolean = false;
   @Input() width: string = 'fit-content';
 
-  @Input() mask: string = '';
-  @Input() dropSpecialCharacters: boolean = false;
 
   @Input() ngModel: any;
   @Output() ngModelChange = new EventEmitter<any>();
@@ -53,10 +50,8 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   private onChange = (value: any) => { };
   private onTouched = () => { };
 
-  constructor(@Optional() @Self() private ngControl: NgControl) {
-    if (this.ngControl) {
-      this.ngControl.valueAccessor = this;
-    }
+  constructor() {
+    // Removido NgControl para evitar dependência circular
   }
 
   ngOnInit() {
@@ -109,17 +104,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     }
 
 
-    if (this.mask && this.dropSpecialCharacters && newValue) {
-
-      const cleanValue = newValue.replace(/[^a-zA-Z0-9]/g, '');
-
-
-      this.value = cleanValue;
-      newValue = cleanValue;
-    } else {
-
-      this.value = newValue;
-    }
+    this.value = newValue;
 
 
     this.onChange(newValue);
@@ -128,17 +113,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   }
 
 
-  onMaskValueChange(unmaskedValue: any): void {
-
-    if (this.dropSpecialCharacters && this.mask) {
-      const cleanValue = String(unmaskedValue || '');
-
-      this.value = cleanValue;
-      this.onChange(cleanValue);
-      this.ngModelChange.emit(cleanValue);
-      this.valueChanged.emit(cleanValue);
-    }
-  }
 
   onInputFocus(): void {
     this.isFocused = true;
@@ -176,9 +150,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   }
 
 
-  get hasMask(): boolean {
-    return !!this.mask && this.type !== 'number';
-  }
 
 
   get safeValue(): string {

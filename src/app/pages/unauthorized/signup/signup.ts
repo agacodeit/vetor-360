@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
     CommonModule,
     CardComponent,
     InputComponent,
-    ButtonComponent],
+    ButtonComponent
+  ],
   standalone: true,
   templateUrl: './signup.html',
   styleUrl: './signup.scss'

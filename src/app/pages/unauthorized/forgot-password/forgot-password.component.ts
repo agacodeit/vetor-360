@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
-  standalone: true,
   imports: [
     CommonModule,
     CardComponent,
     InputComponent,
     ButtonComponent
   ],
+  standalone: true,
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss'
 })
