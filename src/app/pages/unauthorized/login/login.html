@@ -14,10 +14,12 @@
             <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"> </ds-input>
             <ds-input label="Senha" placeholder="******" type="senha" [fullWidth]="true" icon="fa-light fa-eye"
                 iconPosition="right"> </ds-input>
+            <p (click)="forgotPassword()" class="forgot-password">Esqueceu a senha?</p>
         </div>
-
+       
         <ds-button label="Entrar" (onClickEmitter)="login()" [fullWidth]="true" [rounded]="true" />
         <ds-button class="outline-btn" label="Cadastre-se" (onClickEmitter)="signup()" [fullWidth]="true"
             variant="secondary" [rounded]="true" />
+       
     </ds-card>
 </div>
