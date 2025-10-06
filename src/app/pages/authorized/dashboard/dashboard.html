@@ -12,7 +12,8 @@
     </div>
 </div>
 
-<ds-modal modalId="example-modal" (modalClosed)="onModalClosed($event)">
-    <h2>Conteúdo do Modal</h2>
-    <p>Aqui vai o conteúdo do seu modal...</p>
+<ds-modal modalId="create-solicitation" (modalClosed)="onModalClosed($event)">
+    <p>Produto</p>
+    <ds-select label="Status" placeholder="Selecione o status" [options]="statusOptions" formControlName="status"> </ds-select>
+
   </ds-modal>

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 export interface ModalConfig {
   id: string;
   title?: string;
+  subtitle?: string;
   showHeader?: boolean;
   showCloseButton?: boolean;
   closeOnBackdropClick?: boolean;

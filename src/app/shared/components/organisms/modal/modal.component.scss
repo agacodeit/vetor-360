@@ -24,7 +24,7 @@
     max-height: 90vh;
     overflow: hidden;
     margin: 1rem;
-    border: $size-xs solid var(--stroke);
+    //border: $size-xs solid var(--stroke);
     will-change: transform, opacity, filter; // Otimização para animações Angular
 
     // Hover effect sutil
@@ -74,15 +74,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $padding-sm $padding-md; // 20px 24px do design system
-    border-bottom: $size-xs solid var(--stroke);
-    background-color: var(--tertiary);
+    padding: $padding-md $padding-md 0 $padding-md; //24px
+   // background-color: var(--tertiary);
 
     .modal-title {
         margin: 0;
         font-size: $font-xl;
-        font-weight: $font-weight-xbold;
-        color: var(--white);
+        font-weight: $font-weight-md;
+        color: var(--black);
+    }
+}
+
+.modal-subtitle {
+    margin-top: 12px;
+    padding: 0 $padding-md; //24px
+
+    p {
+        font-size: $font-sm;
+        font-weight: $font-weight-md;
+        color: var(--gray-dark);
     }
 }
 

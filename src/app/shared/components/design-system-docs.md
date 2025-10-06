@@ -71,6 +71,7 @@ export class ExampleComponent {
     this.modalService.open({
       id: "example-modal",
       title: "Meu Modal",
+      subtitle: "Lorem ipsum lorem ipsum lorem ipsum.",
       size: "md",
       showHeader: true,
       showCloseButton: true,
