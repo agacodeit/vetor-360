@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent, ModalComponent } from '../../../shared/components';
-import { ModalService } from '../../../shared/services/modal/modal.service';
+import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent } from '../../../shared/components';
+import { ModalComponent, ModalService, SelectOption, TextareaComponent } from '../../../shared';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,14 @@ import { ModalService } from '../../../shared/services/modal/modal.service';
     KanbanComponent,
     CardComponent,
     IconComponent,
-    ModalComponent
+    ModalComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalComponent,
+    TextareaComponent
+  ],
+  providers: [
+    NgModel
   ],
   standalone: true,
   templateUrl: './dashboard.html',
@@ -186,10 +194,27 @@ export class Dashboard implements OnInit {
   }
 
 
+  form: FormGroup = new FormGroup({
+    purpose: new FormControl('', Validators.required)
+  })
+
+  statusOptions: SelectOption[] = [
+    { value: 'active', label: 'Ativo' },
+    { value: 'inactive', label: 'Inativo' },
+    { value: 'pending', label: 'Pendente' }
+  ];
+
+  categoryOptions: SelectOption[] = [
+    { value: 'premium', label: 'Premium', group: 'Pagos' },
+    { value: 'basic', label: 'Básico', group: 'Pagos' },
+    { value: 'free', label: 'Gratuito', group: 'Gratuitos' }
+  ];
+
   openCreateSolicitationModal() {
     this.modalService.open({
-      id: "example-modal",
-      title: 'C76324',
+      id: "create-solicitation",
+      title: "Nova Solicitação",
+      subtitle: "Informe os dados do produto e do cliente",
       size: "md",
       showHeader: true,
       showCloseButton: true,

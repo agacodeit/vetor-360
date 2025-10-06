@@ -14,9 +14,13 @@
                 </h4>
 
                 <ds-icon (click)="closeModal()" cursorType="pointer" *ngIf="modalConfig?.showCloseButton"
-                    aria-label="Fechar modal" icon="fa-solid fa-xmark" fontSize="24px" color="white">
+                    aria-label="Fechar modal" icon="fa-solid fa-xmark" fontSize="20px" color="white">
                 </ds-icon>
 
+            </div>
+
+            <div class="modal-subtitle" *ngIf="modalConfig?.subtitle">
+                <p>{{ modalConfig?.subtitle }}</p>
             </div>
 
 
