@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ButtonComponent, InputComponent, ModalComponent, ModalService, SelectComponent, SelectOption, TextareaComponent } from '../../../shared';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent, ModalComponent, ModalService, SelectOption, TextareaComponent } from '../../../shared';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,8 +11,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Vali
     ReactiveFormsModule,
     ButtonComponent,
     ModalComponent,
-    SelectComponent,
-    InputComponent,
     TextareaComponent
   ],
   providers: [
