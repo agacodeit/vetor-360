@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent } from '../../../shared/components';
+import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent, ButtonComponent } from '../../../shared/components';
 import { ModalComponent, ModalService, SelectOption, TextareaComponent } from '../../../shared';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
 
@@ -15,7 +15,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Vali
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,
-    TextareaComponent
+    TextareaComponent,
+    ButtonComponent
   ],
   providers: [
     NgModel
