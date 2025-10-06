@@ -4,7 +4,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 @Component({
   selector: 'ds-button',
   standalone: true,
-  imports: [NgStyle, NgClass, SpinnerComponent, NgIf],
+  imports: [NgStyle, NgClass, SpinnerComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -12,7 +12,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 export class ButtonComponent {
 
   @Input() label: string = '';
-  @Input() variant: 'fill' | 'outline' | 'ghost' = 'fill';
+  @Input() variant: 'fill' | 'secondary' | 'outline' | 'ghost' = 'fill';
   @Input() icon: string = '';
   @Input() iconSize: string = '';
   @Input() fullWidth: boolean = false;

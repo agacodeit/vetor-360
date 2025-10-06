@@ -25,6 +25,7 @@ export * from './molecules/tabs/tabs.component';
 // Organisms
 export * from './organisms/card/card.component';
 export * from './organisms/file-upload/file-upload.component';
+export * from './organisms/kanban/kanban.component';
 export * from './organisms/modal/modal.component';
 export * from './organisms/table/table.component';
 export * from './organisms/table/table-row/table-row.component';

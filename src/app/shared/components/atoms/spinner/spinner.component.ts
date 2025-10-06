@@ -11,7 +11,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 })
 export class SpinnerComponent {
 
-  @Input() variant: 'fill' | 'outline' | 'ghost' = 'fill';
+  @Input() variant: 'fill' | 'secondary' | 'outline' | 'ghost' = 'fill';
   @Input() size: string = '24px';
 
   get color() {

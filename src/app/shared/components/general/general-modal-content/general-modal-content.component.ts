@@ -8,7 +8,7 @@ import { ModalService } from '../../../services/modal/modal.service';
 export interface GeneralModalButton {
   label: string;
   action: any; // Valor retornado quando clicado
-  variant?: 'fill' | 'outline' | 'ghost';
+  variant?: 'fill' | 'secondary' | 'outline' | 'ghost';
   icon?: string;
   disabled?: boolean;
   isLoading?: boolean;
@@ -82,7 +82,7 @@ export class GeneralModalContentComponent {
   /**
    * 🔘 VARIANTE DO BOTÃO - Retorna variante padrão se não especificada
    */
-  getButtonVariant(button: GeneralModalButton): 'fill' | 'outline' | 'ghost' {
+  getButtonVariant(button: GeneralModalButton): 'fill' | 'secondary' | 'outline' | 'ghost' {
     return button.variant || 'outline';
   }
 }

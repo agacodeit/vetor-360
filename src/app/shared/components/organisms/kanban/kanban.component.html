@@ -1,0 +1,123 @@
+<div class="kanban">
+    <div class="kanban__header">
+        <h2 class="kanban__title">Kanban Board</h2>
+        <div class="kanban__actions">
+            <ds-button *ngIf="allowAddColumns && columns.length < maxColumns" label="Add Column" variant="outline"
+                icon="add" (onClickEmitter)="isAddingColumn = true">
+            </ds-button>
+        </div>
+    </div>
+
+    <div class="kanban__board" #kanbanBoard>
+        <!-- Existing Columns -->
+        <div *ngFor="let column of columns; trackBy: trackByColumnId" class="kanban__column" cdkDropList
+            [id]="column.id" [cdkDropListData]="column.cards" [cdkDropListConnectedTo]="getConnectedDropLists()"
+            (cdkDropListDropped)="onCardDrop($event)">
+
+            <div class="kanban__column-header" [style.border-color]="column.color">
+                <div class="kanban__column-title">
+                    <input *ngIf="editingColumnId === column.id" [(ngModel)]="editingColumnTitle"
+                        (blur)="saveColumnEdit()" (keyup.enter)="saveColumnEdit()"
+                        (keyup.escape)="cancelEditingColumn()" class="kanban__column-edit-input" #editInput>
+                    <span *ngIf="editingColumnId !== column.id" (click)="allowEditColumns && startEditingColumn(column)"
+                        class="kanban__column-title-text"
+                        [class.kanban__column-title-text--editable]="allowEditColumns">
+                        {{ column.title }}
+                    </span>
+                </div>
+
+                <div class="kanban__column-info">
+                    <span *ngIf="showCardCount" class="kanban__column-count">
+                        {{ getColumnCardCount(column) }}
+                        <span *ngIf="column.maxCards">/ {{ column.maxCards }}</span>
+                    </span>
+
+                    <div class="kanban__column-actions">
+                        <ds-button *ngIf="allowEditColumns && editingColumnId !== column.id" variant="ghost" icon="edit"
+                            label="Edit" (onClickEmitter)="startEditingColumn(column)">
+                        </ds-button>
+
+                        <ds-button *ngIf="allowDeleteColumns && columns.length > 1" variant="ghost" icon="delete"
+                            (onClickEmitter)="removeColumn(column.id)">
+                        </ds-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kanban__column-content">
+                <!-- Cards -->
+                <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
+                    [cdkDragData]="card" (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
+
+                    <!-- Template customizado se fornecido -->
+                    <ng-container *ngIf="cardTemplate; else defaultCardTemplate">
+                        <ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: card, column: column }">
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- Template padrão -->
+                    <ng-template #defaultCardTemplate>
+                        <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="bordered"
+                            borderRadius="md" class="kanban__card-content">
+
+                            <div class="kanban__card-header">
+                                <h4 class="kanban__card-title">{{ card.title }}</h4>
+                                <div class="kanban__card-priority"
+                                    [style.background-color]="getPriorityColor(card.priority || 'medium')">
+                                </div>
+                            </div>
+
+                            <p *ngIf="card.description" class="kanban__card-description">
+                                {{ card.description }}
+                            </p>
+
+                            <div *ngIf="card.dueDate" class="kanban__card-due-date">
+                                <ds-icon icon="schedule" fontSize="14px"></ds-icon>
+                                <span>{{ card.dueDate | date:'short' }}</span>
+                            </div>
+
+                            <div *ngIf="card.tags && card.tags.length > 0" class="kanban__card-tags">
+                                <span *ngFor="let tag of card.tags" class="kanban__card-tag">
+                                    {{ tag }}
+                                </span>
+                            </div>
+
+                            <div slot="footer" class="kanban__card-actions">
+                                <ds-button variant="ghost" icon="delete" iconColor="primary-green"
+                                    (onClickEmitter)="removeCard(card, column.id)">
+                                </ds-button>
+                            </div>
+                        </ds-card>
+                    </ng-template>
+                </div>
+
+                <!-- Add Card Button -->
+                <ds-button *ngIf="allowAddCards && !isColumnAtMaxCapacity(column)" label="Add Card" variant="outline"
+                    icon="add" [fullWidth]="true" (onClickEmitter)="addCard(column.id)" class="kanban__add-card-btn">
+                </ds-button>
+
+                <!-- Column at max capacity message -->
+                <div *ngIf="isColumnAtMaxCapacity(column)" class="kanban__max-capacity">
+                    <ds-icon icon="info" fontSize="16px"></ds-icon>
+                    <span>Column at maximum capacity</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Column Form -->
+        <div *ngIf="isAddingColumn" class="kanban__add-column">
+            <div class="kanban__add-column-form">
+                <input [(ngModel)]="newColumnTitle" placeholder="Column title" class="kanban__add-column-input"
+                    (keyup.enter)="addColumn()" (keyup.escape)="isAddingColumn = false" #newColumnInput>
+
+                <div class="kanban__add-column-actions">
+                    <ds-button label="Add" variant="fill" (onClickEmitter)="addColumn()">
+                    </ds-button>
+
+                    <ds-button label="Cancel" variant="ghost" (onClickEmitter)="isAddingColumn = false">
+                    </ds-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
