@@ -81,7 +81,7 @@
     }
 
     &__column-header {
-        padding: $padding-sm $padding-s;
+        padding: $padding-sm $padding-s 0 $padding-s;
         border-bottom: 2px solid var(--primary-blue);
         background: var(--kanban-header-bg);
         border-radius: $border-radius-md $border-radius-md 0 0;
@@ -162,7 +162,7 @@
     }
 
     &__column-content {
-        padding: 0 $padding-s;
+        padding: $padding-ssm;
         display: flex;
         flex-direction: column;
         gap: $padding-s;
@@ -179,6 +179,11 @@
         &:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-box);
+        }
+
+        h4 {
+            font-size: $font-xl;
+            font-weight: $font-weight-md;
         }
 
 

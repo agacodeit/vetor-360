@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { KanbanComponent, KanbanColumn, KanbanCard } from '../../../shared/components';
+import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent } from '../../../shared/components';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     CommonModule,
-    KanbanComponent
+    KanbanComponent,
+    CardComponent,
+    IconComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
@@ -113,6 +115,15 @@ export class Dashboard implements OnInit {
             assignee: 'Rafael Mendes',
             dueDate: new Date('2024-02-05'),
             tags: ['design-system', 'components']
+          },
+          {
+            id: 'custom-card-1',
+            title: 'Card Customizado',
+            description: 'Este card usa template customizado',
+            priority: 'medium',
+            assignee: 'Desenvolvedor',
+            dueDate: new Date('2024-02-15'),
+            tags: ['custom', 'template']
           }
         ]
       }
@@ -147,5 +158,16 @@ export class Dashboard implements OnInit {
   onColumnRenamed(event: any) {
     console.log('Coluna renomeada:', event);
     // Lógica para renomear coluna no backend
+  }
+
+  removeCard(card: KanbanCard, columnId: string) {
+    const column = this.kanbanColumns.find(col => col.id === columnId);
+    if (column) {
+      const index = column.cards.findIndex(c => c.id === card.id);
+      if (index > -1) {
+        column.cards.splice(index, 1);
+        console.log('Card removido:', card);
+      }
+    }
   }
 }

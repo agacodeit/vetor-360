@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit, TrackByFunction, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit, TrackByFunction, ViewChild, ElementRef, HostListener, ContentChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem, CdkDragMove } from '@angular/cdk/drag-drop';
@@ -34,6 +34,7 @@ export interface KanbanColumn {
 })
 export class KanbanComponent implements OnInit {
     @ViewChild('kanbanBoard', { static: false }) kanbanBoard!: ElementRef<HTMLElement>;
+    @ContentChild('cardTemplate', { static: false }) cardTemplate!: TemplateRef<any>;
 
     @Input() columns: KanbanColumn[] = [];
     @Input() allowAddCards: boolean = false;

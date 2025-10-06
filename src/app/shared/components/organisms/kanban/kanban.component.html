@@ -49,42 +49,51 @@
                 <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
                     [cdkDragData]="card" (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
 
-                    <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="bordered"
-                        borderRadius="md" class="kanban__card-content">
+                    <!-- Template customizado se fornecido -->
+                    <ng-container *ngIf="cardTemplate; else defaultCardTemplate">
+                        <ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: card, column: column }">
+                        </ng-container>
+                    </ng-container>
 
-                        <div class="kanban__card-header">
-                            <h4 class="kanban__card-title">{{ card.title }}</h4>
-                            <div class="kanban__card-priority"
-                                [style.background-color]="getPriorityColor(card.priority || 'medium')">
+                    <!-- Template padrão -->
+                    <ng-template #defaultCardTemplate>
+                        <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="bordered"
+                            borderRadius="md" class="kanban__card-content">
+
+                            <div class="kanban__card-header">
+                                <h4 class="kanban__card-title">{{ card.title }}</h4>
+                                <div class="kanban__card-priority"
+                                    [style.background-color]="getPriorityColor(card.priority || 'medium')">
+                                </div>
                             </div>
-                        </div>
 
-                        <p *ngIf="card.description" class="kanban__card-description">
-                            {{ card.description }}
-                        </p>
+                            <p *ngIf="card.description" class="kanban__card-description">
+                                {{ card.description }}
+                            </p>
 
-                        <div *ngIf="card.assignee" class="kanban__card-assignee">
-                            <ds-icon icon="person" fontSize="14px"></ds-icon>
-                            <span>{{ card.assignee }}</span>
-                        </div>
+                            <div *ngIf="card.assignee" class="kanban__card-assignee">
+                                <ds-icon icon="person" fontSize="14px"></ds-icon>
+                                <span>{{ card.assignee }}</span>
+                            </div>
 
-                        <div *ngIf="card.dueDate" class="kanban__card-due-date">
-                            <ds-icon icon="schedule" fontSize="14px"></ds-icon>
-                            <span>{{ card.dueDate | date:'short' }}</span>
-                        </div>
+                            <div *ngIf="card.dueDate" class="kanban__card-due-date">
+                                <ds-icon icon="schedule" fontSize="14px"></ds-icon>
+                                <span>{{ card.dueDate | date:'short' }}</span>
+                            </div>
 
-                        <div *ngIf="card.tags && card.tags.length > 0" class="kanban__card-tags">
-                            <span *ngFor="let tag of card.tags" class="kanban__card-tag">
-                                {{ tag }}
-                            </span>
-                        </div>
+                            <div *ngIf="card.tags && card.tags.length > 0" class="kanban__card-tags">
+                                <span *ngFor="let tag of card.tags" class="kanban__card-tag">
+                                    {{ tag }}
+                                </span>
+                            </div>
 
-                        <div slot="footer" class="kanban__card-actions">
-                            <ds-button variant="ghost" icon="delete" iconColor="primary-green"
-                                (onClickEmitter)="removeCard(card, column.id)">
-                            </ds-button>
-                        </div>
-                    </ds-card>
+                            <div slot="footer" class="kanban__card-actions">
+                                <ds-button variant="ghost" icon="delete" iconColor="primary-green"
+                                    (onClickEmitter)="removeCard(card, column.id)">
+                                </ds-button>
+                            </div>
+                        </ds-card>
+                    </ng-template>
                 </div>
 
                 <!-- Add Card Button -->

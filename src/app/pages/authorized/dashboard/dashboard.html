@@ -9,6 +9,21 @@
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
             (columnRenamed)="onColumnRenamed($event)">
+
+            <!-- Template customizado para os cards -->
+            <ng-template #cardTemplate let-card let-column="column">
+                <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">
+
+                    <div class="__card-header">
+                        <ds-icon icon="fa-regular fa-ticket" color="primary-dark" fontSize="24px" />
+                        <h4>{{ card.title }}</h4>
+                    </div>
+                    <p>{{ card.description }}</p>
+
+
+                </ds-card>
+            </ng-template>
+
         </ds-kanban>
     </div>
 </div>
