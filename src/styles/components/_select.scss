@@ -9,18 +9,18 @@
 
     .select-label {
         margin-bottom: 8px;
-        font-size: $font-md;
-        line-height: 30px;
-        letter-spacing: 0.4px;
+        font-family: "Work Sans", sans-serif;
+        font-weight: $font-weight-md;
+        font-size: $font-sm;
         color: var(--label);
-        position: relative;
+       /*  position: relative;
         top: 12px;
         height: 24px;
         left: 18px;
         background: white;
         z-index: 1;
         border-radius: $border-radius-xb;
-        padding: 0 $padding-xs;
+        padding: 0 $padding-xs; */
 
         &.required::after {
             content: " *";
@@ -64,7 +64,7 @@
             width: 100%;
             min-height: 44px;
             padding: $padding-xsm $padding-xs $padding-xsm $padding-sm;
-            border: 2px solid var(--stroke);
+            border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
             background-color: inherit;
             color: var(--secondary);
@@ -88,7 +88,7 @@
             }
 
             &.invalid {
-                border: 2px solid var(--tertiary);
+                border: 1px solid var(--tertiary);
                 padding: $padding-xxsm $padding-xxsmm $padding-xxsm $padding-xxsm;
 
                 &.has-icon-left {
@@ -222,7 +222,7 @@
             min-width: fit-content;
             z-index: 99999 !important;
             background: white;
-            border: 2px solid var(--primary-dark);
+            border: 1px solid var(--primary-dark);
             border-radius: $border-radius-sm;
             box-shadow: 0 4px 12px rgba(1, 48, 71, 0.15);
             max-height: 300px;

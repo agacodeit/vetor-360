@@ -33,6 +33,11 @@
         border: 2px solid var(--stroke);
     }
 
+    &--bordered {
+        border: 2px solid var(--primary-dark);
+        background-color: var(--white);
+    }
+
     &--filled {
         background-color: var(--white);
     }

@@ -31,7 +31,7 @@
             border: none;
             border-radius: $border-radius-sm;
             outline: none;
-            border: 2px solid var(--primary-dark);
+            border: 1px solid var(--primary-dark);
             background-color: inherit;
             color: var(--primary-dark);
             font-size: $font-md;
@@ -42,7 +42,7 @@
             line-height: 1.5;
 
             &.invalid {
-                border: 2px solid var(--tertiary);
+                border: 1px solid var(--tertiary);
                 // Ajustar padding para compensar a borda extra
                 padding: $padding-xxsm $padding-s;
             }

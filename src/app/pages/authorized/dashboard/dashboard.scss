@@ -1,0 +1,71 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/typography' as *;
+@use '../../../../styles/themes/default' as *;
+
+.dashboard {
+    padding: $padding-md;
+    height: 80vh;
+    background: var(--secondary-white);
+
+    &__header {
+        margin-bottom: $padding-md;
+        text-align: center;
+    }
+
+    &__title {
+        font-family: $font-primary;
+        font-size: $font-xxxl;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        margin: 0 0 $padding-xs 0;
+    }
+
+    &__subtitle {
+        font-family: $font-primary;
+        font-size: $font-md;
+        font-weight: $font-weight-md;
+        color: var(--label);
+        margin: 0;
+    }
+
+    &__content {
+        height: calc(80vh - 24px);
+        overflow: hidden;
+    }
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+    .welcome-msg {
+        padding: 0 28vw;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+
+        i {
+            font-size: 30px;
+        }
+
+        p,
+        h2 {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: 500;
+        }
+    }
+}
+
+@media (max-width: 800px) {
+    .container {
+        .welcome-msg {
+            padding: 0 14vw;
+        }
+    }
+}
