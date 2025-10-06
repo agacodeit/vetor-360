@@ -71,11 +71,6 @@
                                 {{ card.description }}
                             </p>
 
-                            <div *ngIf="card.assignee" class="kanban__card-assignee">
-                                <ds-icon icon="person" fontSize="14px"></ds-icon>
-                                <span>{{ card.assignee }}</span>
-                            </div>
-
                             <div *ngIf="card.dueDate" class="kanban__card-due-date">
                                 <ds-icon icon="schedule" fontSize="14px"></ds-icon>
                                 <span>{{ card.dueDate | date:'short' }}</span>

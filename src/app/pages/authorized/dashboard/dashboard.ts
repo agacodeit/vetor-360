@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent } from '../../../shared/components';
+import { Component, inject, OnInit } from '@angular/core';
+import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent, ModalComponent } from '../../../shared/components';
+import { ModalService } from '../../../shared/services/modal/modal.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,13 +9,16 @@ import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent
     CommonModule,
     KanbanComponent,
     CardComponent,
-    IconComponent
+    IconComponent,
+    ModalComponent
   ],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
 export class Dashboard implements OnInit {
+  private modalService = inject(ModalService);
+
   kanbanColumns: KanbanColumn[] = [];
 
   ngOnInit() {
@@ -25,32 +29,35 @@ export class Dashboard implements OnInit {
     this.kanbanColumns = [
       {
         id: 'todo',
-        title: 'To Do',
+        title: 'Criada',
         cards: [
           {
             id: '1',
-            title: 'Implementar autenticação',
+            title: 'C76324',
             description: 'Criar sistema de login e registro de usuários',
             priority: 'high',
-            assignee: 'João Silva',
+            client: 'João Silva',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
             tags: ['backend', 'security']
           },
           {
             id: '2',
-            title: 'Design do dashboard',
+            title: 'C76324',
             description: 'Criar wireframes e mockups para o painel principal',
             priority: 'medium',
-            assignee: 'Maria Santos',
+            client: 'Maria Santos',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-20'),
             tags: ['design', 'ui/ux']
           },
           {
             id: '3',
-            title: 'Configurar CI/CD',
+            title: 'C76324',
             description: 'Implementar pipeline de deploy automático',
             priority: 'low',
-            assignee: 'Pedro Costa',
+            client: 'Pedro Costa',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-25'),
             tags: ['devops', 'deployment']
           }
@@ -58,23 +65,25 @@ export class Dashboard implements OnInit {
       },
       {
         id: 'in-progress',
-        title: 'In Progress',
+        title: 'Em andamento',
         cards: [
           {
             id: '4',
-            title: 'Desenvolver API REST',
+            title: 'C76324',
             description: 'Criar endpoints para gerenciamento de dados',
             priority: 'high',
-            assignee: 'Ana Oliveira',
+            client: 'Ana Oliveira',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-10'),
             tags: ['backend', 'api']
           },
           {
             id: '5',
-            title: 'Implementar testes unitários',
+            title: 'C76324',
             description: 'Criar cobertura de testes para componentes críticos',
             priority: 'medium',
-            assignee: 'Carlos Lima',
+            client: 'Carlos Lima',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-18'),
             tags: ['testing', 'quality']
           }
@@ -82,14 +91,15 @@ export class Dashboard implements OnInit {
       },
       {
         id: 'review',
-        title: 'Review',
+        title: 'Revisão',
         cards: [
           {
             id: '6',
-            title: 'Refatorar código legado',
+            title: 'C76324',
             description: 'Melhorar estrutura e performance do código existente',
             priority: 'medium',
-            assignee: 'Lucas Ferreira',
+            client: 'Lucas Ferreira',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-12'),
             tags: ['refactoring', 'performance']
           }
@@ -97,32 +107,35 @@ export class Dashboard implements OnInit {
       },
       {
         id: 'done',
-        title: 'Done',
+        title: 'Finalizado',
         cards: [
           {
             id: '7',
-            title: 'Configurar projeto Angular',
+            title: 'C76324',
             description: 'Inicializar estrutura base do projeto com design system',
             priority: 'low',
-            assignee: 'Sofia Alves',
+            client: 'Sofia Alves',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-01-30'),
             tags: ['setup', 'configuration']
           },
           {
             id: '8',
-            title: 'Criar design system',
+            title: 'C76324',
             description: 'Desenvolver componentes reutilizáveis e documentação',
             priority: 'high',
-            assignee: 'Rafael Mendes',
+            client: 'Rafael Mendes',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-05'),
             tags: ['design-system', 'components']
           },
           {
             id: 'custom-card-1',
-            title: 'Card Customizado',
+            title: 'C76324',
             description: 'Este card usa template customizado',
             priority: 'medium',
-            assignee: 'Desenvolvedor',
+            client: 'Desenvolvedor',
+            cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
             tags: ['custom', 'template']
           }
@@ -170,5 +183,22 @@ export class Dashboard implements OnInit {
         console.log('Card removido:', card);
       }
     }
+  }
+
+
+  openCreateSolicitationModal() {
+    this.modalService.open({
+      id: "example-modal",
+      title: 'C76324',
+      size: "md",
+      showHeader: true,
+      showCloseButton: true,
+      closeOnBackdropClick: true,
+      closeOnEscapeKey: true,
+    });
+  }
+
+  onModalClosed(event: any) {
+    console.log('Modal fechado:', event);
   }
 }

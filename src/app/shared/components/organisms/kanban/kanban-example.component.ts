@@ -48,7 +48,7 @@ export class KanbanExampleComponent {
                     title: 'Design new feature',
                     description: 'Create wireframes and mockups for the new user interface',
                     priority: 'high',
-                    assignee: 'John Doe',
+                    client: 'John Doe',
                     dueDate: new Date('2024-02-15'),
                     tags: ['design', 'ui/ux']
                 },
@@ -57,7 +57,7 @@ export class KanbanExampleComponent {
                     title: 'Research competitors',
                     description: 'Analyze competitor products and market trends',
                     priority: 'medium',
-                    assignee: 'Jane Smith',
+                    client: 'Jane Smith',
                     dueDate: new Date('2024-02-20'),
                     tags: ['research', 'analysis']
                 }
@@ -72,7 +72,7 @@ export class KanbanExampleComponent {
                     title: 'Implement authentication',
                     description: 'Build login and registration functionality',
                     priority: 'high',
-                    assignee: 'Mike Johnson',
+                    client: 'Mike Johnson',
                     dueDate: new Date('2024-02-10'),
                     tags: ['development', 'backend']
                 }
@@ -87,7 +87,7 @@ export class KanbanExampleComponent {
                     title: 'Setup project structure',
                     description: 'Initialize Angular project with design system',
                     priority: 'low',
-                    assignee: 'Sarah Wilson',
+                    client: 'Sarah Wilson',
                     dueDate: new Date('2024-01-30'),
                     tags: ['setup', 'configuration']
                 }

@@ -11,8 +11,9 @@ export interface KanbanCard {
     title: string;
     description?: string;
     priority?: 'low' | 'medium' | 'high';
-    assignee?: string;
+    client?: string;
     dueDate?: Date;
+    cnpj?: string;
     tags?: string[];
     data?: any;
 }

@@ -181,12 +181,35 @@
             box-shadow: var(--shadow-box);
         }
 
-        h4 {
-            font-size: $font-xl;
-            font-weight: $font-weight-md;
+        hr {
+            margin: 16px 0;
         }
 
+        .__card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: $padding-xs;
+            margin-bottom: 16px;
 
+            h4 {
+                font-size: $font-xl;
+                font-weight: $font-weight-md;
+            }
+        }
+
+        .__card-description {
+            p {
+                font-size: $font-md;
+            }
+
+            .card-icon {
+                margin-top: 4px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+        }
     }
 
     &__card-content {
