@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="kanban__board">
+    <div class="kanban__board" #kanbanBoard>
         <!-- Existing Columns -->
         <div *ngFor="let column of columns; trackBy: trackByColumnId" class="kanban__column" cdkDropList
             [id]="column.id" [cdkDropListData]="column.cards" [cdkDropListConnectedTo]="getConnectedDropLists()"
@@ -47,9 +47,9 @@
             <div class="kanban__column-content">
                 <!-- Cards -->
                 <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
-                    [cdkDragData]="card">
+                    [cdkDragData]="card" (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
 
-                    <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="outlined"
+                    <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="bordered"
                         borderRadius="md" class="kanban__card-content">
 
                         <div class="kanban__card-header">

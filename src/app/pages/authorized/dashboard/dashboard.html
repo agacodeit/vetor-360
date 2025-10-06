@@ -5,8 +5,8 @@
     </div>
 
     <div class="dashboard__content">
-        <ds-kanban [columns]="kanbanColumns" [allowEditColumns]="true" [showCardCount]="true" [maxColumns]="10"
-            (cardMoved)="onCardMoved($event)" (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
+        <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
+            (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
             (columnRenamed)="onColumnRenamed($event)">
         </ds-kanban>

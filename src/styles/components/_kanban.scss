@@ -37,18 +37,37 @@
 
     &__board {
         display: flex;
-        gap: $padding-md;
+        gap: $padding-ssm;
         overflow-x: auto;
         flex: 1;
         padding-bottom: $padding-xs;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: var(--stroke) transparent;
+
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--stroke);
+            border-radius: $border-radius-xs;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-blue);
+        }
     }
 
     &__column {
-        min-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
-        max-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
-        background: var(--white);
-        border-radius: $border-radius-md;
-        border: 1px solid var(--stroke);
+        min-width: 300px;
+        max-width: 300px;
+        background: var(--kanban-column-bg);
+        border-radius: $border-radius-xxb;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -62,18 +81,17 @@
     }
 
     &__column-header {
-        padding: $padding-s;
+        padding: $padding-sm $padding-s;
         border-bottom: 2px solid var(--primary-blue);
-        background: var(--white);
+        background: var(--kanban-header-bg);
         border-radius: $border-radius-md $border-radius-md 0 0;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         gap: $padding-xs;
     }
 
     &__column-title {
-        flex: 1;
         min-width: 0;
     }
 
@@ -81,7 +99,7 @@
         font-family: $font-primary;
         font-size: $font-md;
         font-weight: $font-weight-bold;
-        color: var(--primary-dark);
+        color: var(--black);
         display: block;
         white-space: nowrap;
         overflow: hidden;
@@ -127,11 +145,14 @@
         font-family: $font-primary;
         font-size: $font-sm;
         font-weight: $font-weight-md;
-        color: var(--label);
-        background: var(--primary-blue-hover-light);
-        padding: $padding-xxs $padding-xs;
+        color: var(--white);
+        background: var(--kanban-count-bg);
         border-radius: $border-radius-max;
-        min-width: $size-xxxxl; // 20px
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
     }
 
@@ -141,7 +162,7 @@
     }
 
     &__column-content {
-        padding: $padding-s;
+        padding: 0 $padding-s;
         display: flex;
         flex-direction: column;
         gap: $padding-s;
@@ -151,27 +172,16 @@
     }
 
     &__card {
-        cursor: move;
+        cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: $border-radius-md;
 
         &:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-box);
         }
 
-        &.cdk-drag-preview {
-            transform: rotate(5deg);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transition: none;
-        }
 
-        &.cdk-drag-placeholder {
-            opacity: 0.4;
-        }
-
-        &.cdk-drag-animating {
-            transition: none;
-        }
     }
 
     &__card-content {

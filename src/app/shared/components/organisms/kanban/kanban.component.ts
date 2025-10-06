@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit, TrackByFunction } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit, TrackByFunction, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CardComponent } from '../../organisms/card/card.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
@@ -33,6 +33,8 @@ export interface KanbanColumn {
     encapsulation: ViewEncapsulation.None
 })
 export class KanbanComponent implements OnInit {
+    @ViewChild('kanbanBoard', { static: false }) kanbanBoard!: ElementRef<HTMLElement>;
+
     @Input() columns: KanbanColumn[] = [];
     @Input() allowAddCards: boolean = false;
     @Input() allowAddColumns: boolean = false;
@@ -67,6 +69,11 @@ export class KanbanComponent implements OnInit {
     isAddingColumn: boolean = false;
     editingColumnId: string | null = null;
     editingColumnTitle: string = '';
+
+    // Auto-scroll properties
+    private scrollSpeed = 50;
+    private scrollZone = 200; // pixels from edge to start scrolling
+    private scrollInterval: any = null;
 
     ngOnInit() {
         // Initialize with default columns if none provided
@@ -213,6 +220,45 @@ export class KanbanComponent implements OnInit {
 
     getConnectedDropLists(): string[] {
         return this.columns.map(column => column.id);
+    }
+
+    onDragMoved(event: CdkDragMove) {
+        if (!this.kanbanBoard) return;
+
+        const boardElement = this.kanbanBoard.nativeElement;
+        const boardRect = boardElement.getBoundingClientRect();
+        const mouseX = event.pointerPosition.x;
+
+        // Check if mouse is near the edges
+        const distanceFromLeft = mouseX - boardRect.left;
+        const distanceFromRight = boardRect.right - mouseX;
+
+        // Clear existing scroll interval
+        if (this.scrollInterval) {
+            clearInterval(this.scrollInterval);
+            this.scrollInterval = null;
+        }
+
+        // Start scrolling if mouse is in scroll zone
+        if (distanceFromLeft < this.scrollZone) {
+            // Scroll left
+            this.scrollInterval = setInterval(() => {
+                boardElement.scrollLeft -= this.scrollSpeed;
+            }, 16); // ~60fps
+        } else if (distanceFromRight < this.scrollZone) {
+            // Scroll right
+            this.scrollInterval = setInterval(() => {
+                boardElement.scrollLeft += this.scrollSpeed;
+            }, 16); // ~60fps
+        }
+    }
+
+    onDragEnded() {
+        // Stop scrolling when drag ends
+        if (this.scrollInterval) {
+            clearInterval(this.scrollInterval);
+            this.scrollInterval = null;
+        }
     }
 
     private generateId(): string {
