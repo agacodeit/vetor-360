@@ -7,8 +7,50 @@
 
         <p class="bold">Ainda não há solicitações cadastradas.</p>
 
-        <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20" (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
+        <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
+            (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
 
+    </div>
+</div>
+
+<div class="dashboard">
+    <div class="dashboard__content">
+        <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
+            (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
+            (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
+            (columnRenamed)="onColumnRenamed($event)">
+
+            <!-- Template customizado para os cards -->
+            <ng-template #cardTemplate let-card let-column="column">
+                <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">
+
+                    <div class="__card-header">
+                        <div class="d-flex align-items-center gap-4">
+                            <ds-icon icon="fa-solid fa-ticket" fontSize="24px" />
+                            <h4>{{ card.title }}</h4>
+                        </div>
+                        <ds-icon icon="fa-solid fa-arrow-right-to-bracket" fontSize="24px" />
+                    </div>
+
+                    <div class="__card-description">
+                        <p>{{ card.client }}</p>
+                        <p>{{ card.cnpj }}</p>
+
+                        <hr>
+
+                        <p>FGI</p>
+                        <p>R$ 800.000,00</p>
+                        <div class="card-icon">
+                            <ds-icon icon="fa-solid fa-file-lines" fontSize="24px" />
+                            <p>0/6 Documentos</p>
+                        </div>
+
+                    </div>
+
+                </ds-card>
+            </ng-template>
+
+        </ds-kanban>
     </div>
 </div>
 
@@ -16,7 +58,11 @@
 
     <form [formGroup]="form">
         <p>Produto</p>
-        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..." formControlName="purpose" [required]="true" [invalid]="(form.get('purpose')?.invalid ?? false) && (form.get('purpose')?.touched ?? false)" errorMessage="Finalidade é obrigatória" helperText="Máximo de 500 caracteres" [fullWidth]="true" [maxlength]="500" resize="vertical"> </ds-textarea>
+        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
+            formControlName="purpose" [required]="true"
+            [invalid]="(form.get('purpose')?.invalid ?? false) && (form.get('purpose')?.touched ?? false)"
+            errorMessage="Finalidade é obrigatória" helperText="Máximo de 500 caracteres" [fullWidth]="true"
+            [maxlength]="500" resize="vertical"> </ds-textarea>
     </form>
 
-  </ds-modal>
+</ds-modal>

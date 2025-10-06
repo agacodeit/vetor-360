@@ -16,7 +16,7 @@ export class CardComponent implements AfterContentInit {
   @Input() clickable: boolean = false;
   @Input() padding: string = '';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
-  @Input() variant: 'default' | 'outlined' | 'filled' = 'filled';
+  @Input() variant: 'default' | 'outlined' | 'filled' | 'bordered' = 'filled';
   @Input() borderRadius: 'sm' | 'md' | 'lg' | 'xl' = 'md';
   @Input() maxWidth: string = '';
 

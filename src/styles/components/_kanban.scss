@@ -1,0 +1,417 @@
+// Kanban Component Styles
+// This file contains the main styles for the kanban component
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+@use '../themes/default' as *;
+
+.kanban {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: calc(100vh - 100px);
+    background: var(--secondary-white);
+    border-radius: $border-radius-md;
+    padding: $padding-md;
+    gap: $padding-md;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: $padding-s;
+        border-bottom: 1px solid var(--stroke);
+    }
+
+    &__title {
+        font-size: $font-xl;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        margin: 0;
+    }
+
+    &__actions {
+        display: flex;
+        gap: $padding-xs;
+    }
+
+    &__board {
+        display: flex;
+        gap: $padding-ssm;
+        overflow-x: auto;
+        flex: 1;
+        padding-bottom: $padding-xs;
+        scroll-behavior: smooth;
+    }
+
+    &__column {
+        min-width: 300px;
+        max-width: 300px;
+        background: var(--kanban-column-bg);
+        border-radius: $border-radius-xxb;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: visible;
+
+        &.cdk-drop-list-dragging {
+            .kanban__card {
+                transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+    }
+
+    &__column-header {
+        padding: $padding-sm $padding-s 0 $padding-s;
+        border-bottom: 2px solid var(--primary-blue);
+        background: var(--kanban-header-bg);
+        border-radius: $border-radius-md $border-radius-md 0 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: $padding-xs;
+    }
+
+    &__column-title {
+        min-width: 0;
+    }
+
+    &__column-title-text {
+        font-family: $font-primary;
+        font-size: $font-md;
+        font-weight: $font-weight-bold;
+        color: var(--black);
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--editable {
+            cursor: pointer;
+            padding: $padding-xxs;
+            border-radius: $border-radius-xs;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: var(--primary-blue-hover-light);
+            }
+        }
+    }
+
+    &__column-edit-input {
+        font-family: $font-primary;
+        font-size: $font-md;
+        font-weight: $font-weight-bold;
+        color: var(--primary-green);
+        border: 1px solid var(--primary-blue);
+        border-radius: $border-radius-xs;
+        padding: $padding-xxs;
+        width: 100%;
+        background: var(--white);
+        outline: none;
+
+        &:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 2px var(--primary-green-hover-light);
+        }
+    }
+
+    &__column-info {
+        display: flex;
+        align-items: center;
+        gap: $padding-xs;
+    }
+
+    &__column-count {
+        font-family: $font-primary;
+        font-size: $font-sm;
+        font-weight: $font-weight-md;
+        color: var(--white);
+        background: var(--kanban-count-bg);
+        border-radius: $border-radius-max;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    &__column-actions {
+        display: flex;
+        gap: $padding-xxs;
+    }
+
+    &__column-content {
+        padding: $padding-ssm;
+        display: flex;
+        flex-direction: column;
+        gap: $padding-s;
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    &__card {
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: $border-radius-md;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-box);
+        }
+
+        hr {
+            margin: 16px 0;
+        }
+
+        .__card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: $padding-xs;
+            margin-bottom: 16px;
+
+            h4 {
+                font-size: $font-xl;
+                font-weight: $font-weight-md;
+            }
+        }
+
+        .__card-description {
+            p {
+                font-size: $font-md;
+            }
+
+            .card-icon {
+                margin-top: 4px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+        }
+    }
+
+    &__card-content {
+        width: 100%;
+        margin: 0;
+    }
+
+    &__card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: $padding-xs;
+    }
+
+    &__card-title {
+        font-family: $font-primary;
+        font-size: $font-sm;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        margin: 0;
+        flex: 1;
+        line-height: 1.3;
+    }
+
+    &__card-priority {
+        width: $size-xxl; // 12px
+        height: $size-xxl; // 12px
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-left: $padding-xs;
+    }
+
+    &__card-description {
+        font-family: $font-primary;
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        color: var(--label);
+        margin: 0 0 $padding-xs 0;
+        line-height: 1.4;
+    }
+
+    &__card-assignee,
+    &__card-due-date {
+        display: flex;
+        align-items: center;
+        gap: $padding-xxs;
+        font-family: $font-primary;
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        color: var(--label);
+        margin-bottom: $padding-xxs;
+    }
+
+    &__card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $padding-xxs;
+        margin-bottom: $padding-xs;
+    }
+
+    &__card-tag {
+        font-family: $font-primary;
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        color: var(--primary-blue);
+        background: var(--primary-blue-hover-light);
+        padding: $padding-xxs $padding-xs;
+        border-radius: $border-radius-xs;
+    }
+
+    &__card-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $padding-xxs;
+        margin-top: $padding-xs;
+        padding-top: $padding-xs;
+        border-top: 1px solid var(--stroke);
+    }
+
+    &__add-card-btn {
+        margin-top: $padding-xs;
+    }
+
+    // Empty column styles
+    &__column:has(.kanban__column-content:empty) {
+        .kanban__column-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .kanban__column-content::before {
+            content: "Drop cards here";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--label);
+            font-family: $font-primary;
+            font-size: $font-sm;
+            font-weight: $font-weight-md;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 1;
+        }
+    }
+
+    &__max-capacity {
+        display: flex;
+        align-items: center;
+        gap: $padding-xs;
+        padding: $padding-s;
+        background: var(--primary-blue-hover-light);
+        border-radius: $border-radius-xs;
+        font-family: $font-primary;
+        font-size: $font-xs;
+        font-weight: $font-weight-md;
+        color: var(--primary-blue);
+        text-align: center;
+        justify-content: center;
+    }
+
+    &__add-column {
+        min-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
+        max-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
+    }
+
+    &__add-column-form {
+        background: var(--white);
+        border: 2px dashed var(--stroke);
+        border-radius: $border-radius-md;
+        padding: $padding-md;
+        display: flex;
+        flex-direction: column;
+        gap: $padding-s;
+        height: fit-content;
+    }
+
+    &__add-column-input {
+        font-family: $font-primary;
+        font-size: $font-md;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        border: 1px solid var(--stroke);
+        border-radius: $border-radius-xs;
+        padding: $padding-s;
+        background: var(--white);
+        outline: none;
+        width: 100%;
+
+        &:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px var(--primary-blue-hover-light);
+        }
+
+        &::placeholder {
+            color: var(--placeholder);
+        }
+    }
+
+    &__add-column-actions {
+        display: flex;
+        gap: $padding-xs;
+        justify-content: flex-end;
+    }
+}
+
+// Drag and drop styles
+.cdk-drop-list {
+    min-height: 100%;
+    position: relative;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: $border-radius-md;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.4;
+    background: var(--primary-blue-hover-light);
+    border: 2px dashed var(--primary-blue);
+    border-radius: $border-radius-md;
+    min-height: 50px;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-receiving {
+    background: var(--primary-green-hover-light);
+}
+
+.cdk-drop-list-dragging {
+    .kanban__card:not(.cdk-drag-placeholder) {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .kanban {
+        padding: $padding-s;
+
+        &__board {
+            flex-direction: column;
+            gap: $padding-s;
+        }
+
+        &__column {
+            min-width: 100%;
+            max-width: 100%;
+        }
+
+        &__add-column {
+            min-width: 100%;
+            max-width: 100%;
+        }
+    }
+}
