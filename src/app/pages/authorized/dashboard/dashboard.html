@@ -13,7 +13,10 @@
 </div>
 
 <ds-modal modalId="create-solicitation" (modalClosed)="onModalClosed($event)">
-    <p>Produto</p>
-    <ds-select label="Status" placeholder="Selecione o status" [options]="statusOptions" formControlName="status"> </ds-select>
+
+    <form [formGroup]="form">
+        <p>Produto</p>
+        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..." formControlName="purpose" [required]="true" [invalid]="(form.get('purpose')?.invalid ?? false) && (form.get('purpose')?.touched ?? false)" errorMessage="Finalidade é obrigatória" helperText="Máximo de 500 caracteres" [fullWidth]="true" [maxlength]="500" resize="vertical"> </ds-textarea>
+    </form>
 
   </ds-modal>
