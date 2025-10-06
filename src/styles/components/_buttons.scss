@@ -32,7 +32,7 @@
     }
 
     &.fill {
-        background-color: var(--secondary);
+        background-color: var(--primary-medium);
         color: white;
 
 
@@ -41,11 +41,11 @@
         }
 
         &.primary-dark {
-            background-color: var(--secondary);
+            background-color: var(--primary-dark);
 
 
             i {
-                color: var(--secondary);
+                color: var(--primary-dark);
             }
         }
 
@@ -76,13 +76,13 @@
     }
 
     &.outline {
-        color: var(--secondary);
-        border: 1px solid var(--secondary);
+        color: var(--primary-medium);
+        border: 1px solid var(--primary-medium);
         background-color: var(--white);
 
 
         i {
-            color: var(--secondary);
+            color: var(--primary-medium);
         }
 
         &.primary-dark {
@@ -105,10 +105,10 @@
     &.ghost {
         background-color: transparent;
         border: none;
-        color: var(--secondary);
+        color: var(--primary-medium);
 
         i {
-            color: var(--secondary);
+            color: var(--primary-medium);
         }
 
         &.primary-dark {

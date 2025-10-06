@@ -1,1 +1,24 @@
-<p>signup works!</p>
+<div class="container">
+    <ds-card size="md" maxWidth="450" [clickable]="false">
+
+        <div class="header">
+            <div class="logo-brand">
+                <img height="150" src="assets/vetor-logo.png" alt="">
+                <h2>Cadastre-se</h2>
+            </div>
+
+            <p>Crie sua conta para acessar a plataforma e conectar-se às melhores soluções financeiras</p>
+        </div>
+
+        <div class="input-box d-flex flex-column gap-16">
+            <ds-input label="Nome completo" placeholder="Digite seu nome completo" [fullWidth]="true"> </ds-input>
+            <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"> </ds-input>
+            <ds-input label="Senha" placeholder="******" type="senha" [fullWidth]="true" icon="fa-light fa-eye"
+                iconPosition="right"> </ds-input>
+        </div>
+
+        <ds-button label="Cadastrar" (onClickEmitter)="signup()" [fullWidth]="true" [rounded]="true" />
+        <ds-button class="ghost-btn" label="Voltar ao Login" (onClickEmitter)="goToLogin()" [fullWidth]="true"
+            variant="ghost" [rounded]="true" />
+    </ds-card>
+</div>

@@ -4,24 +4,26 @@ import { ButtonComponent, CardComponent, InputComponent } from '../../../shared'
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-signup',
+  selector: 'app-forgot-password',
+  standalone: true,
   imports: [
     CommonModule,
     CardComponent,
     InputComponent,
-    ButtonComponent],
-  standalone: true,
-  templateUrl: './signup.html',
-  styleUrl: './signup.scss'
+    ButtonComponent
+  ],
+  templateUrl: './forgot-password.component.html',
+  styleUrl: './forgot-password.component.scss'
 })
-export class Signup {
+export class ForgotPasswordComponent {
+
   router = inject(Router);
 
   goToLogin() {
     this.router.navigate(['/unauthorized/login']);
   }
 
-  signup() {
+  confirm() {
 
   }
 }

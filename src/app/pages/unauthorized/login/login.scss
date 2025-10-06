@@ -19,12 +19,22 @@ hr {
     margin: 24px 0;
 }
 
+.forgot-password {
+    font-size: 14px;
+    color: var(--primary-dark);
+    text-decoration: underline;
+    text-align: end;
+    cursor: pointer;
+}
+
 .header {
     .logo-brand {
         display: flex;
         align-items: center;
         gap: 20px;
+        justify-content: center;
     }
+
     p {
         margin-top: 24px;
         color: var(--gray-medium);
