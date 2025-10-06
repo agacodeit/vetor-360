@@ -42,25 +42,6 @@
         flex: 1;
         padding-bottom: $padding-xs;
         scroll-behavior: smooth;
-        scrollbar-width: thin;
-        scrollbar-color: var(--stroke) transparent;
-
-        &::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: var(--stroke);
-            border-radius: $border-radius-xs;
-        }
-
-        &::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-blue);
-        }
     }
 
     &__column {
