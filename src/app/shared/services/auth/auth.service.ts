@@ -22,7 +22,7 @@ export interface SignupRequest {
     email: string;
     password: string;
     name: string;
-    confirmPassword: string;
+    cellphone: string;
 }
 
 export interface SignupResponse {
@@ -72,7 +72,7 @@ export class AuthService {
     signup(userData: SignupRequest): Observable<SignupResponse> {
         const headers = this.getDefaultHeaders();
 
-        return this.http.post<SignupResponse>(`${this.API_BASE_URL}/auth/signup`, userData, { headers });
+        return this.http.post<SignupResponse>(`${this.API_BASE_URL}/user/create`, userData, { headers });
     }
 
     /**

@@ -1,24 +1,64 @@
-<div class="container">
-    <ds-card size="md" maxWidth="450" [clickable]="false">
+<main class="signup">
+    <section class="signup__container">
+        <ds-card size="md" maxWidth="450" [clickable]="false">
 
-        <div class="header">
-            <div class="logo-brand">
-                <img height="150" src="assets/vetor-logo.png" alt="">
-                <h2>Cadastre-se</h2>
-            </div>
+            <header class="signup__header">
+                <div class="signup__logo">
+                    <img height="150px" width="auto" src="assets/logo/vetor-logo-1067x600.jpg" alt="Vetor 360 Logo"
+                        loading="lazy" decoding="async">
+                </div>
+                <h1 class="signup__title">Cadastre-se</h1>
+                <p class="signup__description">Crie sua conta para acessar a plataforma e conectar-se às melhores
+                    soluções financeiras</p>
+            </header>
 
-            <p>Crie sua conta para acessar a platafo rma e conectar-se às melhores soluções financeiras</p>
-        </div>
+            <form [formGroup]="signupForm" (ngSubmit)="signup()" class="signup__form">
+                <fieldset class="signup__fieldset">
+                    <legend class="signup__legend">Dados pessoais</legend>
 
-        <div class="input-box d-flex flex-column gap-16">
-            <ds-input label="Nome completo" placeholder="Digite seu nome completo" [fullWidth]="true"> </ds-input>
-            <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"> </ds-input>
-            <ds-input label="Senha" placeholder="******" type="senha" [fullWidth]="true" icon="fa-light fa-eye"
-                iconPosition="right"> </ds-input>
-        </div>
+                    <div class="signup__inputs">
+                        <ds-input label="Nome completo" placeholder="Digite seu nome completo" [fullWidth]="true"
+                            formControlName="name" [invalid]="!!(name?.invalid && name?.touched)"
+                            [errorMessage]="name?.invalid && name?.touched ? 'Nome é obrigatório e deve ter pelo menos 2 caracteres' : ''">
+                        </ds-input>
 
-        <ds-button label="Cadastrar" (onClickEmitter)="signup()" [fullWidth]="true" [rounded]="true" />
-        <ds-button class="ghost-btn" label="Voltar ao Login" (onClickEmitter)="goToLogin()" [fullWidth]="true"
-            variant="ghost" [rounded]="true" />
-    </ds-card>
-</div>
+                        <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"
+                            formControlName="email" [invalid]="!!(email?.invalid && email?.touched)"
+                            [errorMessage]="email?.invalid && email?.touched ? 'E-mail é obrigatório e deve ser válido' : ''">
+                        </ds-input>
+
+                        <ds-input label="Celular" placeholder="(11) 99999-9999" [fullWidth]="true"
+                            formControlName="cellphone" [invalid]="!!(cellphone?.invalid && cellphone?.touched)"
+                            [errorMessage]="cellphone?.invalid && cellphone?.touched ? 'Celular é obrigatório no formato (11) 99999-9999' : ''">
+                        </ds-input>
+
+                        <ds-input label="Senha" placeholder="******" type="password" [fullWidth]="true"
+                            icon="fa-light fa-eye" iconPosition="right" formControlName="password"
+                            [invalid]="!!(password?.invalid && password?.touched)"
+                            [errorMessage]="password?.invalid && password?.touched ? 'Senha é obrigatória e deve ter pelo menos 6 caracteres' : ''">
+                        </ds-input>
+
+                    </div>
+                </fieldset>
+
+                <div class="signup__actions">
+                    <ds-button label="Cadastrar" type="submit" [fullWidth]="true" [rounded]="true"
+                        [disabled]="isLoading" [isLoading]="isLoading">
+                    </ds-button>
+
+                    <ds-button label="Voltar ao Login" (onClickEmitter)="goToLogin()" [fullWidth]="true" variant="ghost"
+                        [rounded]="true" [disabled]="isLoading">
+                    </ds-button>
+                </div>
+
+                <div *ngIf="errorMessage" class="signup__error" role="alert">
+                    {{ errorMessage }}
+                </div>
+
+                <div *ngIf="successMessage" class="signup__success" role="status">
+                    {{ successMessage }}
+                </div>
+            </form>
+        </ds-card>
+    </section>
+</main>
