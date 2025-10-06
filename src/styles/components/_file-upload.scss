@@ -18,7 +18,7 @@
 
         &.required::after {
             content: " *";
-            color: var(--primary-purple);
+            color: var(--tertiary);
         }
     }
 
@@ -26,7 +26,7 @@
     .upload-area {
         border: 2px dashed var(--stroke);
         border-radius: $border-radius-md;
-        background-color: var(--secondary-white);
+        background-color: var(--white);
         padding: $spacing-xxl;
         text-align: center;
         cursor: pointer;
@@ -37,19 +37,19 @@
         justify-content: center;
 
         &:hover:not(.disabled) {
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
             background-color: rgba($primary-medium, 0.05);
             transform: translateY(-2px);
         }
 
         &.drag-over {
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
             background-color: rgba($primary-medium, 0.1);
             border-style: solid;
         }
 
         &.processing {
-            border-color: var(--primary-green);
+            border-color: var(--primary-dark);
             background-color: rgba($primary-medium, 0.05);
             cursor: default;
         }
@@ -73,7 +73,7 @@
         gap: $spacing-sm;
 
         .upload-title {
-            color: var(--primary-blue);
+            color: var(--secondary);
             font-size: $font-md;
             font-weight: $font-weight-bold;
             margin: 0;
@@ -81,7 +81,7 @@
         }
 
         .upload-subtitle {
-            color: var(--primary-green);
+            color: var(--primary-dark);
             font-size: $font-sm;
             font-weight: $font-weight-md;
             margin: 0;
@@ -106,7 +106,7 @@
             margin-bottom: $spacing-md;
 
             h4 {
-                color: var(--primary-blue);
+                color: var(--secondary);
                 font-size: $font-sm;
                 font-weight: $font-weight-bold;
                 margin: 0;
@@ -118,7 +118,7 @@
                 gap: $spacing-xs;
                 background: none;
                 border: none;
-                color: var(--primary-purple);
+                color: var(--tertiary);
                 cursor: pointer;
                 font-size: $font-xs;
                 font-weight: $font-weight-md;
@@ -153,7 +153,7 @@
             transition: all 0.2s ease;
 
             &:hover {
-                border-color: var(--primary-green);
+                border-color: var(--primary-dark);
                 transform: translateY(-2px);
                 box-shadow: 0 4px 12px rgba($primary-dark, 0.1);
 
@@ -195,7 +195,7 @@
                 transition: all 0.2s ease;
 
                 &:hover:not(:disabled) {
-                    background-color: var(--primary-purple);
+                    background-color: var(--tertiary);
                     transform: scale(1.1);
                 }
 
@@ -213,7 +213,7 @@
             .file-name {
                 font-size: $font-xs;
                 font-weight: $font-weight-bold;
-                color: var(--primary-blue);
+                color: var(--secondary);
                 margin: 0 0 $spacing-xs 0;
                 white-space: nowrap;
                 overflow: hidden;

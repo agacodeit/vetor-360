@@ -64,11 +64,11 @@
 
     &:hover:not(:disabled) {
         background-color: rgba($primary-medium, 0.05);
-        color: var(--primary-green);
+        color: var(--primary-dark);
     }
 
     &.active {
-        color: var(--primary-blue);
+        color: var(--secondary);
         font-weight: $font-weight-bold; // 500
         background-color: rgba($primary-dark, 0.05);
     }
@@ -85,7 +85,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--primary-green);
+        outline: 2px solid var(--primary-dark);
         outline-offset: 2px;
     }
 }
@@ -98,7 +98,7 @@
     line-height: 1;
 
     .ds-tab-button.active & {
-        color: var(--primary-blue);
+        color: var(--secondary);
     }
 }
 
@@ -115,14 +115,14 @@
     height: 20px; // Usando valor direto
     padding: 0 $spacing-xs; // 0 4px
     border-radius: $border-radius-max; // 99px
-    background-color: var(--primary-purple);
+    background-color: var(--tertiary);
     color: var(--white);
     font-size: $font-xs; // 12px
     font-weight: $font-weight-bold; // 500
     line-height: 1;
 
     .ds-tab-button.active & {
-        background-color: var(--primary-blue);
+        background-color: var(--secondary);
     }
 }
 
@@ -134,7 +134,7 @@
     bottom: 0;
     left: 0;
     height: 3px; // Usando valor direto
-    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+    background: linear-gradient(90deg, var(--secondary) 0%, var(--primary-dark) 100%);
     border-radius: $border-radius-xs $border-radius-xs 0 0; // Usando valores diretos
     transition: transform 0.3s ease;
     transform-origin: left center;
@@ -222,7 +222,7 @@
         width: 3px; // Usando valor direto
         height: 0;
         border-radius: 0 $border-radius-xs $border-radius-xs 0; // Usando valores diretos
-        background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+        background: linear-gradient(180deg, var(--secondary) 0%, var(--primary-dark) 100%);
     }
 
     .ds-tabs-content {
@@ -270,7 +270,7 @@
             width: 0;
             height: 3px; // Usando valor direto
             border-radius: $border-radius-xs $border-radius-xs 0 0; // Usando valores diretos
-            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--primary-dark) 100%);
         }
     }
 }

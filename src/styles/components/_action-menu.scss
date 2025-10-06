@@ -27,7 +27,7 @@
 
     &:hover {
         background-color: var(--neutral-100);
-        color: var(--primary-blue);
+        color: var(--secondary);
     }
 
     &:focus {
@@ -37,7 +37,7 @@
 
     &.open {
         background-color: var(--primary-light);
-        color: var(--primary-blue);
+        color: var(--secondary);
     }
 
     i {
