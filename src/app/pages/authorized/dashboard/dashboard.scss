@@ -33,3 +33,26 @@
         overflow: hidden;
     }
 }
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+    .welcome-msg {
+        padding: 0 360px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+
+        p {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: 500;
+        }
+    }
+}

@@ -10,6 +10,7 @@ import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent
     CardComponent,
     IconComponent
   ],
+  standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
