@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonComponent, TextareaComponent } from '../../../../shared';
+import { ButtonComponent, TextareaComponent, InputComponent, SelectComponent } from '../../../../shared';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -9,7 +9,9 @@ import { ButtonComponent, TextareaComponent } from '../../../../shared';
     CommonModule,
     ReactiveFormsModule,
     ButtonComponent,
-    TextareaComponent
+    TextareaComponent,
+    InputComponent,
+    SelectComponent
   ],
   standalone: true,
   templateUrl: './solicitation-modal.html',
@@ -24,33 +26,113 @@ export class SolicitationModal {
 
   constructor(private fb: FormBuilder) {
     this.solicitationForm = this.fb.group({
+      operationType: ['', [Validators.required]],
+      amount: ['', [Validators.required, Validators.min(1000)]],
+      currency: ['', [Validators.required]],
       purpose: ['', [Validators.required, Validators.maxLength(500)]],
-      clientName: ['', [Validators.required, Validators.minLength(2)]],
-      clientEmail: ['', [Validators.required, Validators.email]],
-      clientPhone: ['', [Validators.required]],
-      amount: ['', [Validators.required, Validators.min(1000)]]
+      businessActivity: ['', [Validators.required]],
+      country: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      term: ['', [Validators.required, Validators.min(1)]],
+      paymentMethod: ['', [Validators.required]],
+      gracePeriod: ['', [Validators.required, Validators.min(0)]]
     });
+  }
+
+  get operationType() {
+    return this.solicitationForm.get('operationType');
+  }
+
+  get amount() {
+    return this.solicitationForm.get('amount');
+  }
+
+  get currency() {
+    return this.solicitationForm.get('currency');
   }
 
   get purpose() {
     return this.solicitationForm.get('purpose');
   }
 
-  get clientName() {
-    return this.solicitationForm.get('clientName');
+  get businessActivity() {
+    return this.solicitationForm.get('businessActivity');
   }
 
-  get clientEmail() {
-    return this.solicitationForm.get('clientEmail');
+  get country() {
+    return this.solicitationForm.get('country');
   }
 
-  get clientPhone() {
-    return this.solicitationForm.get('clientPhone');
+  get state() {
+    return this.solicitationForm.get('state');
   }
 
-  get amount() {
-    return this.solicitationForm.get('amount');
+  get city() {
+    return this.solicitationForm.get('city');
   }
+
+  get term() {
+    return this.solicitationForm.get('term');
+  }
+
+  get paymentMethod() {
+    return this.solicitationForm.get('paymentMethod');
+  }
+
+  get gracePeriod() {
+    return this.solicitationForm.get('gracePeriod');
+  }
+
+  // Opções para os selects
+  operationTypeOptions = [
+    { value: 'capital-giro', label: 'Capital de Giro' },
+    { value: 'financiamento-internacional', label: 'Financiamento Internacional' }
+  ];
+
+  currencyOptions = [
+    { value: 'BRL', label: 'Real' },
+    { value: 'EUR', label: 'Euro' },
+    { value: 'USD', label: 'Dólar' }
+  ];
+
+  businessActivityOptions = [
+    { value: 'padeiro', label: 'Padeiro' },
+    { value: 'empreiteiro', label: 'Empreiteiro' },
+    { value: 'desenvolvedor', label: 'Desenvolvedor' },
+    { value: 'banqueiro', label: 'Banqueiro' }
+  ];
+
+  countryOptions = [
+    { value: 'brasil', label: 'Brasil' },
+    { value: 'portugal', label: 'Portugal' },
+    { value: 'argentina', label: 'Argentina' }
+  ];
+
+  stateOptions = [
+    { value: 'sp', label: 'São Paulo' },
+    { value: 'rj', label: 'Rio de Janeiro' },
+    { value: 'mg', label: 'Minas Gerais' },
+    { value: 'rs', label: 'Rio Grande do Sul' },
+    { value: 'pr', label: 'Paraná' },
+    { value: 'sc', label: 'Santa Catarina' }
+  ];
+
+  cityOptions = [
+    { value: 'sao-paulo', label: 'São Paulo' },
+    { value: 'rio-de-janeiro', label: 'Rio de Janeiro' },
+    { value: 'belo-horizonte', label: 'Belo Horizonte' },
+    { value: 'porto-alegre', label: 'Porto Alegre' },
+    { value: 'curitiba', label: 'Curitiba' },
+    { value: 'florianopolis', label: 'Florianópolis' }
+  ];
+
+  paymentMethodOptions = [
+    { value: 'mensal', label: 'Mensal' },
+    { value: 'trimestral', label: 'Trimestral' },
+    { value: 'semestral', label: 'Semestral' },
+    { value: 'anual', label: 'Anual' }
+  ];
 
   handleSubmit() {
     if (this.solicitationForm.valid) {
@@ -65,6 +147,11 @@ export class SolicitationModal {
     this.onClose.emit();
   }
 
+  handleIdentifyBestOperation() {
+    // Lógica para identificar melhor operação
+    console.log('Identificando melhor operação...');
+  }
+
   private markFormGroupTouched() {
     Object.keys(this.solicitationForm.controls).forEach(key => {
       const control = this.solicitationForm.get(key);
@@ -72,7 +159,4 @@ export class SolicitationModal {
     });
   }
 
-  handleIdentifyBestOperation() {
-
-  }
 }

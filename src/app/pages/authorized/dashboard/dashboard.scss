@@ -4,7 +4,6 @@
 
 .dashboard {
     padding: $padding-md;
-    height: 80vh;
     background: var(--secondary-white);
 
     &__header {
@@ -29,7 +28,7 @@
     }
 
     &__content {
-        height: calc(80vh - 24px);
+        height: calc(100vh - 24px);
         overflow: hidden;
     }
 

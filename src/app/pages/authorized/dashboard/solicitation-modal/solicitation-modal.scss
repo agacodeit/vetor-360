@@ -41,7 +41,6 @@
         font-size: $font-sm;
         font-weight: $font-weight-md;
         color: var(--label);
-        margin-bottom: $padding-md;
         padding: 0;
         flex-shrink: 0;
     }
@@ -54,6 +53,109 @@
         min-height: 0;
     }
 
+
+    // Grid system com CSS Grid
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "operation-type value-currency";
+        gap: $padding-md;
+    }
+
+    &__row-full {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $padding-md;
+    }
+
+    &__row-business-activity {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "business-activity";
+        gap: $padding-md;
+    }
+
+    &__row-grace-period {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "grace-period";
+        gap: $padding-md;
+    }
+
+    &__row-location {
+        display: grid;
+        grid-template-columns: 1fr 1.33fr 1.33fr;
+        grid-template-areas:
+            "country state city";
+        gap: $padding-md;
+    }
+
+    &__row-payment {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "term payment-method";
+        gap: $padding-md;
+
+    }
+
+    &__col {
+        display: flex;
+        flex-direction: column;
+
+        &--operation-type {
+            grid-area: operation-type;
+        }
+
+        &--value-currency {
+            grid-area: value-currency;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: $padding-sm;
+        }
+
+        &--business-activity {
+            grid-area: business-activity;
+        }
+
+        &--country {
+            grid-area: country;
+        }
+
+        &--state {
+            grid-area: state;
+        }
+
+        &--city {
+            grid-area: city;
+        }
+
+        &--term {
+            grid-area: term;
+        }
+
+        &--payment-method {
+            grid-area: payment-method;
+        }
+
+        &--grace-period {
+            grid-area: grace-period;
+        }
+    }
+
+    &__finality {
+        width: 100%;
+    }
+
+    &__identify-button {
+        display: flex;
+        justify-content: center;
+        margin: $padding-md 0;
+    }
+
     &__actions {
         display: flex;
         gap: $padding-md;
@@ -62,37 +164,32 @@
     }
 }
 
-// Estilos específicos para o modal de solicitação
-.solicitation-finality {
-    width: 100%;
-    margin-bottom: $padding-md;
+// Estilos específicos para garantir 100% de largura nos componentes
+.solicitation-modal {
 
-    // Garantir que o textarea ocupe 100% da largura
+    // Garantir que todos os componentes ocupem 100% da largura
     ::ng-deep .form-group {
         width: 100%;
 
-        .textarea-container {
+        .textarea-container,
+        .input-container,
+        .select-container {
             width: 100%;
 
-            .textarea-field {
+            .textarea-field,
+            .input-field,
+            .select-field {
                 width: 100%;
             }
         }
     }
-}
 
-// Botão "Identificar melhor operação" centralizado
-.solicitation-modal {
+    // Garantir que as colunas de grid ocupem 100% da área
+    &__col {
 
-    // Estilo para o botão que não está nas actions
-    ds-button:not(.solicitation-modal__actions ds-button) {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-
-        ::ng-deep .btn {
-            width: auto !important;
-            min-width: 200px;
+        &--business-activity,
+        &--grace-period {
+            width: 100%;
         }
     }
 }
@@ -100,7 +197,6 @@
 // Responsive design
 @media (max-width: 768px) {
     .solicitation-modal {
-
         &__content {
             padding: $padding-md;
         }
@@ -110,16 +206,37 @@
             gap: $padding-sm;
         }
 
-        &__title {
-            font-size: $font-lg;
-        }
-
-        &__subtitle {
-            font-size: $font-sm;
-        }
-
         &__inputs {
             gap: $padding-sm;
+        }
+
+        &__row {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "operation-type"
+                "value-currency";
+        }
+
+        &__row-location {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "country"
+                "state"
+                "city";
+        }
+
+        &__row-payment {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "term"
+                "payment-method";
+        }
+
+        &__col {
+            &--value-currency {
+                grid-template-columns: 1fr;
+                gap: $padding-sm;
+            }
         }
     }
 }
