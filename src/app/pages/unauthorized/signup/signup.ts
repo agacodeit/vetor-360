@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ButtonComponent, CardComponent, InputComponent } from '../../../shared';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services';
+import { MaskDirective } from 'mask-directive';
 
 @Component({
   selector: 'app-signup',
@@ -13,6 +14,9 @@ import { AuthService } from '../../../shared/services';
     CardComponent,
     InputComponent,
     ButtonComponent
+  ],
+  providers: [
+    MaskDirective
   ],
   standalone: true,
   templateUrl: './signup.html',
@@ -56,15 +60,12 @@ export class Signup implements OnInit {
         cellphone,
         password
       }).subscribe({
-        next: (response) => {
+        next: () => {
           this.isLoading = false;
           this.successMessage = 'Conta criada com sucesso! Redirecionando para o login...';
-          console.log('Cadastro realizado com sucesso:', response);
-
           // Redireciona para login após 2 segundos
-          setTimeout(() => {
-            this.router.navigate(['/unauthorized/login']);
-          }, 2000);
+          this.router.navigate(['/unauthorized/login']);
+
         },
         error: (error) => {
           this.isLoading = false;

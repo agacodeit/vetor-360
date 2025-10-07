@@ -38,7 +38,7 @@ export interface SignupResponse {
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly API_BASE_URL = 'https://hml.acessebank.com.br/acessebankapi/api/v1';
+    private readonly API_BASE_URL = '/api/v1';
     private readonly STORAGE_KEY = 'authToken';
 
     private currentUserSubject = new BehaviorSubject<any>(null);
@@ -163,11 +163,7 @@ export class AuthService {
     private getDefaultHeaders(): HttpHeaders {
         return new HttpHeaders({
             'Content-Type': 'application/json',
-            'Accept': 'application/json, text/plain, */*',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-ch-ua': '"Google Chrome";v="141", "Not?A_Brand";v="8", "Chromium";v="141"',
-            'sec-ch-ua-mobile': '?0',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+            'Accept': 'application/json, text/plain, */*'
         });
     }
 
