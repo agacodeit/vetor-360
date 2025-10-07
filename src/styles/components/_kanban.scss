@@ -15,14 +15,6 @@
     padding: $padding-md;
     gap: $padding-md;
 
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: $padding-s;
-        border-bottom: 1px solid var(--stroke);
-    }
-
     &__title {
         font-size: $font-xl;
         font-weight: $font-weight-bold;

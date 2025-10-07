@@ -1,13 +1,4 @@
 <div class="kanban">
-    <div class="kanban__header">
-        <h2 class="kanban__title">Kanban Board</h2>
-        <div class="kanban__actions">
-            <ds-button *ngIf="allowAddColumns && columns.length < maxColumns" label="Add Column" variant="outline"
-                icon="add" (onClickEmitter)="isAddingColumn = true">
-            </ds-button>
-        </div>
-    </div>
-
     <div class="kanban__board" #kanbanBoard>
         <!-- Existing Columns -->
         <div *ngFor="let column of columns; trackBy: trackByColumnId" class="kanban__column" cdkDropList
