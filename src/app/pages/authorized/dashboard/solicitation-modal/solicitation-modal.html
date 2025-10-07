@@ -1,0 +1,38 @@
+<div class="solicitation-modal">
+    <div class="solicitation-modal__overlay" (click)="handleClose()"></div>
+
+    <div class="solicitation-modal__container">
+        <main class="solicitation-modal__content">
+            <form [formGroup]="solicitationForm" (ngSubmit)="handleSubmit()" class="solicitation-modal__form"
+                novalidate>
+                <fieldset class="solicitation-modal__fieldset">
+                    <legend class="solicitation-modal__legend">Dados da Solicitação</legend>
+
+                    <div class="solicitation-finality">
+                        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
+                            formControlName="purpose" [required]="true"
+                            [invalid]="!!(purpose?.invalid && purpose?.touched)" [errorMessage]="purpose?.invalid && purpose?.touched ? 
+                                (purpose?.errors?.['required'] ? 'Finalidade é obrigatória' : 
+                                 purpose?.errors?.['maxlength'] ? 'Máximo de 500 caracteres' : '') : ''"
+                            [fullWidth]="true" [maxlength]="500" resize="vertical">
+                        </ds-textarea>
+                    </div>
+                    <ds-button label="Identificar melhor operação" (onClickEmitter)="handleIdentifyBestOperation()"
+                        [disabled]="isLoading" />
+
+
+                    <div class="solicitation-modal__actions">
+                        <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
+                            [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                        </ds-button>
+
+                        <ds-button label="Criar Solicitação" type="submit" icon="fa-solid fa-plus" iconPosition="left"
+                            (onClickEmitter)="handleSubmit()" [fullWidth]="true" [rounded]="true"
+                            [isLoading]="isLoading" [disabled]="isLoading">
+                        </ds-button>
+                    </div>
+                </fieldset>
+            </form>
+        </main>
+    </div>
+</div>

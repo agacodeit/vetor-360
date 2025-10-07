@@ -20,6 +20,7 @@ export class ButtonComponent {
   @Input() isLoading: boolean = false;
   @Input() disabled: boolean = false;
   @Input() type: 'button' | 'submit' = 'button';
+  @Input() iconPosition: 'left' | 'right' = 'left';
 
   @Output() onClickEmitter = new EventEmitter();
 

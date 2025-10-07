@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
-import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent, ButtonComponent } from '../../../shared/components';
-import { ModalComponent, ModalService, SelectOption, TextareaComponent } from '../../../shared';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalComponent, ModalService, SelectOption } from '../../../shared';
+import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
+import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,8 +16,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Vali
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,
-    TextareaComponent,
-    ButtonComponent
+    ButtonComponent,
+    SolicitationModal
   ],
   providers: [
     NgModel
@@ -225,7 +226,7 @@ export class Dashboard implements OnInit {
       id: "create-solicitation",
       title: "Nova Solicitação",
       subtitle: "Informe os dados do produto e do cliente",
-      size: "md",
+      size: "lg",
       showHeader: true,
       showCloseButton: true,
       closeOnBackdropClick: true,

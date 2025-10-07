@@ -2,10 +2,16 @@
     'width': fullWidth ? '100%' : 'fit-content',
     'white-space': 'nowrap'
 }" [ngClass]="{'rounded': rounded}" (click)="emitAction()">
-    @if(!isLoading){
+    @if (!isLoading) {
+    @if (icon && iconPosition === 'left') {
     <i class="{{icon}}"></i>
-    } @else {
-    <ds-spinner size="12px" variant="fill" color="primary"></ds-spinner>
     }
     {{label}}
+    @if (icon && iconPosition === 'right') {
+    <i class="{{icon}}"></i>
+    }
+    } @else {
+    <ds-spinner size="12px" variant="fill" color="primary"></ds-spinner>
+    {{label}}
+    }
 </button>

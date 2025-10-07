@@ -64,15 +64,7 @@
 
 @if(isModalOpen) {
 <ds-modal modalId="create-solicitation" (modalClosed)="onModalClosed($event)">
-
-    <form [formGroup]="form">
-        <p>Produto</p>
-        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
-            formControlName="purpose" [required]="true"
-            [invalid]="(form.get('purpose')?.invalid ?? false) && (form.get('purpose')?.touched ?? false)"
-            errorMessage="Finalidade é obrigatória" helperText="Máximo de 500 caracteres" [fullWidth]="true"
-            [maxlength]="500" resize="vertical"> </ds-textarea>
-    </form>
-
+    <app-solicitation-modal (onClose)="onModalClosed($event)"
+        (onSubmit)="onModalClosed($event)"></app-solicitation-modal>
 </ds-modal>
 }
