@@ -1,24 +1,52 @@
-<div class="container">
-    <ds-card size="md" maxWidth="450" [clickable]="false">
+<main class="login">
+    <section class="login__container">
+        <ds-card size="md" maxWidth="450" [clickable]="false">
 
-        <div class="header">
-            <div class="logo-brand">
-                <img height="150" src="assets/vetor-logo.png" alt="">
-            </div>
+            <header class="login__header">
+                <div class="login__logo">
+                    <img height="150px" width="auto" src="assets/logo/vetor-logo-1067x600.jpg" alt="Vetor 360 Logo"
+                        loading="lazy" decoding="async">
+                </div>
+                <p class="login__description">Acesse a plataforma e conecte clientes às melhores soluções financeiras
+                </p>
+            </header>
 
-            <p>Acesse a plataforma e conecte clientes às melhores soluções financeiras</p>
-        </div>
+            <form [formGroup]="loginForm" (ngSubmit)="login()" class="login__form">
+                <fieldset class="login__fieldset">
+                    <legend class="login__legend">Dados de acesso</legend>
 
-        <div class="input-box d-flex flex-column gap-16">
-            <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"> </ds-input>
-            <ds-input label="Senha" placeholder="******" type="senha" [fullWidth]="true" icon="fa-light fa-eye"
-                iconPosition="right"> </ds-input>
-            <p (click)="forgotPassword()" class="forgot-password">Esqueceu a senha?</p>
-        </div>
-       
-        <ds-button label="Entrar" (onClickEmitter)="login()" [fullWidth]="true" [rounded]="true" />
-        <ds-button class="outline-btn" label="Cadastre-se" (onClickEmitter)="signup()" [fullWidth]="true"
-            variant="outline" [rounded]="true" />
-       
-    </ds-card>
-</div>
+                    <div class="login__inputs">
+                        <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"
+                            formControlName="email" [invalid]="!!(email?.invalid && email?.touched)"
+                            [errorMessage]="email?.invalid && email?.touched ? 'E-mail é obrigatório e deve ser válido' : ''">
+                        </ds-input>
+
+                        <ds-input label="Senha" placeholder="******" type="password" [fullWidth]="true"
+                            icon="fa-light fa-eye" iconPosition="right" formControlName="password"
+                            [invalid]="!!(password?.invalid && password?.touched)"
+                            [errorMessage]="password?.invalid && password?.touched ? 'Senha é obrigatória e deve ter pelo menos 6 caracteres' : ''">
+                        </ds-input>
+
+                        <button type="button" (click)="forgotPassword()" class="login__forgot-password">
+                            Esqueceu a senha?
+                        </button>
+                    </div>
+                </fieldset>
+
+                <div class="login__actions">
+                    <ds-button label="Entrar" type="submit" [fullWidth]="true" [rounded]="true" [disabled]="isLoading"
+                        [isLoading]="isLoading">
+                    </ds-button>
+
+                    <ds-button label="Cadastre-se" (onClickEmitter)="signup()" [fullWidth]="true" variant="outline"
+                        [rounded]="true" [disabled]="isLoading">
+                    </ds-button>
+                </div>
+
+                <div *ngIf="errorMessage" class="login__error" role="alert">
+                    {{ errorMessage }}
+                </div>
+            </form>
+        </ds-card>
+    </section>
+</main>

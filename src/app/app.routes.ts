@@ -32,6 +32,7 @@ export const routes: Routes = [
     {
         path: 'authorized',
         component: Authorized,
+        canActivate: [authGuard],
         children: [
             {
                 path: 'dashboard',
