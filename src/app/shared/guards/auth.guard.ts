@@ -6,14 +6,13 @@ export const authGuard: CanActivateFn = (route, state) => {
 
     // Verificar se existe token no localStorage
     const token = localStorage.getItem('authToken');
-
-    if (token) {
+    if (state.url === '/' && token) {
         // Se tem token, redirecionar para dashboard
         router.navigate(['/authorized/dashboard']);
         return false; // Impede a navegação para a rota atual
-    } else {
+    } else if (!token) {
         // Se não tem token, redirecionar para login
         router.navigate(['/unauthorized/login']);
         return false; // Impede a navegação para a rota atual
-    }
+    } else return true;
 };

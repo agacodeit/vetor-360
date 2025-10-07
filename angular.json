@@ -65,7 +65,8 @@
               "buildTarget": "vetor-360:build:production"
             },
             "development": {
-              "buildTarget": "vetor-360:build:development"
+              "buildTarget": "vetor-360:build:development",
+              "proxyConfig": "proxy.conf.js"
             }
           },
           "defaultConfiguration": "development"
