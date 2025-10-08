@@ -4,7 +4,7 @@
 
 .dashboard {
     padding: $padding-md;
-    background: var(--secondary-white);
+    background: var(--background);
 
     &__header {
         margin-bottom: $padding-md;
@@ -23,8 +23,9 @@
         font-family: $font-primary;
         font-size: $font-md;
         font-weight: $font-weight-md;
-        color: var(--label);
+        color: var(--gray-dark);
         margin: 0;
+        line-height: 1.3;
     }
 
     &__content {

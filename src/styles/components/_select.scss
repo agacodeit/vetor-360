@@ -63,7 +63,7 @@
         .select-field {
             width: 100%;
             min-height: 44px;
-            padding: $padding-xsm $padding-xs $padding-xsm $padding-sm;
+            padding: $padding-s;
             border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
             background-color: inherit;
@@ -242,7 +242,7 @@
 
             .search-container {
                 position: relative;
-                padding: $padding-xs;
+                padding: $padding-s;
                 border-bottom: 1px solid var(--stroke);
 
                 .search-input {
