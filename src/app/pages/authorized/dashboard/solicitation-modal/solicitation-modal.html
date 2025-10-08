@@ -20,13 +20,13 @@
 
 
                     <div class="solicitation-modal__identify-button">
-                        <ds-button label="Identificar melhor operação" icon="fa-solid fa-arrow-right-to-bracket"
-                            iconPosition="right" (onClickEmitter)="handleIdentifyBestOperation()"
-                            [disabled]="isLoading" />
+                        <ds-button label="Identificar melhor operação" [rounded]="true"
+                            icon="fa-solid fa-arrow-right-to-bracket" iconPosition="right"
+                            (onClickEmitter)="handleIdentifyBestOperation()" [disabled]="isLoading" />
                     </div>
 
 
-                    <div class="solicitation-modal__inputs">
+                    <div class="solicitation-modal__inputs" *ngIf="showSolicitationForm">
                         <div class="solicitation-modal__row">
                             <div class="solicitation-modal__col solicitation-modal__col--operation-type">
                                 <ds-select label="Tipo de Operação" placeholder="Selecione o tipo de operação"
@@ -127,7 +127,7 @@
                         </div>
                     </div>
 
-                    <div class="solicitation-modal__actions">
+                    <div class="solicitation-modal__actions" *ngIf="showSolicitationForm">
                         <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
                             [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
                         </ds-button>

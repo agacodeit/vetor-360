@@ -23,6 +23,7 @@ export class SolicitationModal {
 
   solicitationForm: FormGroup;
   isLoading = false;
+  showSolicitationForm: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.solicitationForm = this.fb.group({
@@ -149,6 +150,7 @@ export class SolicitationModal {
 
   handleIdentifyBestOperation() {
     // Lógica para identificar melhor operação
+    this.showSolicitationForm = true;
     console.log('Identificando melhor operação...');
   }
 
