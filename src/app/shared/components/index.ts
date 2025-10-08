@@ -35,4 +35,5 @@ export * from './organisms/table/table-cell/table-cell.component';
 export * from './general/general-modal-content/general-modal-content.component';
 
 // Layout Components
+export * from './layout/header/header.component';
 export * from './layout/menu/menu.component';
