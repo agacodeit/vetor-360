@@ -4,6 +4,7 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/typography' as *;
 @use '../themes/default' as *;
+@use '../base/base' as *;
 
 .kanban {
     display: flex;
