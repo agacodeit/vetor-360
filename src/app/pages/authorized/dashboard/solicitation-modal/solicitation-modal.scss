@@ -197,9 +197,6 @@
 // Responsive design
 @media (max-width: 768px) {
     .solicitation-modal {
-        &__content {
-            padding: $padding-md;
-        }
 
         &__actions {
             flex-direction: column;

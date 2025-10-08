@@ -14,6 +14,14 @@
     overflow-y: auto;
     padding-top: 0; // O header já tem sua própria altura
     background: var(--background);
+
+    // Esconder a barra de scroll visual
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE e Edge
+
+    &::-webkit-scrollbar {
+        display: none; // Chrome, Safari e Opera
+    }
 }
 
 // Garantir que o header fique fixo no topo
@@ -28,8 +36,8 @@ ds-header {
 
 // Ajustar o conteúdo para não ficar atrás do header
 .authorized-content {
-    margin-top: 88px; // Altura do header (40px logo + 48px padding)
-    min-height: calc(100vh - 88px);
+    margin-top: 112px; // Altura do header (40px logo + 48px padding)
+    min-height: calc(100vh - 112px);
 }
 
 // Responsive adjustments
