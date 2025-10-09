@@ -1,0 +1,107 @@
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+
+@use '../../../../../../styles/themes/default' as *;
+
+.basic-info-step {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        margin-bottom: $padding-lg;
+        text-align: center;
+    }
+
+    &__title {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-xl;
+        font-weight: $font-weight-md;
+        color: var(--secondary);
+        margin: 0 0 $padding-sm 0;
+    }
+
+    &__description {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-sm;
+        color: var(--placeholder);
+        margin: 0;
+    }
+
+    &__form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: $padding-md;
+    }
+
+    &__field {
+        width: 100%;
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: $padding-md;
+    }
+
+    &__col {
+        display: flex;
+        flex-direction: column;
+
+        &--operation-type {
+            grid-column: 1;
+        }
+
+        &--value-currency {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: $padding-sm;
+        }
+
+        &--country {
+            grid-column: 1;
+        }
+
+        &--state {
+            grid-column: 2;
+        }
+
+        &--city {
+            grid-column: 3;
+        }
+
+        &--term {
+            grid-column: 1;
+        }
+
+        &--payment-method {
+            grid-column: 2;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .basic-info-step {
+        &__row {
+            grid-template-columns: 1fr;
+            gap: $padding-sm;
+        }
+
+        &__col {
+            grid-column: 1 !important;
+
+            &--value-currency {
+                grid-template-columns: 1fr;
+                gap: $padding-sm;
+            }
+        }
+    }
+}

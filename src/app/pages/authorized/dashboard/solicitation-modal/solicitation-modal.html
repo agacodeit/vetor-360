@@ -3,139 +3,61 @@
 
     <div class="solicitation-modal__container">
         <main class="solicitation-modal__content">
-            <form [formGroup]="solicitationForm" (ngSubmit)="handleSubmit()" class="solicitation-modal__form"
-                novalidate>
-                <fieldset class="solicitation-modal__fieldset">
 
-                    <div class="solicitation-modal__finality">
-                        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
-                            formControlName="purpose" [required]="true"
-                            [invalid]="!!(purpose?.invalid && purpose?.touched)" [errorMessage]="purpose?.invalid && purpose?.touched ? 
-                                (purpose?.errors?.['required'] ? 'Finalidade é obrigatória' : 
-                                 purpose?.errors?.['maxlength'] ? 'Máximo de 500 caracteres' : '') : ''"
-                            [fullWidth]="true" [maxlength]="500" resize="vertical">
-                        </ds-textarea>
-                    </div>
+            <!-- Stepper -->
+            <div class="solicitation-modal__stepper">
+                <ds-stepper [steps]="stepperSteps" [currentStep]="currentStep" variant="default" size="md"
+                    [showConnector]="true" [clickable]="false" (stepChanged)="onStepChanged($event)">
+                </ds-stepper>
+            </div>
 
+            <!-- Conteúdo dos Steps -->
+            <div class="solicitation-modal__step-content">
 
-                    <div class="solicitation-modal__identify-button">
-                        <ds-button label="Identificar melhor operação" [rounded]="true"
-                            icon="fa-solid fa-arrow-right-to-bracket" iconPosition="right"
-                            (onClickEmitter)="handleIdentifyBestOperation()" [disabled]="isLoading" />
-                    </div>
+                <!-- Step 1: Informações Básicas -->
+                <app-basic-info-step *ngIf="currentStep === 0" [formData]="basicInfoData"
+                    (formDataChange)="onBasicInfoDataChange($event)" (formValid)="onBasicInfoValidChange($event)">
+                </app-basic-info-step>
 
+                <!-- Step 2: Garantias -->
+                <app-guarantees-step *ngIf="currentStep === 1" [formData]="guaranteesData"
+                    (formDataChange)="onGuaranteesDataChange($event)" (formValid)="onGuaranteesValidChange($event)">
+                </app-guarantees-step>
 
-                    <div class="solicitation-modal__inputs" *ngIf="showSolicitationForm">
-                        <div class="solicitation-modal__row">
-                            <div class="solicitation-modal__col solicitation-modal__col--operation-type">
-                                <ds-select label="Tipo de Operação" placeholder="Selecione o tipo de operação"
-                                    formControlName="operationType" [required]="true"
-                                    [invalid]="!!(operationType?.invalid && operationType?.touched)"
-                                    [errorMessage]="operationType?.invalid && operationType?.touched ? 'Tipo de operação é obrigatório' : ''"
-                                    [options]="operationTypeOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
+                <!-- Step 3: Documentos -->
+                <app-documents-step *ngIf="currentStep === 2" [formData]="documentsData"
+                    (formDataChange)="onDocumentsDataChange($event)" (formValid)="onDocumentsValidChange($event)">
+                </app-documents-step>
 
-                            <div class="solicitation-modal__col solicitation-modal__col--value-currency">
-                                <ds-input label="Valor" placeholder="R$ 0,00" type="number" formControlName="amount"
-                                    [required]="true" [invalid]="!!(amount?.invalid && amount?.touched)" [errorMessage]="amount?.invalid && amount?.touched ? 
-                                        'Valor é obrigatório' : ''" [fullWidth]="true">
-                                </ds-input>
+            </div>
 
-                                <ds-select label="Moeda" placeholder="Selecione a moeda" formControlName="currency"
-                                    [required]="true" [invalid]="!!(currency?.invalid && currency?.touched)"
-                                    [errorMessage]="currency?.invalid && currency?.touched ? 'Moeda é obrigatória' : ''"
-                                    [options]="currencyOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
-                        </div>
+            <!-- Ações do Modal -->
+            <div class="solicitation-modal__actions">
 
-                        <!-- Ramo de Atividade (100%) -->
-                        <div class="solicitation-modal__row-business-activity">
-                            <div class="solicitation-modal__col solicitation-modal__col--business-activity">
-                                <ds-select label="Ramo de Atividade" placeholder="Selecione o ramo de atividade"
-                                    formControlName="businessActivity" [required]="true"
-                                    [invalid]="!!(businessActivity?.invalid && businessActivity?.touched)"
-                                    [errorMessage]="businessActivity?.invalid && businessActivity?.touched ? 'Ramo de atividade é obrigatório' : ''"
-                                    [options]="businessActivityOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
-                        </div>
+                <!-- Botão Cancelar -->
+                <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
+                    [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                </ds-button>
 
-                        <!-- Localização (3-4-4 colunas) -->
-                        <div class="solicitation-modal__row-location">
-                            <div class="solicitation-modal__col solicitation-modal__col--country">
-                                <ds-select label="País" placeholder="Selecione o país" formControlName="country"
-                                    [required]="true" [invalid]="!!(country?.invalid && country?.touched)"
-                                    [errorMessage]="country?.invalid && country?.touched ? 'País é obrigatório' : ''"
-                                    [options]="countryOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
+                <!-- Botão Voltar -->
+                <ds-button *ngIf="canGoPrevious()" label="Voltar" type="button" variant="outline"
+                    (onClickEmitter)="goToPreviousStep()" [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                </ds-button>
 
-                            <div class="solicitation-modal__col solicitation-modal__col--state">
-                                <ds-select label="Estado" placeholder="Selecione o estado" formControlName="state"
-                                    [required]="true" [invalid]="!!(state?.invalid && state?.touched)"
-                                    [errorMessage]="state?.invalid && state?.touched ? 'Estado é obrigatório' : ''"
-                                    [options]="stateOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
+                <!-- Botão Próximo -->
+                <ds-button *ngIf="currentStep < 2" label="Próximo" type="button" variant="fill"
+                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [rounded]="true"
+                    [disabled]="!canGoNext() || isLoading">
+                </ds-button>
 
-                            <div class="solicitation-modal__col solicitation-modal__col--city">
-                                <ds-select label="Cidade" placeholder="Selecione a cidade" formControlName="city"
-                                    [required]="true" [invalid]="!!(city?.invalid && city?.touched)"
-                                    [errorMessage]="city?.invalid && city?.touched ? 'Cidade é obrigatória' : ''"
-                                    [options]="cityOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
-                        </div>
+                <!-- Botão Finalizar -->
+                <ds-button *ngIf="currentStep === 2" label="Criar Solicitação" type="button" variant="fill"
+                    icon="fa-solid fa-plus" iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true"
+                    [rounded]="true" [isLoading]="isLoading" [disabled]="!canFinish() || isLoading">
+                </ds-button>
 
-                        <!-- Prazo e Forma de Pagamento (50% + 50%) -->
-                        <div class="solicitation-modal__row-payment">
-                            <div class="solicitation-modal__col solicitation-modal__col--term">
-                                <ds-input label="Prazo" placeholder="Em meses" type="number" formControlName="term"
-                                    [required]="true" [invalid]="!!(term?.invalid && term?.touched)" [errorMessage]="term?.invalid && term?.touched ? 
-                                        (term?.errors?.['required'] ? 'Prazo é obrigatório' : 
-                                         term?.errors?.['min'] ? 'Prazo mínimo de 1 mês' : '') : ''"
-                                    [fullWidth]="true">
-                                </ds-input>
-                            </div>
+            </div>
 
-                            <div class="solicitation-modal__col solicitation-modal__col--payment-method">
-                                <ds-select label="Forma de Pagamento" placeholder="Selecione a forma de pagamento"
-                                    formControlName="paymentMethod" [required]="true"
-                                    [invalid]="!!(paymentMethod?.invalid && paymentMethod?.touched)"
-                                    [errorMessage]="paymentMethod?.invalid && paymentMethod?.touched ? 'Forma de pagamento é obrigatória' : ''"
-                                    [options]="paymentMethodOptions" [fullWidth]="true">
-                                </ds-select>
-                            </div>
-                        </div>
-
-                        <!-- Carência (100%) -->
-                        <div class="solicitation-modal__row-grace-period">
-                            <div class="solicitation-modal__col solicitation-modal__col--grace-period">
-                                <ds-input label="Carência" placeholder="Em meses" type="number"
-                                    formControlName="gracePeriod" [required]="true"
-                                    [invalid]="!!(gracePeriod?.invalid && gracePeriod?.touched)" [errorMessage]="gracePeriod?.invalid && gracePeriod?.touched ? 
-                                        (gracePeriod?.errors?.['required'] ? 'Carência é obrigatória' : 
-                                         gracePeriod?.errors?.['min'] ? 'Carência mínima de 0 meses' : '') : ''"
-                                    [fullWidth]="true">
-                                </ds-input>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="solicitation-modal__actions" *ngIf="showSolicitationForm">
-                        <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
-                            [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
-                        </ds-button>
-
-                        <ds-button label="Criar Solicitação" type="submit" icon="fa-solid fa-plus" iconPosition="left"
-                            (onClickEmitter)="handleSubmit()" [fullWidth]="true" [rounded]="true"
-                            [isLoading]="isLoading" [disabled]="isLoading">
-                        </ds-button>
-                    </div>
-                </fieldset>
-            </form>
         </main>
     </div>
 </div>

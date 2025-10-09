@@ -1,0 +1,400 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+// ============================================
+// COMPONENTE DS-STEPPER
+// ============================================
+
+.stepper-container {
+    display: flex;
+    width: 100%;
+
+    // Orientação horizontal (padrão)
+    &.orientation-horizontal {
+        flex-direction: row;
+        align-items: flex-start;
+
+        .stepper-wrapper {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .step-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+
+            .step-connector {
+                position: absolute;
+                top: 20px; // Meio do círculo
+                left: 50%;
+                right: -50%;
+                height: 2px;
+                background-color: var(--stroke);
+                z-index: 1;
+
+                &.completed {
+                    background-color: var(--primary-medium);
+                }
+            }
+        }
+    }
+
+    // Orientação vertical
+    &.orientation-vertical {
+        flex-direction: column;
+
+        .stepper-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            text-align: left;
+            position: relative;
+
+            .step-marker {
+                margin-right: $padding-md;
+                flex-shrink: 0;
+            }
+
+            .step-content {
+                flex: 1;
+                text-align: left;
+            }
+
+            .step-connector {
+                position: absolute;
+                left: 20px; // Meio do círculo
+                top: 40px;
+                bottom: -40px;
+                width: 2px;
+                background-color: var(--stroke);
+                z-index: 1;
+
+                &.completed {
+                    background-color: var(--primary-medium);
+                }
+            }
+        }
+    }
+
+    // Modificadores
+    &.clickable {
+        .step-item {
+            cursor: pointer;
+
+            &:hover:not(.disabled) {
+                .step-marker {
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+}
+
+// ============================================
+// ELEMENTOS DO STEPPER
+// ============================================
+
+.step-item {
+    position: relative;
+    transition: all 0.3s ease;
+
+    // Estados
+    &.active {
+        .step-marker {
+            background-color: var(--primary-medium);
+            color: white;
+            border-color: var(--primary-medium);
+        }
+
+        .step-title {
+            color: var(--primary-dark);
+            font-weight: $font-weight-md;
+        }
+    }
+
+    &.completed {
+        .step-marker {
+            background-color: var(--primary-medium);
+            color: white;
+            border-color: var(--primary-medium);
+        }
+
+        .step-title {
+            color: var(--secondary);
+        }
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+
+        .step-marker {
+            background-color: var(--gray-light);
+            color: var(--placeholder);
+            border-color: var(--stroke);
+        }
+
+        .step-title {
+            color: var(--placeholder);
+        }
+    }
+
+    &.error {
+        .step-marker {
+            background-color: var(--tertiary);
+            color: white;
+            border-color: var(--tertiary);
+        }
+
+        .step-title {
+            color: var(--tertiary);
+        }
+    }
+
+    &.accessible {
+        cursor: pointer;
+    }
+}
+
+.step-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--stroke);
+    background-color: white;
+    color: var(--secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+
+    // Variantes de tamanho
+    .size-sm & {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+
+        .step-number {
+            font-size: $font-xs;
+            font-weight: $font-weight-md;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+    }
+
+    .size-md & {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+        .step-number {
+            font-size: $font-sm;
+            font-weight: $font-weight-md;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+    }
+
+    .size-lg & {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+
+        .step-number {
+            font-size: $font-md;
+            font-weight: $font-weight-md;
+        }
+
+        .step-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+    }
+
+    // Variantes de estilo
+    .variant-dots & {
+        border: none;
+        background-color: transparent;
+
+        .step-dot {
+            background-color: var(--stroke);
+            transition: background-color 0.3s ease;
+        }
+    }
+
+    .variant-numbers & {
+        .step-number {
+            font-family: 'Work Sans', sans-serif;
+        }
+    }
+}
+
+.step-content {
+    margin-top: $padding-sm;
+
+    .orientation-vertical & {
+        margin-top: 0;
+    }
+}
+
+.step-title {
+    font-family: 'Work Sans', sans-serif;
+    font-size: $font-sm;
+    font-weight: $font-weight-md;
+    color: var(--secondary);
+    margin: 0 0 $padding-xxs 0;
+    transition: color 0.3s ease;
+
+    .size-sm & {
+        font-size: $font-xs;
+    }
+
+    .size-lg & {
+        font-size: $font-md;
+    }
+}
+
+.step-description {
+    font-family: 'Work Sans', sans-serif;
+    font-size: $font-xs;
+    color: var(--placeholder);
+    margin: 0;
+    line-height: 1.4;
+
+    .size-sm & {
+        font-size: $font-sm;
+    }
+
+    .size-lg & {
+        font-size: $font-sm;
+    }
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: $font-weight-md;
+}
+
+.step-dot {
+    display: block;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.step-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+    i {
+        font-size: 14px;
+
+        .size-sm & {
+            font-size: 12px;
+        }
+
+        .size-lg & {
+            font-size: 18px;
+        }
+    }
+}
+
+// ============================================
+// RESPONSIVIDADE
+// ============================================
+
+@media (max-width: 768px) {
+    .stepper-container {
+        &.orientation-horizontal {
+            .step-item {
+                .step-content {}
+
+                .step-title {
+                    font-size: $font-xs;
+                }
+
+                .step-description {
+                    display: none; // Ocultar descrição em mobile para economizar espaço
+                }
+            }
+        }
+
+        &.orientation-vertical {
+            .step-item {
+                .step-marker {
+                    margin-right: $padding-sm;
+                }
+            }
+        }
+    }
+
+    .step-marker {
+        .size-md & {
+            width: 32px;
+            height: 32px;
+        }
+
+        .size-lg & {
+            width: 48px;
+            height: 48px;
+        }
+    }
+}
+
+// ============================================
+// ACESSIBILIDADE
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+
+    .step-item,
+    .step-marker {
+        transition: none;
+    }
+}
+
+// Estados de foco para acessibilidade
+.step-item:focus {
+    outline: 2px solid var(--primary-medium);
+    outline-offset: 2px;
+    border-radius: $border-radius-sm;
+}
+
+// Melhorar contraste para usuários com baixa visão
+@media (prefers-contrast: high) {
+    .step-marker {
+        border-width: 3px;
+    }
+
+    .step-connector {
+        height: 3px;
+    }
+}

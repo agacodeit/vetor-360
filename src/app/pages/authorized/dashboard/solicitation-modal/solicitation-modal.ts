@@ -1,7 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonComponent, TextareaComponent, InputComponent, SelectComponent } from '../../../../shared';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../../../shared';
+import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
+import { BasicInfoStepComponent } from './steps/basic-info-step.component';
+import { GuaranteesStepComponent } from './steps/guarantees-step.component';
+import { DocumentsStepComponent } from './steps/documents-step.component';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -9,156 +13,139 @@ import { ButtonComponent, TextareaComponent, InputComponent, SelectComponent } f
     CommonModule,
     ReactiveFormsModule,
     ButtonComponent,
-    TextareaComponent,
-    InputComponent,
-    SelectComponent
+    StepperComponent,
+    BasicInfoStepComponent,
+    GuaranteesStepComponent,
+    DocumentsStepComponent
   ],
   standalone: true,
   templateUrl: './solicitation-modal.html',
   styleUrl: './solicitation-modal.scss'
 })
-export class SolicitationModal {
+export class SolicitationModal implements OnInit {
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
 
-  solicitationForm: FormGroup;
+  // Formulário pai que agrupa todos os steps
+  mainForm: FormGroup;
   isLoading = false;
-  showSolicitationForm: boolean = false;
+  currentStep = 0;
+
+  // Dados dos formulários de cada step
+  basicInfoData: any = {};
+  guaranteesData: any = {};
+  documentsData: any = {};
+
+  // Estados de validação de cada step
+  stepValidStates = [false, false, true]; // Step 3 (documentos) sempre válido por enquanto
+
+  // Configuração dos steps do stepper
+  stepperSteps: StepperStep[] = [
+    {
+      id: 'basic-info',
+      title: 'Informações Básicas',
+      description: 'Dados da solicitação'
+    },
+    {
+      id: 'guarantees',
+      title: 'Garantias',
+      description: 'Garantias oferecidas'
+    },
+    {
+      id: 'documents',
+      title: 'Documentos',
+      description: 'Anexos necessários'
+    }
+  ];
 
   constructor(private fb: FormBuilder) {
-    this.solicitationForm = this.fb.group({
-      operationType: ['', [Validators.required]],
-      amount: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      purpose: ['', [Validators.required, Validators.maxLength(500)]],
-      businessActivity: ['', [Validators.required]],
-      country: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      term: ['', [Validators.required, Validators.min(1)]],
-      paymentMethod: ['', [Validators.required]],
-      gracePeriod: ['', [Validators.required, Validators.min(0)]]
-    });
+    // Formulário pai vazio, os dados serão gerenciados pelos componentes filhos
+    this.mainForm = this.fb.group({});
   }
 
-  get operationType() {
-    return this.solicitationForm.get('operationType');
+  ngOnInit(): void {
+    // Inicialização se necessário
   }
 
-  get amount() {
-    return this.solicitationForm.get('amount');
+  // Métodos para gerenciar o stepper
+  onStepChanged(stepIndex: number): void {
+    this.currentStep = stepIndex;
   }
 
-  get currency() {
-    return this.solicitationForm.get('currency');
+  // Métodos para receber dados dos componentes filhos
+  onBasicInfoDataChange(data: any): void {
+    this.basicInfoData = data;
   }
 
-  get purpose() {
-    return this.solicitationForm.get('purpose');
+  onBasicInfoValidChange(isValid: boolean): void {
+    this.stepValidStates[0] = isValid;
   }
 
-  get businessActivity() {
-    return this.solicitationForm.get('businessActivity');
+  onGuaranteesDataChange(data: any): void {
+    this.guaranteesData = data;
   }
 
-  get country() {
-    return this.solicitationForm.get('country');
+  onGuaranteesValidChange(isValid: boolean): void {
+    this.stepValidStates[1] = isValid;
   }
 
-  get state() {
-    return this.solicitationForm.get('state');
+  onDocumentsDataChange(data: any): void {
+    this.documentsData = data;
   }
 
-  get city() {
-    return this.solicitationForm.get('city');
+  onDocumentsValidChange(isValid: boolean): void {
+    this.stepValidStates[2] = isValid;
   }
 
-  get term() {
-    return this.solicitationForm.get('term');
+  // Verificar se pode avançar para o próximo step
+  canGoNext(): boolean {
+    return this.stepValidStates[this.currentStep];
   }
 
-  get paymentMethod() {
-    return this.solicitationForm.get('paymentMethod');
+  // Verificar se pode voltar
+  canGoPrevious(): boolean {
+    return this.currentStep > 0;
   }
 
-  get gracePeriod() {
-    return this.solicitationForm.get('gracePeriod');
+  // Verificar se pode finalizar
+  canFinish(): boolean {
+    return this.currentStep === 2 && this.stepValidStates.every(valid => valid);
   }
 
-  // Opções para os selects
-  operationTypeOptions = [
-    { value: 'capital-giro', label: 'Capital de Giro' },
-    { value: 'financiamento-internacional', label: 'Financiamento Internacional' }
-  ];
-
-  currencyOptions = [
-    { value: 'BRL', label: 'Real' },
-    { value: 'EUR', label: 'Euro' },
-    { value: 'USD', label: 'Dólar' }
-  ];
-
-  businessActivityOptions = [
-    { value: 'padeiro', label: 'Padeiro' },
-    { value: 'empreiteiro', label: 'Empreiteiro' },
-    { value: 'desenvolvedor', label: 'Desenvolvedor' },
-    { value: 'banqueiro', label: 'Banqueiro' }
-  ];
-
-  countryOptions = [
-    { value: 'brasil', label: 'Brasil' },
-    { value: 'portugal', label: 'Portugal' },
-    { value: 'argentina', label: 'Argentina' }
-  ];
-
-  stateOptions = [
-    { value: 'sp', label: 'São Paulo' },
-    { value: 'rj', label: 'Rio de Janeiro' },
-    { value: 'mg', label: 'Minas Gerais' },
-    { value: 'rs', label: 'Rio Grande do Sul' },
-    { value: 'pr', label: 'Paraná' },
-    { value: 'sc', label: 'Santa Catarina' }
-  ];
-
-  cityOptions = [
-    { value: 'sao-paulo', label: 'São Paulo' },
-    { value: 'rio-de-janeiro', label: 'Rio de Janeiro' },
-    { value: 'belo-horizonte', label: 'Belo Horizonte' },
-    { value: 'porto-alegre', label: 'Porto Alegre' },
-    { value: 'curitiba', label: 'Curitiba' },
-    { value: 'florianopolis', label: 'Florianópolis' }
-  ];
-
-  paymentMethodOptions = [
-    { value: 'mensal', label: 'Mensal' },
-    { value: 'trimestral', label: 'Trimestral' },
-    { value: 'semestral', label: 'Semestral' },
-    { value: 'anual', label: 'Anual' }
-  ];
-
-  handleSubmit() {
-    if (this.solicitationForm.valid) {
-      this.isLoading = true;
-      this.onSubmit.emit(this.solicitationForm.value);
-    } else {
-      this.markFormGroupTouched();
+  // Navegação entre steps
+  goToNextStep(): void {
+    if (this.canGoNext() && this.currentStep < 2) {
+      this.currentStep++;
     }
   }
 
-  handleClose() {
+  goToPreviousStep(): void {
+    if (this.canGoPrevious()) {
+      this.currentStep--;
+    }
+  }
+
+  // Métodos principais
+  handleClose(): void {
     this.onClose.emit();
   }
 
-  handleIdentifyBestOperation() {
-    // Lógica para identificar melhor operação
-    this.showSolicitationForm = true;
-    console.log('Identificando melhor operação...');
-  }
+  handleSubmit(): void {
+    if (this.canFinish()) {
+      this.isLoading = true;
 
-  private markFormGroupTouched() {
-    Object.keys(this.solicitationForm.controls).forEach(key => {
-      const control = this.solicitationForm.get(key);
-      control?.markAsTouched();
-    });
-  }
+      // Combinar todos os dados dos steps
+      const formData = {
+        ...this.basicInfoData,
+        ...this.guaranteesData,
+        ...this.documentsData
+      };
 
+      // Simular envio
+      setTimeout(() => {
+        this.isLoading = false;
+        this.onSubmit.emit(formData);
+      }, 2000);
+    }
+  }
 }
