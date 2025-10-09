@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TextareaComponent } from '../../../../../shared/components/atoms/textarea/textarea.component';
+import { TextareaComponent } from '../../../../../../shared/components/atoms/textarea/textarea.component';
 
 @Component({
     selector: 'app-guarantees-step',

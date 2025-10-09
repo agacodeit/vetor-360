@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AccordionComponent, AccordionItem, AccordionItemDirective } from '../../../../../shared';
+import { AccordionComponent, AccordionItem, AccordionItemDirective } from '../../../../../../shared';
 
 @Component({
     selector: 'app-documents-step',

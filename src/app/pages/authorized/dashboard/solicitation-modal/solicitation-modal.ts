@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared';
 import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
-import { BasicInfoStepComponent } from './steps/basic-info-step.component';
-import { GuaranteesStepComponent } from './steps/guarantees-step.component';
-import { DocumentsStepComponent } from './steps/documents-step.component';
+import { DocumentsStepComponent } from './steps/documents/documents-step.component';
+import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
+import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
 
 @Component({
   selector: 'app-solicitation-modal',

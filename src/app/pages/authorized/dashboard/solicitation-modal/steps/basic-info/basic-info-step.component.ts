@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent, SelectComponent, TextareaComponent } from '../../../../../shared';
+import { InputComponent, SelectComponent, TextareaComponent } from '../../../../../../shared';
 
 @Component({
     selector: 'app-basic-info-step',
