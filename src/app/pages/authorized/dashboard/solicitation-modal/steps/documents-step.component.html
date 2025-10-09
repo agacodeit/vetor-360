@@ -11,13 +11,13 @@
             <div class="documents-step__accordion">
                 <ds-accordion [items]="accordionItems" variant="default" size="md" [allowMultiple]="true"
                     iconPosition="right" (itemToggled)="onAccordionItemToggled($event)">
-                </ds-accordion>
-            </div>
 
-            <!-- Nota informativa -->
-            <div class="documents-step__note">
-                <i class="fa-solid fa-info-circle"></i>
-                <p>O upload dos documentos poderá ser realizado após a criação da solicitação.</p>
+                    <!-- Conteúdo do primeiro item -->
+                    <ng-template accordionItem="doc-required">
+
+                    </ng-template>
+
+                </ds-accordion>
             </div>
 
         </div>

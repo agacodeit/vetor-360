@@ -15,7 +15,9 @@
         <div class="accordion-content" [class.expanded]="isItemExpanded(item)"
             [attr.aria-hidden]="!isItemExpanded(item)" role="region" [attr.aria-labelledby]="item.id">
             <div class="accordion-content-inner">
-                <div class="accordion-content-text" [innerHTML]="item.content"></div>
+                @if (getContentTemplate(item.id)) {
+                <ng-container *ngTemplateOutlet="getContentTemplate(item.id)!"></ng-container>
+                }
             </div>
         </div>
     </div>
