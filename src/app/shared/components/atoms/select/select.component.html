@@ -3,16 +3,20 @@
 }" [id]="uniqueId + '-container'">
 
 
-    <label *ngIf="label" [for]="uniqueId" [class]="labelClasses">
+    @if (label) {
+    <label [for]="uniqueId" [class]="labelClasses">
         {{ label }}
     </label>
+    }
 
 
     <div class="select-container" [class.has-icon]="icon">
 
 
-        <ds-icon *ngIf="icon" [icon]="icon" fontSize="18px" color="placeholder" [class]="'icon-' + iconPosition">
+        @if (icon) {
+        <ds-icon [icon]="icon" fontSize="18px" color="placeholder" [class]="'icon-' + iconPosition">
         </ds-icon>
+        }
 
 
         <div [id]="uniqueId" [class]="selectClasses" [attr.tabindex]="disabled ? -1 : 0" (click)="toggleDropdown()"
@@ -23,29 +27,36 @@
             <div class="select-value">
 
 
-                <div *ngIf="multiple && hasValue" class="selected-chips">
-                    <span *ngFor="let option of selectedOptions" class="chip">
+                @if (multiple && hasValue) {
+                <div class="selected-chips">
+                    @for (option of selectedOptions; track option) {
+                    <span class="chip">
                         {{ option[optionLabel] }}
                         <button type="button" class="chip-remove" (click)="removeOption(option, $event)"
                             [disabled]="disabled">
                             ×
                         </button>
                     </span>
+                    }
                 </div>
+                }
 
 
-                <span *ngIf="!multiple || !hasValue" class="select-display-text" [class.placeholder]="!hasValue">
+                @if (!multiple || !hasValue) {
+                <span class="select-display-text" [class.placeholder]="!hasValue">
                     {{ displayValue }}
                 </span>
+                }
             </div>
 
 
             <div class="select-actions">
 
-                <button *ngIf="clearable && hasValue && !disabled" type="button" class="clear-button"
-                    (click)="clearSelection($event)" tabindex="-1">
+                @if (clearable && hasValue && !disabled) {
+                <button type="button" class="clear-button" (click)="clearSelection($event)" tabindex="-1">
                     ×
                 </button>
+                }
 
 
                 <ds-icon icon="fa-solid fa-chevron-down" fontSize="12px" color="placeholder" class="dropdown-arrow"
@@ -55,39 +66,48 @@
         </div>
 
 
-        <div *ngIf="isOpen" [class]="dropdownClasses">
+        @if (isOpen) {
+        <div [class]="dropdownClasses">
 
 
-            <div *ngIf="searchable" class="search-container">
+            @if (searchable) {
+            <div class="search-container">
                 <input type="text" class="search-input" placeholder="Buscar..." [(ngModel)]="searchTerm"
                     (input)="onSearchChange($event)" (click)="$event.stopPropagation()">
                 <ds-icon icon="fa-solid fa-search" fontSize="14px" color="placeholder" class="search-icon">
                 </ds-icon>
             </div>
+            }
 
 
             <div class="options-container">
 
 
-                <div *ngIf="loading" class="option-item loading">
+                @if (loading) {
+                <div class="option-item loading">
                     <ds-icon icon="fa-solid fa-spinner" fontSize="16px" color="placeholder" class="spinning">
                     </ds-icon>
                     {{ loadingText }}
                 </div>
+                }
 
 
-                <div *ngIf="!loading && filteredOptions.length === 0" class="option-item no-options">
+                @if (!loading && filteredOptions.length === 0) {
+                <div class="option-item no-options">
                     {{ noOptionsText }}
                 </div>
+                }
 
 
-                <div *ngFor="let option of filteredOptions" class="option-item"
-                    [class.selected]="isOptionSelected(option)" [class.disabled]="option.disabled"
+                @for (option of filteredOptions; track option) {
+                <div class="option-item" [class.selected]="isOptionSelected(option)" [class.disabled]="option.disabled"
                     (click)="selectOption(option)">
 
 
-                    <input *ngIf="multiple" type="checkbox" class="option-checkbox" [checked]="isOptionSelected(option)"
+                    @if (multiple) {
+                    <input type="checkbox" class="option-checkbox" [checked]="isOptionSelected(option)"
                         [disabled]="option.disabled" tabindex="-1">
+                    }
 
 
                     <span class="option-label">
@@ -95,24 +115,33 @@
                     </span>
 
 
-                    <ds-icon *ngIf="!multiple && isOptionSelected(option)" icon="fa-solid fa-check" fontSize="14px"
-                        color="primary-medium" class="selected-icon">
+                    @if (!multiple && isOptionSelected(option)) {
+                    <ds-icon icon="fa-solid fa-check" fontSize="14px" color="primary-medium" class="selected-icon">
                     </ds-icon>
+                    }
                 </div>
+                }
             </div>
         </div>
+        }
     </div>
 
 
-    <div class="form-feedback" *ngIf="showError || showHelper">
+    @if (showError || showHelper) {
+    <div class="form-feedback">
 
-        <div *ngIf="showError" class="error-message">
+        @if (showError) {
+        <div class="error-message">
             {{ errorMessage }}
         </div>
+        }
 
 
-        <div *ngIf="showHelper" class="helper-text">
+        @if (showHelper) {
+        <div class="helper-text">
             {{ helperText }}
         </div>
+        }
     </div>
+    }
 </div>

@@ -15,19 +15,25 @@
             <div class="solicitation-modal__step-content">
 
                 <!-- Step 1: Informações Básicas -->
-                <app-basic-info-step *ngIf="currentStep === 0" [formData]="basicInfoData"
-                    (formDataChange)="onBasicInfoDataChange($event)" (formValid)="onBasicInfoValidChange($event)">
+                @if (currentStep === 0) {
+                <app-basic-info-step [formData]="basicInfoData" (formDataChange)="onBasicInfoDataChange($event)"
+                    (formValid)="onBasicInfoValidChange($event)">
                 </app-basic-info-step>
+                }
 
                 <!-- Step 2: Garantias -->
-                <app-guarantees-step *ngIf="currentStep === 1" [formData]="guaranteesData"
-                    (formDataChange)="onGuaranteesDataChange($event)" (formValid)="onGuaranteesValidChange($event)">
+                @if (currentStep === 1) {
+                <app-guarantees-step [formData]="guaranteesData" (formDataChange)="onGuaranteesDataChange($event)"
+                    (formValid)="onGuaranteesValidChange($event)">
                 </app-guarantees-step>
+                }
 
                 <!-- Step 3: Documentos -->
-                <app-documents-step *ngIf="currentStep === 2" [formData]="documentsData"
-                    (formDataChange)="onDocumentsDataChange($event)" (formValid)="onDocumentsValidChange($event)">
+                @if (currentStep === 2) {
+                <app-documents-step [formData]="documentsData" (formDataChange)="onDocumentsDataChange($event)"
+                    (formValid)="onDocumentsValidChange($event)">
                 </app-documents-step>
+                }
 
             </div>
 
@@ -40,21 +46,26 @@
                 </ds-button>
 
                 <!-- Botão Voltar -->
-                <ds-button *ngIf="canGoPrevious()" label="Voltar" type="button" variant="outline"
-                    (onClickEmitter)="goToPreviousStep()" [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                @if (canGoPrevious()) {
+                <ds-button label="Voltar" type="button" variant="outline" (onClickEmitter)="goToPreviousStep()"
+                    [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
                 </ds-button>
+                }
 
                 <!-- Botão Próximo -->
-                <ds-button *ngIf="currentStep < 2" label="Próximo" type="button" variant="fill"
+                @if (currentStep < 2) { <ds-button label="Próximo" type="button" variant="fill"
                     (onClickEmitter)="goToNextStep()" [fullWidth]="true" [rounded]="true"
                     [disabled]="!canGoNext() || isLoading">
-                </ds-button>
+                    </ds-button>
+                    }
 
-                <!-- Botão Finalizar -->
-                <ds-button *ngIf="currentStep === 2" label="Criar Solicitação" type="button" variant="fill"
-                    icon="fa-solid fa-plus" iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true"
-                    [rounded]="true" [isLoading]="isLoading" [disabled]="!canFinish() || isLoading">
-                </ds-button>
+                    <!-- Botão Finalizar -->
+                    @if (currentStep === 2) {
+                    <ds-button label="Criar Solicitação" type="button" variant="fill" icon="fa-solid fa-plus"
+                        iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [rounded]="true"
+                        [isLoading]="isLoading" [disabled]="!canFinish() || isLoading">
+                    </ds-button>
+                    }
 
             </div>
 

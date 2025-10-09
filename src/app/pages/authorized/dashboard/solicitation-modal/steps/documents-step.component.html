@@ -1,22 +1,23 @@
 <div class="documents-step">
     <div class="documents-step__header">
         <h3 class="documents-step__title">Documentos</h3>
-        <p class="documents-step__description">Anexe os documentos necessários para sua solicitação</p>
+        <p class="documents-step__description">Confira os documentos necessários para sua solicitação</p>
     </div>
 
     <form [formGroup]="documentsForm" class="documents-step__form">
         <div class="documents-step__content">
 
-            <!-- Placeholder para futuras implementações -->
-            <div class="documents-step__placeholder">
-                <div class="documents-step__placeholder-icon">
-                    <i class="fa-solid fa-file-upload"></i>
-                </div>
-                <h4 class="documents-step__placeholder-title">Upload de Documentos</h4>
-                <p class="documents-step__placeholder-description">
-                    Esta seção será implementada em breve. Aqui você poderá anexar os documentos necessários para sua
-                    solicitação.
-                </p>
+            <!-- Accordion com informações sobre documentos -->
+            <div class="documents-step__accordion">
+                <ds-accordion [items]="accordionItems" variant="default" size="md" [allowMultiple]="true"
+                    iconPosition="right" (itemToggled)="onAccordionItemToggled($event)">
+                </ds-accordion>
+            </div>
+
+            <!-- Nota informativa -->
+            <div class="documents-step__note">
+                <i class="fa-solid fa-info-circle"></i>
+                <p>O upload dos documentos poderá ser realizado após a criação da solicitação.</p>
             </div>
 
         </div>

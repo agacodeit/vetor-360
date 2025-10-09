@@ -1,17 +1,22 @@
-<button [type]="type" [disabled]="disabled" class="btn {{variant}}" [ngStyle]="{
+<button [type]="type" [disabled]="disabled" class="btn {{variant}}" [ngClass]="{
+    'rounded': rounded,
+    'label-align-left': labelAlign === 'left',
+    'label-align-center': labelAlign === 'center',
+    'label-align-right': labelAlign === 'right'
+}" [ngStyle]="{
     'width': fullWidth ? '100%' : 'fit-content',
     'white-space': 'nowrap'
-}" [ngClass]="{'rounded': rounded}" (click)="emitAction()">
+}" (click)="emitAction()">
     @if (!isLoading) {
     @if (icon && iconPosition === 'left') {
-    <i class="{{icon}}"></i>
+    <i class="button-icon {{icon}}" [ngStyle]="{'font-size': iconSize || '16px'}"></i>
     }
-    {{label}}
+    <span class="button-label">{{label}}</span>
     @if (icon && iconPosition === 'right') {
-    <i class="{{icon}}"></i>
+    <i class="button-icon {{icon}}" [ngStyle]="{'font-size': iconSize || '16px'}"></i>
     }
     } @else {
     <ds-spinner size="12px" variant="fill" color="primary"></ds-spinner>
-    {{label}}
+    <span class="button-label">{{label}}</span>
     }
 </button>

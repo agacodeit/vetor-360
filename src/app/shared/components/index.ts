@@ -2,6 +2,7 @@
 // This file exports all components from the design system for easy importing
 
 // Atoms
+export * from './atoms/accordion/accordion.component';
 export * from './atoms/action-menu/action-menu.component';
 export * from './atoms/badge/badge.component';
 export * from './atoms/button/button.component';
@@ -12,6 +13,7 @@ export * from './atoms/print-button/print-button.component';
 export * from './atoms/radio/radio.component';
 export * from './atoms/select/select.component';
 export * from './atoms/spinner/spinner.component';
+export * from './atoms/stepper/stepper.component';
 export * from './atoms/textarea/textarea.component';
 
 // Molecules
