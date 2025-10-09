@@ -167,22 +167,6 @@
 // Estilos específicos para garantir 100% de largura nos componentes
 .solicitation-modal {
 
-    // Garantir que todos os componentes ocupem 100% da largura
-    ::ng-deep .form-group {
-        width: 100%;
-
-        .textarea-container,
-        .input-container,
-        .select-container {
-            width: 100%;
-
-            .textarea-field,
-            .input-field,
-            .select-field {
-                width: 100%;
-            }
-        }
-    }
 
     // Garantir que as colunas de grid ocupem 100% da área
     &__col {
