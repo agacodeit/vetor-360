@@ -68,9 +68,6 @@
             min-height: 36px;
         }
 
-        .accordion-content-inner {
-            padding: $padding-sm $padding-md $padding-md $padding-md;
-        }
     }
 
     &.size-md {
@@ -78,20 +75,12 @@
             font-size: $font-md;
             min-height: 44px;
         }
-
-        .accordion-content-inner {
-            padding: $padding-md $padding-lg $padding-lg $padding-lg;
-        }
     }
 
     &.size-lg {
         .accordion-header {
             font-size: $font-lg;
             min-height: 52px;
-        }
-
-        .accordion-content-inner {
-            padding: $padding-lg $padding-xl $padding-xl $padding-xl;
         }
     }
 

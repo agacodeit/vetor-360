@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AccordionComponent, AccordionItem, AccordionItemDirective } from '../../../../../../shared';
+import { AccordionComponent, AccordionItem, AccordionItemDirective, CheckboxComponent } from '../../../../../../shared';
 
 @Component({
     selector: 'app-documents-step',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, AccordionComponent, AccordionItemDirective],
+    imports: [CommonModule, ReactiveFormsModule, AccordionComponent, AccordionItemDirective, CheckboxComponent],
     templateUrl: './documents-step.component.html',
     styleUrls: ['./documents-step.component.scss'],
     encapsulation: ViewEncapsulation.None

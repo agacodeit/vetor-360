@@ -13,8 +13,37 @@
                     iconPosition="right" (itemToggled)="onAccordionItemToggled($event)">
 
                     <!-- Conteúdo do primeiro item -->
-                    <ng-template accordionItem="doc-required">
-
+                    <ng-template accordionItem="doc-required" class="documents-step__accordion-content">
+                        <div class="d-flex gap-8 justify-content-between align-items-center">
+                            <ds-checkbox label="RG ou CNH - Documento de identidade" />
+                            <button type="button" class="btn-file">
+                                <span>
+                                    <i class="fa-solid fa-upload"></i>
+                                    <span>Selecionar</span>
+                                </span>
+                                <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                            </button>
+                        </div>
+                        <div class="d-flex gap-8 justify-content-between align-items-center" style="margin-top: 12px;">
+                            <ds-checkbox label="CPF - Cadastro de Pessoa Física" />
+                            <button type="button" class="btn-file">
+                                <span>
+                                    <i class="fa-solid fa-upload"></i>
+                                    <span>Selecionar</span>
+                                </span>
+                                <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                            </button>
+                        </div>
+                        <div class="d-flex gap-8 justify-content-between align-items-center" style="margin-top: 12px;">
+                            <ds-checkbox label="Comprovante de Residência (últimos 3 meses)" />
+                            <button type="button" class="btn-file">
+                                <span>
+                                    <i class="fa-solid fa-upload"></i>
+                                    <span>Selecionar</span>
+                                </span>
+                                <input type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                            </button>
+                        </div>
                     </ng-template>
 
                 </ds-accordion>
