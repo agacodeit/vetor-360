@@ -28,7 +28,7 @@ export class SolicitationModal {
   constructor(private fb: FormBuilder) {
     this.solicitationForm = this.fb.group({
       operationType: ['', [Validators.required]],
-      amount: ['', [Validators.required, Validators.min(1000)]],
+      amount: ['', [Validators.required]],
       currency: ['', [Validators.required]],
       purpose: ['', [Validators.required, Validators.maxLength(500)]],
       businessActivity: ['', [Validators.required]],

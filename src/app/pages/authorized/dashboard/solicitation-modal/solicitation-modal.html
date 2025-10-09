@@ -39,9 +39,7 @@
                             <div class="solicitation-modal__col solicitation-modal__col--value-currency">
                                 <ds-input label="Valor" placeholder="R$ 0,00" type="number" formControlName="amount"
                                     [required]="true" [invalid]="!!(amount?.invalid && amount?.touched)" [errorMessage]="amount?.invalid && amount?.touched ? 
-                                        (amount?.errors?.['required'] ? 'Valor é obrigatório' : 
-                                         amount?.errors?.['min'] ? 'Valor mínimo de R$ 1.000,00' : '') : ''"
-                                    [fullWidth]="true">
+                                        'Valor é obrigatório' : ''" [fullWidth]="true">
                                 </ds-input>
 
                                 <ds-select label="Moeda" placeholder="Selecione a moeda" formControlName="currency"
