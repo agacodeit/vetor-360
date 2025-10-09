@@ -7,14 +7,12 @@
                     <img height="150px" width="auto" src="assets/logo/vetor-logo-1067x600.jpg" alt="Vetor 360 Logo"
                         loading="lazy" decoding="async">
                 </div>
-                <p class="login__description">Acesse a plataforma e conecte clientes às melhores soluções financeiras
+                <p class="login__subtitle">Acesse a plataforma e conecte clientes às melhores soluções financeiras
                 </p>
             </header>
 
             <form [formGroup]="loginForm" (ngSubmit)="login()" class="login__form">
                 <fieldset class="login__fieldset">
-                    <legend class="login__legend">Dados de acesso</legend>
-
                     <div class="login__inputs">
                         <ds-input label="E-mail" placeholder="Digite seu e-mail" [fullWidth]="true"
                             formControlName="email" [invalid]="!!(email?.invalid && email?.touched)"

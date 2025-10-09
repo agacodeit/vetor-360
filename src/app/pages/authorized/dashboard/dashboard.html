@@ -1,5 +1,6 @@
+<!-- Mostra welcome apenas quando NÃO há solicitações -->
+@if (!hasSolicitations) {
 <div class="container">
-
     <div class="welcome-msg">
         <h2>Bem-vindo, Advisor!</h2>
         <p>Aqui você acompanha todas as solicitações de crédito de seus clientes. Vamos começar?</p>
@@ -9,11 +10,16 @@
 
         <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
             (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
-
     </div>
 </div>
-
+}@else{
 <div class="dashboard">
+    <!-- Botões de teste (apenas para desenvolvimento) -->
+    <div class="dashboard__new-solicitation">
+        <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
+            (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
+    </div>
+
     <div class="dashboard__content">
         <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
@@ -26,10 +32,10 @@
 
                     <div class="__card-header">
                         <div class="d-flex align-items-center gap-4">
-                            <ds-icon icon="fa-solid fa-ticket" fontSize="24px" />
+                            <ds-icon icon="fa-regular fa-square-minus" fontSize="24px" />
                             <h4>{{ card.title }}</h4>
                         </div>
-                        <ds-icon icon="fa-solid fa-arrow-right-to-bracket" fontSize="24px" />
+                        <ds-icon icon="fa-regular fa-circle-right" fontSize="24px" />
                     </div>
 
                     <div class="__card-description">
@@ -41,7 +47,7 @@
                         <p>FGI</p>
                         <p>R$ 800.000,00</p>
                         <div class="card-icon">
-                            <ds-icon icon="fa-solid fa-file-lines" fontSize="24px" />
+                            <ds-icon icon="fa-regular fa-folder-open" color="gray-medium" fontSize="20px" />
                             <p>0/6 Documentos</p>
                         </div>
 
@@ -53,16 +59,12 @@
         </ds-kanban>
     </div>
 </div>
+}
 
+
+@if(isModalOpen) {
 <ds-modal modalId="create-solicitation" (modalClosed)="onModalClosed($event)">
-
-    <form [formGroup]="form">
-        <p>Produto</p>
-        <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
-            formControlName="purpose" [required]="true"
-            [invalid]="(form.get('purpose')?.invalid ?? false) && (form.get('purpose')?.touched ?? false)"
-            errorMessage="Finalidade é obrigatória" helperText="Máximo de 500 caracteres" [fullWidth]="true"
-            [maxlength]="500" resize="vertical"> </ds-textarea>
-    </form>
-
+    <app-solicitation-modal (onClose)="onModalClosed($event)"
+        (onSubmit)="onModalClosed($event)"></app-solicitation-modal>
 </ds-modal>
+}

@@ -28,48 +28,40 @@
         .textarea-field {
             width: 100%;
             padding: $padding-s;
-            border: none;
             border-radius: $border-radius-sm;
             outline: none;
-            border: 1px solid var(--primary-dark);
+            border: 1px solid var(--stroke);
+            min-height: 80px;
             background-color: inherit;
-            color: var(--primary-dark);
-            font-size: $font-md;
-            font-family: "Work Sans", sans-serif;
+            color: var(--gray-medium);
+            font-size: $font-sm;
             box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
-            min-height: 80px; // Altura mínima
             line-height: 1.5;
 
             &.invalid {
-                border: 1px solid var(--tertiary);
-                // Ajustar padding para compensar a borda extra
+                border: 2px solid var(--tertiary);
                 padding: $padding-xxsm $padding-s;
             }
 
             &::placeholder {
                 color: var(--placeholder);
-                font-weight: $font-weight-md;
+                font-weight: $font-weight-lt;
                 font-size: $font-md;
-                line-height: 1.5;
-                font-family: "Work Sans", sans-serif;
+                line-height: 100%;
                 letter-spacing: 0px;
             }
 
             &:focus {
                 border-color: var(--primary-dark);
-                box-shadow: 0 0 0 3px rgba(1, 80, 120, 0.1);
+                box-shadow: 0 0 0 3px #F7F5FF;
             }
 
             &:disabled {
-                background-color: var(--background);
+                background-color: var(--disabled-bg, #f5f5f5);
                 color: var(--disabled-text, #999);
                 cursor: not-allowed;
                 opacity: 0.6;
-
-                &::placeholder {
-                    color: var(--disabled-text, #999);
-                }
             }
 
             &:readonly {
@@ -107,10 +99,10 @@
             }
 
             &.has-icon-right {
-                padding-right: $padding-xxsmmmm;
+                padding-right: $padding-xxsmmmmm;
 
                 &.invalid {
-                    padding-right: $padding-xbg;
+                    padding-right: $padding-xxsmmmmm;
                     padding-top: $padding-xxsm;
                     padding-bottom: $padding-xxsm;
                     padding-left: $padding-xxsm;
@@ -161,7 +153,7 @@
 
     .helper-text {
         margin-top: 4px;
-        color: var(--placeholder);
+        color: var(--primary-dark);
         font-size: $font-xs;
         font-weight: $font-weight-md;
         line-height: 1.4;

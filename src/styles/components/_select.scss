@@ -5,7 +5,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: visible !important; // Garantir que o dropdown não seja cortado
 
     .select-label {
         margin-bottom: 8px;
@@ -13,7 +12,7 @@
         font-weight: $font-weight-md;
         font-size: $font-sm;
         color: var(--label);
-       /*  position: relative;
+        /*  position: relative;
         top: 12px;
         height: 24px;
         left: 18px;
@@ -32,7 +31,6 @@
         position: relative;
         display: flex;
         align-items: center;
-        overflow: visible !important; // Garantir que o dropdown não seja cortado
 
         &.has-icon {
             .select-field {
@@ -63,7 +61,7 @@
         .select-field {
             width: 100%;
             min-height: 44px;
-            padding: $padding-xsm $padding-xs $padding-xsm $padding-sm;
+            padding: 0 $padding-s;
             border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
             background-color: inherit;
@@ -88,8 +86,8 @@
             }
 
             &.invalid {
-                border: 1px solid var(--tertiary);
-                padding: $padding-xxsm $padding-xxsmm $padding-xxsm $padding-xxsm;
+                border: 2px solid var(--tertiary);
+                padding: 0 $padding-s;
 
                 &.has-icon-left {
                     padding-left: $padding-xxsmm;
@@ -242,7 +240,7 @@
 
             .search-container {
                 position: relative;
-                padding: $padding-xs;
+                padding: $padding-s;
                 border-bottom: 1px solid var(--stroke);
 
                 .search-input {
@@ -277,9 +275,7 @@
                     padding: $padding-s;
                     cursor: pointer;
                     transition: background-color 0.2s ease;
-                    font-size: $font-xl;
-                    border-bottom: 1px solid rgba(216, 216, 216, 0.3);
-                    font-family: 'Work Sans', sans-serif;
+                    font-size: $font-md;
 
                     &:last-child {
                         border-bottom: none;
@@ -410,39 +406,3 @@
 // ============================================
 // OVERRIDES PARA MODAIS E CONTAINERS COM OVERFLOW
 // ============================================
-
-// Garantir que o dropdown sempre apareça sobre modais
-.ds-modal .select-dropdown,
-.modal .select-dropdown,
-[class*="modal"] .select-dropdown {
-    z-index: 999999 !important;
-    position: absolute !important;
-}
-
-// Abordagem cirúrgica: só afetar containers de select em modais
-.ds-modal,
-.modal,
-[class*="modal"] {
-
-    // Só aplicar overflow visible para containers de select
-    .select-container {
-        overflow: visible !important;
-        z-index: 99998; // Garantir que o container também tenha z-index alto
-    }
-
-    // Para form-groups que contêm selects, vamos usar uma classe específica
-    .form-group.has-select {
-        overflow: visible !important;
-        z-index: 99998;
-    }
-}
-
-// Garantir que containers de select não afetem o dropdown
-.select-container {
-    overflow: visible !important;
-}
-
-// Para form-groups com selects (aplicada via JavaScript)
-.form-group.has-select {
-    overflow: visible !important;
-}
