@@ -1,0 +1,40 @@
+<div [class]="stepperClasses">
+    <div class="stepper-wrapper">
+        <div *ngFor="let step of steps; let i = index" [class]="stepClasses" [class.active]="isStepActive(step, i)"
+            [class.completed]="isStepCompleted(step, i)" [class.disabled]="step.disabled" [class.error]="step.error"
+            [class.accessible]="isStepAccessible(step, i)" [attr.data-status]="getStepStatus(step, i)"
+            (click)="selectStep(step, i)">
+            <!-- Step Marker -->
+            <div class="step-marker">
+                <!-- Variant: Numbers -->
+                <span *ngIf="variant === 'numbers'" class="step-number">
+                    <i *ngIf="step.icon && isStepCompleted(step, i)" [class]="step.icon"></i>
+                    <i *ngIf="step.error" class="fa-solid fa-exclamation"></i>
+                    <span *ngIf="!step.icon || !isStepCompleted(step, i)">{{ i + 1 }}</span>
+                </span>
+
+                <!-- Variant: Dots -->
+                <span *ngIf="variant === 'dots'" class="step-dot">
+                    <i *ngIf="step.icon && isStepCompleted(step, i)" [class]="step.icon"></i>
+                    <i *ngIf="step.error" class="fa-solid fa-exclamation"></i>
+                </span>
+
+                <!-- Variant: Default -->
+                <span *ngIf="variant === 'default'" class="step-circle">
+                    <i *ngIf="step.icon && isStepCompleted(step, i)" [class]="step.icon"></i>
+                    <i *ngIf="step.error" class="fa-solid fa-exclamation"></i>
+                    <span *ngIf="!step.icon || !isStepCompleted(step, i)" class="step-number">{{ i + 1 }}</span>
+                </span>
+            </div>
+
+            <!-- Step Content -->
+            <div class="step-content">
+                <h4 class="step-title">{{ step.title }}</h4>
+            </div>
+
+            <!-- Connector Line -->
+            <div *ngIf="showConnector && i < steps.length - 1" class="step-connector"
+                [class.completed]="isStepCompleted(step, i)"></div>
+        </div>
+    </div>
+</div>
