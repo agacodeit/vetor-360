@@ -3,26 +3,13 @@
     <div [class]="itemClasses" [class.expanded]="isItemExpanded(item)" [class.disabled]="isItemDisabled(item)"
         [attr.data-id]="item.id">
         <!-- Header do item -->
-        <button class="accordion-header" [class.expanded]="isItemExpanded(item)" [class.disabled]="isItemDisabled(item)"
-            [disabled]="isItemDisabled(item)" (click)="toggleItem(item)" [attr.aria-expanded]="isItemExpanded(item)"
-            [attr.aria-disabled]="isItemDisabled(item)" role="button" tabindex="0">
-            <!-- Ícone à esquerda (se configurado) -->
-            @if (iconPosition === 'left') {
-            <i class="accordion-icon accordion-icon--left" [class.rotated]="isItemExpanded(item)">
-                <i class="fa-solid fa-chevron-right"></i>
-            </i>
-            }
-
-            <!-- Título do item -->
-            <span class="accordion-title">{{ item.title }}</span>
-
-            <!-- Ícone à direita (se configurado) -->
-            @if (iconPosition === 'right') {
-            <i class="accordion-icon accordion-icon--right" [class.rotated]="isItemExpanded(item)">
-                <i class="fa-solid fa-chevron-down"></i>
-            </i>
-            }
-        </button>
+        <ds-button class="accordion-header" [class.expanded]="isItemExpanded(item)"
+            [class.disabled]="isItemDisabled(item)" [label]="item.title" type="button" variant="fill"
+            [disabled]="isItemDisabled(item)" (onClickEmitter)="toggleItem(item)" iconColor="white"
+            [attr.aria-expanded]="isItemExpanded(item)" [attr.aria-disabled]="isItemDisabled(item)"
+            [icon]="iconPosition === 'left' ? 'fa-solid fa-chevron-right' : iconPosition === 'right' ? 'fa-solid fa-chevron-down' : ''"
+            [iconPosition]="iconPosition" labelAlign="left" [fullWidth]="true">
+        </ds-button>
 
         <!-- Conteúdo do item -->
         <div class="accordion-content" [class.expanded]="isItemExpanded(item)"

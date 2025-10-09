@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ButtonComponent } from '../button/button.component';
 
 export interface AccordionItem {
     id: string;
@@ -12,7 +13,7 @@ export interface AccordionItem {
 @Component({
     selector: 'ds-accordion',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, ButtonComponent],
     templateUrl: './accordion.component.html',
     styleUrls: ['./accordion.component.scss'],
     encapsulation: ViewEncapsulation.None

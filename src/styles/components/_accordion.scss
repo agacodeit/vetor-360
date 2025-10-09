@@ -13,7 +13,6 @@
     // Variantes
     &.variant-default {
         .accordion-item {
-            border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
             margin-bottom: $padding-sm;
             overflow: hidden;
@@ -65,7 +64,6 @@
     // Tamanhos
     &.size-sm {
         .accordion-header {
-            padding: $padding-sm $padding-md;
             font-size: $font-sm;
             min-height: 36px;
         }
@@ -77,7 +75,6 @@
 
     &.size-md {
         .accordion-header {
-            padding: $padding-md $padding-lg;
             font-size: $font-md;
             min-height: 44px;
         }
@@ -89,7 +86,6 @@
 
     &.size-lg {
         .accordion-header {
-            padding: $padding-lg $padding-xl;
             font-size: $font-lg;
             min-height: 52px;
         }
@@ -123,7 +119,6 @@
         }
 
         .accordion-header {
-            background-color: var(--primary-light);
             color: var(--primary-dark);
 
             .accordion-icon {
@@ -142,34 +137,63 @@
     display: flex;
     align-items: center;
     width: 100%;
-    background: none;
-    border: none;
-    cursor: pointer;
     text-align: left;
-    font-family: 'Work Sans', sans-serif;
-    font-weight: $font-weight-md;
-    color: var(--secondary);
-    transition: all 0.3s ease;
-    outline: none;
     position: relative;
 
-    &:hover:not(.disabled) {
-        background-color: var(--gray-light);
-    }
+    // Sobrescrever estilos do ds-button para se adequar ao accordion
+    ::ng-deep {
+        .button {
+            width: 100%;
+            justify-content: space-between;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: var(--secondary) !important;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: $font-weight-md;
+            transition: all 0.3s ease;
+            text-align: left;
 
-    &:focus {
-        outline: 2px solid var(--primary-medium);
-        outline-offset: -2px;
+            &:hover:not(:disabled) {
+                background: none !important;
+                color: var(--secondary) !important;
+                box-shadow: none !important;
+            }
+
+            &:focus {
+                outline: 2px solid var(--primary-medium);
+                outline-offset: -2px;
+                box-shadow: none !important;
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+
+            // Garantir que o ícone tenha a rotação correta
+            .button-icon {
+                transition: transform 0.3s ease;
+            }
+        }
     }
 
     &.expanded {
-        background-color: var(--primary-light);
-        color: var(--primary-dark);
+        ::ng-deep .button {
+            background: none !important;
+            color: var(--primary-dark) !important;
+
+            .button-icon {
+                transform: rotate(90deg);
+            }
+        }
     }
 
     &.disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
+        ::ng-deep .button {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
     }
 }
 
@@ -219,11 +243,6 @@
         max-height: 1000px;
         opacity: 1;
     }
-}
-
-.accordion-content-inner {
-    border-top: 1px solid var(--stroke);
-    background-color: var(--gray-light);
 }
 
 .accordion-content-text {
