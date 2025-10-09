@@ -5,10 +5,10 @@
         <!-- Header do item -->
         <ds-button class="accordion-header" [class.expanded]="isItemExpanded(item)"
             [class.disabled]="isItemDisabled(item)" [label]="item.title" type="button" variant="fill"
-            [disabled]="isItemDisabled(item)" (onClickEmitter)="toggleItem(item)" iconColor="white"
+            [disabled]="isItemDisabled(item)" (onClickEmitter)="toggleItem(item)"
             [attr.aria-expanded]="isItemExpanded(item)" [attr.aria-disabled]="isItemDisabled(item)"
             [icon]="iconPosition === 'left' ? 'fa-solid fa-chevron-right' : iconPosition === 'right' ? 'fa-solid fa-chevron-down' : ''"
-            [iconPosition]="iconPosition" labelAlign="left" [fullWidth]="true">
+            [iconPosition]="iconPosition" labelAlign="left" [rotateIcon]="isItemExpanded(item)" [fullWidth]="true">
         </ds-button>
 
         <!-- Conteúdo do item -->
