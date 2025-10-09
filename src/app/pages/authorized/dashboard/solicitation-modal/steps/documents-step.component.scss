@@ -1,5 +1,7 @@
-@use '../../../../../styles/abstracts/variables' as *;
-@use '../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+
+@use '../../../../../../styles/themes/default' as *;
 
 .documents-step {
     width: 100%;
@@ -35,41 +37,51 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: $padding-md;
-        min-height: 400px;
-        justify-content: center;
-        align-items: center;
+        gap: $padding-lg;
     }
 
-    &__placeholder {
-        text-align: center;
-        padding: $padding-xl;
-        border: 2px dashed var(--stroke);
-        border-radius: $border-radius-sm;
-        background-color: var(--gray-light);
-        max-width: 400px;
+    &__accordion {
         width: 100%;
     }
 
-    &__placeholder-icon {
-        font-size: 48px;
-        color: var(--placeholder);
-        margin-bottom: $padding-md;
-    }
+    &__note {
+        display: flex;
+        align-items: center;
+        gap: $padding-sm;
+        padding: $padding-md;
+        background-color: var(--primary-light);
+        border-left: 4px solid var(--primary-medium);
+        border-radius: $border-radius-sm;
 
-    &__placeholder-title {
-        font-family: 'Work Sans', sans-serif;
-        font-size: $font-lg;
-        font-weight: $font-weight-md;
-        color: var(--secondary);
-        margin: 0 0 $padding-sm 0;
-    }
+        i {
+            font-size: $font-lg;
+            color: var(--primary-medium);
+            flex-shrink: 0;
+        }
 
-    &__placeholder-description {
-        font-family: 'Work Sans', sans-serif;
-        font-size: $font-sm;
-        color: var(--placeholder);
-        margin: 0;
-        line-height: 1.5;
+        p {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-sm;
+            color: var(--secondary);
+            margin: 0;
+            line-height: 1.5;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .documents-step {
+        &__note {
+            padding: $padding-sm;
+
+            i {
+                font-size: $font-md;
+            }
+
+            p {
+                font-size: $font-xs;
+            }
+        }
     }
 }

@@ -1,0 +1,32 @@
+<div [class]="accordionClasses">
+    <div *ngFor="let item of items; let i = index" [class]="itemClasses" [class.expanded]="isItemExpanded(item)"
+        [class.disabled]="isItemDisabled(item)" [attr.data-id]="item.id">
+        <!-- Header do item -->
+        <button class="accordion-header" [class.expanded]="isItemExpanded(item)" [class.disabled]="isItemDisabled(item)"
+            [disabled]="isItemDisabled(item)" (click)="toggleItem(item)" [attr.aria-expanded]="isItemExpanded(item)"
+            [attr.aria-disabled]="isItemDisabled(item)" role="button" tabindex="0">
+            <!-- Ícone à esquerda (se configurado) -->
+            <i *ngIf="iconPosition === 'left'" class="accordion-icon accordion-icon--left"
+                [class.rotated]="isItemExpanded(item)">
+                <i class="fa-solid fa-chevron-right"></i>
+            </i>
+
+            <!-- Título do item -->
+            <span class="accordion-title">{{ item.title }}</span>
+
+            <!-- Ícone à direita (se configurado) -->
+            <i *ngIf="iconPosition === 'right'" class="accordion-icon accordion-icon--right"
+                [class.rotated]="isItemExpanded(item)">
+                <i class="fa-solid fa-chevron-down"></i>
+            </i>
+        </button>
+
+        <!-- Conteúdo do item -->
+        <div class="accordion-content" [class.expanded]="isItemExpanded(item)"
+            [attr.aria-hidden]="!isItemExpanded(item)" role="region" [attr.aria-labelledby]="item.id">
+            <div class="accordion-content-inner">
+                <div class="accordion-content-text" [innerHTML]="item.content"></div>
+            </div>
+        </div>
+    </div>
+</div>
