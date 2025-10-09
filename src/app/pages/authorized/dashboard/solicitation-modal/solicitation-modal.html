@@ -42,28 +42,26 @@
 
                 <!-- Botão Cancelar -->
                 <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
-                    [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                    [fullWidth]="true" [disabled]="isLoading">
                 </ds-button>
 
                 <!-- Botão Voltar -->
                 @if (canGoPrevious()) {
                 <ds-button label="Voltar" type="button" variant="outline" (onClickEmitter)="goToPreviousStep()"
-                    [fullWidth]="true" [rounded]="true" [disabled]="isLoading">
+                    [fullWidth]="true" [disabled]="isLoading">
                 </ds-button>
                 }
 
                 <!-- Botão Próximo -->
                 @if (currentStep < 2) { <ds-button label="Próximo" type="button" variant="fill"
-                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [rounded]="true"
-                    [disabled]="!canGoNext() || isLoading">
+                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [disabled]="!canGoNext() || isLoading">
                     </ds-button>
                     }
 
-                    <!-- Botão Finalizar -->
                     @if (currentStep === 2) {
                     <ds-button label="Criar Solicitação" type="button" variant="fill" icon="fa-solid fa-plus"
-                        iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [rounded]="true"
-                        [isLoading]="isLoading" [disabled]="!canFinish() || isLoading">
+                        iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [isLoading]="isLoading"
+                        [disabled]="!canFinish() || isLoading">
                     </ds-button>
                     }
 

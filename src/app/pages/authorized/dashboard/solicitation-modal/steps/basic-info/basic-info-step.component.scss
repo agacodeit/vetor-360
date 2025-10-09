@@ -1,6 +1,6 @@
-@use '../../../../../../styles/abstracts/variables' as *;
-@use '../../../../../../styles/abstracts/typography' as *;
-@use '../../../../../../styles/themes/default' as *;
+@use '../../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../../styles/themes/default' as *;
 
 .basic-info-step {
     width: 100%;
@@ -47,6 +47,10 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: $padding-md;
+
+        &--location {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
     }
 
     &__col {
@@ -92,6 +96,10 @@
         &__row {
             grid-template-columns: 1fr;
             gap: $padding-sm;
+
+            &--location {
+                grid-template-columns: 1fr;
+            }
         }
 
         &__col {

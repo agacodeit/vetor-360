@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent, SelectComponent, TextareaComponent } from '../../../../../../shared';
+import { ButtonComponent, InputComponent, SelectComponent, TextareaComponent } from '../../../../../../shared';
 
 @Component({
     selector: 'app-basic-info-step',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent],
+    imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent, ButtonComponent],
     templateUrl: './basic-info-step.component.html',
     styleUrls: ['./basic-info-step.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -17,6 +17,7 @@ export class BasicInfoStepComponent {
     @Output() formDataChange = new EventEmitter<any>();
 
     basicInfoForm: FormGroup;
+    showRestOfForm: boolean = false;
 
     // Opções para os selects
     operationTypeOptions = [
@@ -100,4 +101,14 @@ export class BasicInfoStepComponent {
     get term() { return this.basicInfoForm.get('term'); }
     get paymentMethod() { return this.basicInfoForm.get('paymentMethod'); }
     get gracePeriod() { return this.basicInfoForm.get('gracePeriod'); }
+
+    identifyOperation(): void {
+        // Validar se o campo finalidade está preenchido
+        if (this.purpose?.valid) {
+            this.showRestOfForm = true;
+        } else {
+            // Marcar o campo como touched para mostrar erro
+            this.purpose?.markAsTouched();
+        }
+    }
 }

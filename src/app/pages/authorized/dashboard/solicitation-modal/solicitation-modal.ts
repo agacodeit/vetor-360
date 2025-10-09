@@ -29,7 +29,7 @@ export class SolicitationModal implements OnInit {
   // Formulário pai que agrupa todos os steps
   mainForm: FormGroup;
   isLoading = false;
-  currentStep = 2;
+  currentStep = 0;
 
   // Dados dos formulários de cada step
   basicInfoData: any = {};
