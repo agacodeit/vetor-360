@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared';
@@ -25,6 +25,11 @@ import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.compo
 export class SolicitationModal implements OnInit {
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
+
+  // ViewChild para acessar os componentes dos steps
+  @ViewChild(BasicInfoStepComponent) basicInfoStepComponent!: BasicInfoStepComponent;
+  @ViewChild(GuaranteesStepComponent) guaranteesStepComponent!: GuaranteesStepComponent;
+  @ViewChild(DocumentsStepComponent) documentsStepComponent!: DocumentsStepComponent;
 
   // Formulário pai que agrupa todos os steps
   mainForm: FormGroup;
@@ -114,6 +119,9 @@ export class SolicitationModal implements OnInit {
 
   // Navegação entre steps
   goToNextStep(): void {
+    // Marcar o step atual como touched antes de tentar avançar
+    this.markCurrentStepAsTouched();
+
     if (this.canGoNext() && this.currentStep < 2) {
       this.currentStep++;
     }
@@ -131,6 +139,7 @@ export class SolicitationModal implements OnInit {
   }
 
   handleSubmit(): void {
+    // Verificar se todos os steps são válidos
     if (this.canFinish()) {
       this.isLoading = true;
 
@@ -146,6 +155,52 @@ export class SolicitationModal implements OnInit {
         this.isLoading = false;
         this.onSubmit.emit(formData);
       }, 2000);
+    } else {
+      // Se não pode finalizar, encontrar o primeiro step inválido e navegar para ele
+      const firstInvalidStepIndex = this.stepValidStates.findIndex(valid => !valid);
+      if (firstInvalidStepIndex !== -1 && firstInvalidStepIndex !== this.currentStep) {
+        // Navegar para o primeiro step inválido
+        this.currentStep = firstInvalidStepIndex;
+        // Marcar como touched após a navegação (usar setTimeout para garantir que o componente foi renderizado)
+        setTimeout(() => {
+          this.markCurrentStepAsTouched();
+        }, 0);
+      } else {
+        // Se o step atual é o inválido, apenas marcar como touched
+        this.markCurrentStepAsTouched();
+      }
+    }
+  }
+
+  markCurrentStepAsTouched(): void {
+    switch (this.currentStep) {
+      case 0:
+        if (this.basicInfoStepComponent?.basicInfoForm) {
+          this.basicInfoStepComponent.basicInfoForm.markAllAsTouched();
+        }
+        break;
+      case 1:
+        if (this.guaranteesStepComponent?.guaranteesForm) {
+          this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
+        }
+        break;
+      case 2:
+        if (this.documentsStepComponent?.documentsForm) {
+          this.documentsStepComponent.documentsForm.markAllAsTouched();
+        }
+        break;
+    }
+  }
+
+  markAllStepsAsTouched(): void {
+    if (this.basicInfoStepComponent?.basicInfoForm) {
+      this.basicInfoStepComponent.basicInfoForm.markAllAsTouched();
+    }
+    if (this.guaranteesStepComponent?.guaranteesForm) {
+      this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
+    }
+    if (this.documentsStepComponent?.documentsForm) {
+      this.documentsStepComponent.documentsForm.markAllAsTouched();
     }
   }
 }

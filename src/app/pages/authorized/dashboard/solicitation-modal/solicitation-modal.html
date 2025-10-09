@@ -54,14 +54,14 @@
 
                 <!-- Botão Próximo -->
                 @if (currentStep < 2) { <ds-button label="Próximo" type="button" variant="fill"
-                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [disabled]="!canGoNext() || isLoading">
+                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [disabled]="isLoading">
                     </ds-button>
                     }
 
                     @if (currentStep === 2) {
                     <ds-button label="Criar Solicitação" type="button" variant="fill" icon="fa-solid fa-plus"
                         iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [isLoading]="isLoading"
-                        [disabled]="!canFinish() || isLoading">
+                        [disabled]="isLoading">
                     </ds-button>
                     }
 
