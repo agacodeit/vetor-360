@@ -5,7 +5,8 @@
 @forward './cards';
 @forward './table';
 @forward './file-upload';
-@forward './tabs';
+@forward './stepper';
+@forward './accordion';
 @forward './action-menu';
 @forward './badge';
 @forward './list-view';
@@ -14,3 +15,4 @@
 @forward './checkbox';
 @forward './radiobutton';
 @forward './kanban';
+@forward './toast';

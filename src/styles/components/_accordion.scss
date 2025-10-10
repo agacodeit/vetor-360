@@ -1,0 +1,395 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+// ============================================
+// COMPONENTE DS-ACCORDION
+// ============================================
+
+.accordion-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    // Variantes
+    &.variant-default {
+        .accordion-item {
+            border-radius: $border-radius-sm;
+            margin-bottom: $padding-sm;
+            overflow: hidden;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &.expanded {
+                border-color: var(--primary-medium);
+            }
+        }
+    }
+
+    &.variant-bordered {
+        .accordion-item {
+            border: 2px solid var(--stroke);
+            border-radius: $border-radius-sm;
+            margin-bottom: $padding-md;
+            overflow: hidden;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &.expanded {
+                border-color: var(--primary-medium);
+                box-shadow: 0 2px 8px rgba(1, 80, 120, 0.1);
+            }
+        }
+    }
+
+    &.variant-minimal {
+        .accordion-item {
+            border-bottom: 1px solid var(--stroke);
+            border-radius: 0;
+            margin-bottom: 0;
+
+            &:first-child {
+                border-top: 1px solid var(--stroke);
+            }
+
+            &.expanded {
+                border-bottom-color: var(--primary-medium);
+            }
+        }
+    }
+
+    // Tamanhos
+    &.size-sm {
+        .accordion-header {
+            font-size: $font-sm;
+            min-height: 36px;
+        }
+
+    }
+
+    &.size-md {
+        .accordion-header {
+            font-size: $font-md;
+            min-height: 44px;
+        }
+    }
+
+    &.size-lg {
+        .accordion-header {
+            font-size: $font-lg;
+            min-height: 52px;
+        }
+    }
+
+    // Modificadores
+    &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+}
+
+// ============================================
+// ELEMENTOS DO COMPONENTE
+// ============================================
+
+.accordion-item {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    transition: all 0.3s ease;
+
+    &.expanded {
+        .accordion-content {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
+        .accordion-header {
+            color: var(--primary-dark);
+
+            .accordion-icon {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    position: relative;
+
+    // Sobrescrever estilos do ds-button para se adequar ao accordion
+    ::ng-deep {
+        .button {
+            width: 100%;
+            justify-content: space-between;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: var(--secondary) !important;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: $font-weight-md;
+            transition: all 0.3s ease;
+            text-align: left;
+
+            &:hover:not(:disabled) {
+                background: none !important;
+                color: var(--secondary) !important;
+                box-shadow: none !important;
+            }
+
+            &:focus {
+                outline: 2px solid var(--primary-medium);
+                outline-offset: -2px;
+                box-shadow: none !important;
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+
+            // Garantir que o ícone tenha a rotação correta
+            .button-icon {
+                transition: transform 0.3s ease;
+            }
+        }
+    }
+
+    &.expanded {
+        ::ng-deep .button {
+            background: none !important;
+            color: var(--primary-dark) !important;
+
+            .button-icon {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    &.disabled {
+        ::ng-deep .button {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+}
+
+.accordion-title {
+    flex: 1;
+    font-weight: $font-weight-md;
+    line-height: 1.4;
+}
+
+.accordion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    color: var(--placeholder);
+    font-size: 14px;
+
+    .size-sm & {
+        font-size: 12px;
+    }
+
+    .size-lg & {
+        font-size: 16px;
+    }
+
+    &.accordion-icon--left {
+        margin-right: $padding-sm;
+    }
+
+    &.accordion-icon--right {
+        margin-left: $padding-sm;
+    }
+
+    &.rotated {
+        transform: rotate(180deg);
+    }
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    background-color: var(--white);
+
+    &.expanded {
+        max-height: 1000px;
+        opacity: 1;
+    }
+}
+
+.accordion-content-text {
+    font-family: 'Work Sans', sans-serif;
+    font-size: $font-sm;
+    line-height: 1.6;
+    color: var(--secondary);
+
+    .size-sm & {
+        font-size: $font-xs;
+    }
+
+    .size-lg & {
+        font-size: $font-md;
+    }
+
+    // Estilização para conteúdo HTML
+    p {
+        margin: 0 0 $padding-sm 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul,
+    ol {
+        margin: $padding-sm 0;
+        padding-left: $padding-lg;
+    }
+
+    li {
+        margin-bottom: $padding-xxs;
+    }
+
+    strong {
+        font-weight: $font-weight-md;
+    }
+
+    em {
+        font-style: italic;
+    }
+
+    a {
+        color: var(--primary-medium);
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// ============================================
+// RESPONSIVIDADE
+// ============================================
+
+@media (max-width: 768px) {
+    .accordion-container {
+        &.size-md {
+            .accordion-header {
+                padding: $padding-sm $padding-md;
+                font-size: $font-sm;
+                min-height: 40px;
+            }
+
+            .accordion-content-inner {
+                padding: $padding-sm $padding-md $padding-md $padding-md;
+            }
+        }
+
+        &.size-lg {
+            .accordion-header {
+                padding: $padding-md $padding-lg;
+                font-size: $font-md;
+                min-height: 44px;
+            }
+
+            .accordion-content-inner {
+                padding: $padding-md $padding-lg $padding-lg $padding-lg;
+            }
+        }
+    }
+
+    .accordion-title {
+        font-size: $font-sm;
+    }
+
+    .accordion-icon {
+        font-size: 12px;
+    }
+}
+
+// ============================================
+// ACESSIBILIDADE
+// ============================================
+
+@media (prefers-reduced-motion: reduce) {
+
+    .accordion-item,
+    .accordion-header,
+    .accordion-content,
+    .accordion-icon {
+        transition: none;
+    }
+}
+
+// Estados de foco para acessibilidade
+.accordion-header:focus-visible {
+    outline: 2px solid var(--primary-medium);
+    outline-offset: -2px;
+}
+
+// Melhorar contraste para usuários com baixa visão
+@media (prefers-contrast: high) {
+    .accordion-item {
+        border-width: 2px;
+    }
+
+    .accordion-header {
+        border-bottom: 1px solid var(--stroke);
+    }
+}
+
+// ============================================
+// ANIMAÇÕES PERSONALIZADAS
+// ============================================
+
+@keyframes accordionSlideDown {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    to {
+        max-height: 1000px;
+        opacity: 1;
+    }
+}
+
+@keyframes accordionSlideUp {
+    from {
+        max-height: 1000px;
+        opacity: 1;
+    }
+
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+.accordion-content {
+    &.expanding {
+        animation: accordionSlideDown 0.3s ease-out;
+    }
+
+    &.collapsing {
+        animation: accordionSlideUp 0.3s ease-out;
+    }
+}

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { CardComponent, KanbanCard, KanbanColumn, KanbanComponent, IconComponent, ButtonComponent } from '../../../shared/components';
-import { ModalComponent, ModalService, SelectOption, TextareaComponent } from '../../../shared';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
+import { Component, effect, inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalComponent, ModalService, SelectOption } from '../../../shared';
+import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
+import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,8 +16,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Vali
     FormsModule,
     ReactiveFormsModule,
     ModalComponent,
-    TextareaComponent,
-    ButtonComponent
+    ButtonComponent,
+    SolicitationModal
   ],
   providers: [
     NgModel
@@ -27,8 +28,16 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgModel, Vali
 })
 export class Dashboard implements OnInit {
   private modalService = inject(ModalService);
+  isModalOpen: boolean = false;
 
   kanbanColumns: KanbanColumn[] = [];
+
+  constructor() {
+    effect(() => {
+      const modalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
+      this.isModalOpen = modalInstance ? modalInstance.isOpen : false;
+    });
+  }
 
   ngOnInit() {
     this.initializeKanbanData();
@@ -212,11 +221,12 @@ export class Dashboard implements OnInit {
   ];
 
   openCreateSolicitationModal() {
+    this.isModalOpen = true;
     this.modalService.open({
       id: "create-solicitation",
       title: "Nova Solicitação",
       subtitle: "Informe os dados do produto e do cliente",
-      size: "md",
+      size: "lg",
       showHeader: true,
       showCloseButton: true,
       closeOnBackdropClick: true,
@@ -225,6 +235,37 @@ export class Dashboard implements OnInit {
   }
 
   onModalClosed(event: any) {
+    this.isModalOpen = false;
     console.log('Modal fechado:', event);
+  }
+
+  /**
+   * Verifica se há solicitações (cards) no kanban
+   */
+  get hasSolicitations(): boolean {
+    return this.kanbanColumns.some(column => column.cards.length > 0);
+  }
+
+  /**
+   * Conta o total de solicitações em todas as colunas
+   */
+  get totalSolicitations(): number {
+    return this.kanbanColumns.reduce((total, column) => total + column.cards.length, 0);
+  }
+
+  /**
+   * Limpa todas as solicitações (para teste)
+   */
+  clearAllSolicitations() {
+    this.kanbanColumns.forEach(column => {
+      column.cards = [];
+    });
+  }
+
+  /**
+   * Restaura as solicitações de exemplo (para teste)
+   */
+  restoreExampleSolicitations() {
+    this.initializeKanbanData();
   }
 }
