@@ -1,35 +1,36 @@
-<div class="solicitation-details">
+<article class="solicitation-details">
 
     <div class="solicitation-details__container">
-        <main class="solicitation-details__content">
+        <div class="solicitation-details__content">
 
             <!-- SOLICITATION DATA -->
-            <div class="d-grid columns-2 gap-24">
-                <div class="d-flex flex-column gap-12">
-                    <div class="title-semibold">
+            <section class="solicitation-details__section d-grid columns-2 gap-24">
+                <div class="solicitation-details__info d-flex flex-column gap-12">
+                    <h2 class="title-semibold">
                         Solicitação
-                    </div>
-                    <div class="body">
+                    </h2>
+                    <p class="body">
                         XPTO
-                    </div>
+                    </p>
                 </div>
-                <div class="d-flex flex-column gap-12 align-items-end">
+                <div class="solicitation-details__info d-flex flex-column gap-12 align-items-end">
                     <div class="solicitation-details__status">
-                        <div class="title-semibold">
+                        <span class="title-semibold">
                             {{ getStatusLabel() }}
-                        </div>
+                        </span>
                     </div>
                 </div>
-            </div>
+            </section>
             <!-- SOLICITATION DATA -->
 
             <!-- FOLLOW-UP -->
-            <div class="d-grid columns-1 gap-24 mt-24">
-                <div class="d-flex flex-column gap-12">
-                    <div class="title-semibold">
-                        Follow-up <a href="" class="body">Abrir visualização</a>
-                    </div>
-                    <div class="body d-flex align-items-center gap-24">
+            <section class="solicitation-details__section d-grid columns-1 gap-24 mt-24">
+                <div class="solicitation-details__follow-up d-flex flex-column gap-12">
+                    <h2 class="title-semibold">
+                        Follow-up <button type="button" class="body solicitation-details__link">Abrir
+                            visualização</button>
+                    </h2>
+                    <div class="solicitation-details__stats body d-flex align-items-center gap-24">
                         <p class="body">
                             <ds-icon icon="fa-regular fa-comment-dots" fontSize="16px" color="primary" />
                             2 mensagens
@@ -40,52 +41,52 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </section>
             <!-- FOLLOW-UP -->
 
             <!-- CLIENT DATA -->
-            <div class="d-grid columns-2 gap-24 mt-24">
-                <div class="d-grid columns-1">
-                    <div class="title-semibold mb-12">
+            <section class="solicitation-details__section d-grid columns-2 gap-24 mt-24">
+                <div class="solicitation-details__client-info d-grid columns-1">
+                    <h2 class="title-semibold mb-12">
                         Cliente
-                    </div>
-                    <div class="d-flex justify-content-between mb-8">
-                        <div class="d-flex flex-column gap-12">
+                    </h2>
+                    <div class="solicitation-details__client-data d-flex justify-content-between mb-8">
+                        <div class="solicitation-details__client-details d-flex flex-column gap-12">
                             <div class="solicitation-details__client">
                                 <p class="body mb-6">{{cardData?.client}}</p>
                                 <p class="input-label font-weight-regular">{{cardData?.cnpj}}</p>
                             </div>
                         </div>
-                        <div class="d-flex flex-column">
+                        <div class="solicitation-details__client-details d-flex flex-column">
                             <div class="solicitation-details__client">
                                 <p class="body mb-6">Aberta em {{cardData?.dueDate | date:'dd/MM/yyyy'}}</p>
                                 <p class="body">Tecnologia</p>
                             </div>
                         </div>
                     </div>
-                    <div class="address">
+                    <address class="solicitation-details__address">
                         <p class="body">Alameda Afonso Schmidt, 119 - Sala 78 - Santa Terezinha, São Paulo - SP,
                             02450-000</p>
-                    </div>
+                    </address>
                 </div>
 
-                <div class="d-flex gap-12">
-                    <div class="d-flex flex-column gap-12">
-                        <div class="title-semibold">
+                <div class="solicitation-details__rating-info d-flex gap-12">
+                    <div class="solicitation-details__rating-text d-flex flex-column gap-12">
+                        <h2 class="title-semibold">
                             Rating
-                        </div>
-                        <div class="input-label font-weight-regular">
+                        </h2>
+                        <p class="input-label font-weight-regular">
                             Cliente com alguns pontos de atenção, mas ainda com capacidade de pagamento adequada
-                        </div>
+                        </p>
                     </div>
                     <div class="solicitation-details__rating">
                         B
                     </div>
                 </div>
 
-            </div>
+            </section>
             <!-- CLIENT DATA -->
 
-        </main>
+        </div>
     </div>
-</div>
+</article>

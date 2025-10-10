@@ -29,6 +29,22 @@
             border: 1px solid #FFC800;
         }
 
+        &__link {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+
+        &__address {
+            font-style: normal;
+        }
+
         &__rating {
             border-radius: 12px;
             font-size: 48px;
