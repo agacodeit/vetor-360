@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, CheckboxComponent } from '../../../../../../shared';
 
@@ -11,7 +11,7 @@ import { AccordionComponent, AccordionItem, AccordionItemDirective, CheckboxComp
     styleUrls: ['./documents-step.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DocumentsStepComponent {
+export class DocumentsStepComponent implements OnInit {
     @Input() formData: any = {};
     @Output() formValid = new EventEmitter<boolean>();
     @Output() formDataChange = new EventEmitter<any>();
@@ -37,15 +37,15 @@ export class DocumentsStepComponent {
             this.formDataChange.emit(value);
             this.formValid.emit(this.documentsForm.valid);
         });
-
-        // Preencher com dados iniciais se fornecidos
-        if (this.formData) {
-            this.documentsForm.patchValue(this.formData);
-        }
     }
 
     ngOnInit(): void {
-        // Inicializar validação
+        // Carregar dados salvos se existirem
+        if (this.formData && Object.keys(this.formData).length > 0) {
+            this.documentsForm.patchValue(this.formData, { emitEvent: false });
+        }
+
+        // Emitir estado inicial de validade
         this.formValid.emit(this.documentsForm.valid);
     }
 
