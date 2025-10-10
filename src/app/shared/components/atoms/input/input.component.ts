@@ -3,11 +3,17 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
+import { MaskDirective } from "mask-directive";
 
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [CommonModule, IconComponent, FormsModule],
+  imports: [
+    CommonModule,
+    IconComponent,
+    FormsModule,
+    MaskDirective
+  ],
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -36,7 +42,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() helperText: string = '';
   @Input() fullWidth: boolean = false;
   @Input() width: string = 'fit-content';
-
+  @Input() libMask: string = '';
 
   @Input() ngModel: any;
   @Output() ngModelChange = new EventEmitter<any>();
@@ -149,8 +155,18 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     return !this.showError && !!this.helperText;
   }
 
-
-
+  /**
+   * Retorna o tipo efetivo do input.
+   * Se tiver máscara de moeda, força type="text" para evitar erro de parse
+   */
+  get effectiveType(): string {
+    // Máscaras de moeda devem usar type="text"
+    const currencyMasks = ['BRL', 'USD', 'EUR', 'GBP'];
+    if (this.libMask && currencyMasks.includes(this.libMask.toUpperCase())) {
+      return 'text';
+    }
+    return this.type;
+  }
 
   get safeValue(): string {
     if (this.value === null || this.value === undefined) {

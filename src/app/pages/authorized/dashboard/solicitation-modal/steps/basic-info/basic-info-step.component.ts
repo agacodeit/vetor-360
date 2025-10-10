@@ -2,11 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent, InputComponent, SelectComponent, TextareaComponent } from '../../../../../../shared';
+import { MaskDirective } from "mask-directive";
 
 @Component({
     selector: 'app-basic-info-step',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent, ButtonComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        InputComponent,
+        SelectComponent,
+        TextareaComponent,
+        ButtonComponent,
+        MaskDirective
+    ],
     templateUrl: './basic-info-step.component.html',
     styleUrls: ['./basic-info-step.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -67,7 +76,7 @@ export class BasicInfoStepComponent {
             purpose: ['', [Validators.required, Validators.maxLength(500)]],
             operationType: ['', Validators.required],
             amount: ['', [Validators.required, Validators.min(1000)]],
-            currency: ['', Validators.required],
+            currency: ['BRL', Validators.required],
             businessActivity: ['', Validators.required],
             country: ['', Validators.required],
             state: ['', Validators.required],

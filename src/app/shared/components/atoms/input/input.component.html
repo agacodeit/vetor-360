@@ -17,8 +17,9 @@
         }
 
 
-        <input [id]="uniqueId" [class]="inputClasses" [type]="type" [placeholder]="placeholder" [required]="required"
-            [disabled]="disabled" [readonly]="readonly" [attr.maxlength]="maxlength" [attr.minlength]="minlength"
+        <input [libMask]="libMask" [dropSpecialCharacters]="false" [id]="uniqueId" [class]="inputClasses"
+            [type]="effectiveType" [placeholder]="placeholder" [required]="required" [disabled]="disabled"
+            [readonly]="readonly" [attr.maxlength]="maxlength" [attr.minlength]="minlength"
             [attr.step]="type === 'number' ? '0.01' : null" [attr.min]="type === 'number' ? '0' : null"
             [autocomplete]="autocomplete" [value]="safeValue" (input)="onInputChange($event.target)"
             (focus)="onInputFocus()" (blur)="onInputBlur()" />
