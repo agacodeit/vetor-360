@@ -1,0 +1,253 @@
+@use '../../../../../styles/abstracts/variables' as *;
+@use '../../../../../styles/abstracts/typography' as *;
+@use '../../../../../styles/themes/default' as *;
+
+// Estilos apenas para o conteúdo interno do modal
+// O modal base (backdrop, dialog) é gerenciado pelo modal.component.scss
+
+.solicitation-modal {
+    // Container do conteúdo interno
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: $padding-md;
+
+    &__header {
+        text-align: center;
+        margin-bottom: $padding-lg;
+        padding-bottom: $padding-md;
+        border-bottom: 1px solid var(--stroke);
+    }
+
+    &__title {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-xxl;
+        font-weight: $font-weight-md;
+        color: var(--secondary);
+        margin: 0 0 $padding-sm 0;
+    }
+
+    &__subtitle {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-sm;
+        color: var(--placeholder);
+        margin: 0;
+    }
+
+    &__step-content {
+        flex: 1;
+        overflow-y: auto;
+        margin: $padding-md 0;
+    }
+
+    &__content {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+
+    &__form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__legend {
+        font-family: $font-primary;
+        font-size: $font-sm;
+        font-weight: $font-weight-md;
+        color: var(--label);
+        padding: 0;
+        flex-shrink: 0;
+    }
+
+    &__inputs {
+        display: flex;
+        flex-direction: column;
+        gap: $padding-md;
+        flex: 1;
+        min-height: 0;
+    }
+
+
+    // Grid system com CSS Grid
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "operation-type value-currency";
+        gap: $padding-md;
+    }
+
+    &__row-full {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $padding-md;
+    }
+
+    &__row-business-activity {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "business-activity";
+        gap: $padding-md;
+    }
+
+    &__row-grace-period {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "grace-period";
+        gap: $padding-md;
+    }
+
+    &__row-location {
+        display: grid;
+        grid-template-columns: 1fr 1.33fr 1.33fr;
+        grid-template-areas:
+            "country state city";
+        gap: $padding-md;
+    }
+
+    &__row-payment {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "term payment-method";
+        gap: $padding-md;
+
+    }
+
+    &__col {
+        display: flex;
+        flex-direction: column;
+
+        &--operation-type {
+            grid-area: operation-type;
+        }
+
+        &--value-currency {
+            grid-area: value-currency;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: $padding-sm;
+        }
+
+        &--business-activity {
+            grid-area: business-activity;
+        }
+
+        &--country {
+            grid-area: country;
+        }
+
+        &--state {
+            grid-area: state;
+        }
+
+        &--city {
+            grid-area: city;
+        }
+
+        &--term {
+            grid-area: term;
+        }
+
+        &--payment-method {
+            grid-area: payment-method;
+        }
+
+        &--grace-period {
+            grid-area: grace-period;
+        }
+    }
+
+    &__finality {
+        width: 100%;
+    }
+
+    &__identify-button {
+        display: flex;
+        justify-content: center;
+        margin: $padding-md 0;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $padding-md;
+        flex-shrink: 0;
+        background-color: var(--white);
+    }
+}
+
+// Estilos específicos para garantir 100% de largura nos componentes
+.solicitation-modal {
+
+
+    // Garantir que as colunas de grid ocupem 100% da área
+    &__col {
+
+        &--business-activity,
+        &--grace-period {
+            width: 100%;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .solicitation-modal {
+
+        &__actions {
+            flex-direction: column;
+            gap: $padding-sm;
+        }
+
+        &__inputs {
+            gap: $padding-sm;
+        }
+
+        &__row {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "operation-type"
+                "value-currency";
+        }
+
+        &__row-location {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "country"
+                "state"
+                "city";
+        }
+
+        &__row-payment {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "term"
+                "payment-method";
+        }
+
+        &__col {
+            &--value-currency {
+                grid-template-columns: 1fr;
+                gap: $padding-sm;
+            }
+        }
+    }
+}

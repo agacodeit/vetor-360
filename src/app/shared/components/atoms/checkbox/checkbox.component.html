@@ -1,1 +1,18 @@
-<p>checkbox works!</p>
+<div [class]="containerClasses">
+    <label [class]="labelClasses" [attr.for]="uniqueId">
+        <input type="checkbox" [id]="uniqueId" [class]="checkboxClasses" [checked]="value" [disabled]="disabled"
+            [indeterminate]="indeterminate" [attr.aria-invalid]="invalid" [attr.aria-required]="required"
+            (change)="onCheckboxChange($event)" (blur)="onCheckboxBlur()" />
+        @if (label) {
+        <span class="checkbox-label-text">{{ label }}</span>
+        }
+    </label>
+
+    @if (showError) {
+    <span class="error-message" role="alert">{{ errorMessage }}</span>
+    }
+
+    @if (showHelper) {
+    <span class="helper-text">{{ helperText }}</span>
+    }
+</div>

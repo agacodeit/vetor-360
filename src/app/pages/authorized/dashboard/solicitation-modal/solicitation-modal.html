@@ -1,0 +1,72 @@
+<div class="solicitation-modal">
+    <div class="solicitation-modal__overlay" (click)="handleClose()"></div>
+
+    <div class="solicitation-modal__container">
+        <main class="solicitation-modal__content">
+
+            <!-- Stepper -->
+            <div class="solicitation-modal__stepper">
+                <ds-stepper [steps]="stepperSteps" [currentStep]="currentStep" variant="default" size="md"
+                    [showConnector]="true" [clickable]="false" (stepChanged)="onStepChanged($event)">
+                </ds-stepper>
+            </div>
+
+            <!-- Conteúdo dos Steps -->
+            <div class="solicitation-modal__step-content">
+
+                <!-- Step 1: Informações Básicas -->
+                @if (currentStep === 0) {
+                <app-basic-info-step [formData]="basicInfoData" (formDataChange)="onBasicInfoDataChange($event)"
+                    (formValid)="onBasicInfoValidChange($event)">
+                </app-basic-info-step>
+                }
+
+                <!-- Step 2: Garantias -->
+                @if (currentStep === 1) {
+                <app-guarantees-step [formData]="guaranteesData" (formDataChange)="onGuaranteesDataChange($event)"
+                    (formValid)="onGuaranteesValidChange($event)">
+                </app-guarantees-step>
+                }
+
+                <!-- Step 3: Documentos -->
+                @if (currentStep === 2) {
+                <app-documents-step [formData]="documentsData" (formDataChange)="onDocumentsDataChange($event)"
+                    (formValid)="onDocumentsValidChange($event)">
+                </app-documents-step>
+                }
+
+            </div>
+
+            <!-- Ações do Modal -->
+            <div class="solicitation-modal__actions">
+
+                <!-- Botão Cancelar -->
+                <ds-button label="Cancelar" type="button" variant="outline" (onClickEmitter)="handleClose()"
+                    [fullWidth]="true" [disabled]="isLoading">
+                </ds-button>
+
+                <!-- Botão Voltar -->
+                @if (canGoPrevious()) {
+                <ds-button label="Voltar" type="button" variant="outline" (onClickEmitter)="goToPreviousStep()"
+                    [fullWidth]="true" [disabled]="isLoading">
+                </ds-button>
+                }
+
+                <!-- Botão Próximo -->
+                @if (currentStep < 2) { <ds-button label="Próximo" type="button" variant="fill"
+                    (onClickEmitter)="goToNextStep()" [fullWidth]="true" [disabled]="isLoading">
+                    </ds-button>
+                    }
+
+                    @if (currentStep === 2) {
+                    <ds-button label="Criar Solicitação" type="button" variant="fill" icon="fa-solid fa-plus"
+                        iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [isLoading]="isLoading"
+                        [disabled]="isLoading">
+                    </ds-button>
+                    }
+
+            </div>
+
+        </main>
+    </div>
+</div>

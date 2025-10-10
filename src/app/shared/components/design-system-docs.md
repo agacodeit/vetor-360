@@ -774,7 +774,8 @@ $font-sm: 14px;
 $font-md: 16px;
 $font-lg: 18px;
 $font-xl: 24px;
-$font-xxl: 32px;
+$font-xxl: 28px;
+$font-xxxl: 32px;
 ```
 
 #### Mixins de Tipografia

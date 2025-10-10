@@ -75,7 +75,6 @@
     align-items: center;
     justify-content: space-between;
     padding: $padding-md $padding-md 0 $padding-md; //24px
-   // background-color: var(--tertiary);
 
     .modal-title {
         margin: 0;
@@ -97,7 +96,6 @@
 }
 
 .modal-body {
-    padding: $padding-md; // 24px
     flex: 1;
     overflow-y: scroll;
     background-color: var(--white);
