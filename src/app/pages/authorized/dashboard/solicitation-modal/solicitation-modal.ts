@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared';
@@ -6,6 +6,7 @@ import { StepperComponent, StepperStep } from '../../../../shared/components/ato
 import { DocumentsStepComponent } from './steps/documents/documents-step.component';
 import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
 import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
+import { ToastService } from '../../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -23,6 +24,8 @@ import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.compo
   styleUrl: './solicitation-modal.scss'
 })
 export class SolicitationModal implements OnInit {
+  private toastService = inject(ToastService);
+
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
 
@@ -124,6 +127,8 @@ export class SolicitationModal implements OnInit {
 
     if (this.canGoNext() && this.currentStep < 2) {
       this.currentStep++;
+    } else if (!this.canGoNext()) {
+      this.toastService.error('Por favor, preencha todos os campos obrigatórios antes de continuar.');
     }
   }
 
@@ -159,6 +164,13 @@ export class SolicitationModal implements OnInit {
       // Se não pode finalizar, encontrar o primeiro step inválido e navegar para ele
       const firstInvalidStepIndex = this.stepValidStates.findIndex(valid => !valid);
       if (firstInvalidStepIndex !== -1 && firstInvalidStepIndex !== this.currentStep) {
+        // Mostrar mensagem de erro
+        const stepNames = ['Informações Básicas', 'Garantias', 'Documentos'];
+        this.toastService.error(
+          `Por favor, preencha todos os campos obrigatórios na etapa "${stepNames[firstInvalidStepIndex]}".`,
+          'Formulário incompleto'
+        );
+
         // Navegar para o primeiro step inválido
         this.currentStep = firstInvalidStepIndex;
         // Marcar como touched após a navegação (usar setTimeout para garantir que o componente foi renderizado)
@@ -166,8 +178,12 @@ export class SolicitationModal implements OnInit {
           this.markCurrentStepAsTouched();
         }, 0);
       } else {
-        // Se o step atual é o inválido, apenas marcar como touched
+        // Se o step atual é o inválido, apenas marcar como touched e mostrar toast
         this.markCurrentStepAsTouched();
+        this.toastService.error(
+          'Por favor, preencha todos os campos obrigatórios antes de enviar.',
+          'Formulário incompleto'
+        );
       }
     }
   }

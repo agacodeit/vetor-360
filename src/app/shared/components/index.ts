@@ -15,6 +15,8 @@ export * from './atoms/select/select.component';
 export * from './atoms/spinner/spinner.component';
 export * from './atoms/stepper/stepper.component';
 export * from './atoms/textarea/textarea.component';
+export * from './atoms/toast/toast.component';
+export * from './atoms/toast/toast-container.component';
 
 // Molecules
 export * from './molecules/breadcrumb/breadcrumb.component';

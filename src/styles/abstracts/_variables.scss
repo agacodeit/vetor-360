@@ -77,3 +77,28 @@ $size-xxxxxxxxxxxxxxxxxxxxxxxxxl: 500px;
 $size-xxxxxxxxxxxxxxxxxxxxxxxxxxl: 800px;
 $size-xxxxxxxxxxxxxxxxxxxxxxxxxxxl: 1140px;
 $size-xxxxxxxxxxxxxxxxxxxxxxxxxxxxl: 1200px;
+
+// === CORES DO TOAST ===
+// Success
+$toast-success-bg: #d4edda;
+$toast-success-border: #28a745;
+$toast-success-text: #155724;
+$toast-success-icon: #28a745;
+
+// Error
+$toast-error-bg: #f8d7da;
+$toast-error-border: #dc3545;
+$toast-error-text: #721c24;
+$toast-error-icon: #dc3545;
+
+// Warning
+$toast-warning-bg: #fff3cd;
+$toast-warning-border: #ffc107;
+$toast-warning-text: #856404;
+$toast-warning-icon: #ffc107;
+
+// Info
+$toast-info-bg: #d1ecf1;
+$toast-info-border: #17a2b8;
+$toast-info-text: #0c5460;
+$toast-info-icon: #17a2b8;
