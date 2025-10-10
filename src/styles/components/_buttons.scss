@@ -50,6 +50,14 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+
+    // Rotação do ícone quando rotateIcon = true
+    &.icon-rotated {
+        .button-icon {
+            transform: rotate(180deg);
+        }
     }
 
     // Retrocompatibilidade com ícones antigos (i sem classe)

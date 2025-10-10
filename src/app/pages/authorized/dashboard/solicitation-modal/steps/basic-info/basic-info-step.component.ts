@@ -1,22 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent, SelectComponent, TextareaComponent } from '../../../../../shared';
+import { ButtonComponent, InputComponent, SelectComponent, TextareaComponent } from '../../../../../../shared';
 
 @Component({
     selector: 'app-basic-info-step',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, InputComponent, SelectComponent, TextareaComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        InputComponent,
+        SelectComponent,
+        TextareaComponent,
+        ButtonComponent
+    ],
     templateUrl: './basic-info-step.component.html',
     styleUrls: ['./basic-info-step.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class BasicInfoStepComponent {
+export class BasicInfoStepComponent implements OnInit {
     @Input() formData: any = {};
     @Output() formValid = new EventEmitter<boolean>();
     @Output() formDataChange = new EventEmitter<any>();
 
     basicInfoForm: FormGroup;
+    showRestOfForm: boolean = false;
 
     // Opções para os selects
     operationTypeOptions = [
@@ -65,8 +73,8 @@ export class BasicInfoStepComponent {
         this.basicInfoForm = this.fb.group({
             purpose: ['', [Validators.required, Validators.maxLength(500)]],
             operationType: ['', Validators.required],
-            amount: ['', [Validators.required, Validators.min(1000)]],
-            currency: ['', Validators.required],
+            amount: ['', [Validators.required]],
+            currency: ['BRL', Validators.required],
             businessActivity: ['', Validators.required],
             country: ['', Validators.required],
             state: ['', Validators.required],
@@ -81,11 +89,21 @@ export class BasicInfoStepComponent {
             this.formDataChange.emit(value);
             this.formValid.emit(this.basicInfoForm.valid);
         });
+    }
 
-        // Carregar dados iniciais se fornecidos
-        if (this.formData) {
-            this.basicInfoForm.patchValue(this.formData);
+    ngOnInit(): void {
+        // Carregar dados salvos se existirem
+        if (this.formData && Object.keys(this.formData).length > 0) {
+            this.basicInfoForm.patchValue(this.formData, { emitEvent: false });
+
+            // Restaurar o estado showRestOfForm se houver dados além da finalidade
+            if (this.formData.purpose) {
+                this.showRestOfForm = true;
+            }
         }
+
+        // Emitir estado inicial de validade
+        this.formValid.emit(this.basicInfoForm.valid);
     }
 
     // Getters para facilitar o acesso aos controles
@@ -100,4 +118,14 @@ export class BasicInfoStepComponent {
     get term() { return this.basicInfoForm.get('term'); }
     get paymentMethod() { return this.basicInfoForm.get('paymentMethod'); }
     get gracePeriod() { return this.basicInfoForm.get('gracePeriod'); }
+
+    identifyOperation(): void {
+        // Validar se o campo finalidade está preenchido
+        if (this.purpose?.valid) {
+            this.showRestOfForm = true;
+        } else {
+            // Marcar o campo como touched para mostrar erro
+            this.purpose?.markAsTouched();
+        }
+    }
 }

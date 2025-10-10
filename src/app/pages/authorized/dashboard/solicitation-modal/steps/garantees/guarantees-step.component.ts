@@ -1,17 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TextareaComponent } from '../../../../../shared/components/atoms/textarea/textarea.component';
+import { TextareaComponent } from '../../../../../../shared/components/atoms/textarea/textarea.component';
 
 @Component({
     selector: 'app-guarantees-step',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, TextareaComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        TextareaComponent
+    ],
     templateUrl: './guarantees-step.component.html',
     styleUrls: ['./guarantees-step.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class GuaranteesStepComponent {
+export class GuaranteesStepComponent implements OnInit {
     @Input() formData: any = {};
     @Output() formValid = new EventEmitter<boolean>();
     @Output() formDataChange = new EventEmitter<any>();
@@ -28,11 +32,16 @@ export class GuaranteesStepComponent {
             this.formDataChange.emit(value);
             this.formValid.emit(this.guaranteesForm.valid);
         });
+    }
 
-        // Carregar dados iniciais se fornecidos
-        if (this.formData) {
-            this.guaranteesForm.patchValue(this.formData);
+    ngOnInit(): void {
+        // Carregar dados salvos se existirem
+        if (this.formData && Object.keys(this.formData).length > 0) {
+            this.guaranteesForm.patchValue(this.formData, { emitEvent: false });
         }
+
+        // Emitir estado inicial de validade
+        this.formValid.emit(this.guaranteesForm.valid);
     }
 
     // Getter para facilitar o acesso ao controle

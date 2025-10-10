@@ -22,6 +22,7 @@ export class ButtonComponent {
   @Input() type: 'button' | 'submit' = 'button';
   @Input() iconPosition: 'left' | 'right' = 'left';
   @Input() labelAlign: 'left' | 'center' | 'right' = 'center';
+  @Input() rotateIcon: boolean = false;
 
   @Output() onClickEmitter = new EventEmitter();
 

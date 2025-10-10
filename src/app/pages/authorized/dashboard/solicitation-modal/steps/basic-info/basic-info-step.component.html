@@ -13,6 +13,13 @@
                 </ds-textarea>
             </div>
 
+            <div class="d-flex justify-content-center">
+                <ds-button label="Identificar melhor operação" variant="fill" [rounded]="true"
+                    icon="fa-solid fa-circle-plus" (onClickEmitter)="identifyOperation()">
+                </ds-button>
+            </div>
+
+            @if (showRestOfForm) {
             <!-- Tipo de Operação e Valor/Moeda -->
             <div class="basic-info-step__row">
                 <div class="basic-info-step__col basic-info-step__col--operation-type">
@@ -25,8 +32,9 @@
                 </div>
 
                 <div class="basic-info-step__col basic-info-step__col--value-currency">
-                    <ds-input label="Valor" placeholder="R$ 0,00" type="number" formControlName="amount"
-                        [required]="true" [invalid]="!!(amount?.invalid && amount?.touched)" [errorMessage]="amount?.invalid && amount?.touched ? 
+                    <ds-input label="Valor" placeholder="R$ 0,00" type="text" formControlName="amount" [required]="true"
+                        [libMask]="basicInfoForm.get('currency')?.value || 'BRL'"
+                        [invalid]="!!(amount?.invalid && amount?.touched)" [errorMessage]="amount?.invalid && amount?.touched ? 
                 (amount?.errors?.['required'] ? 'Valor é obrigatório' : 
                  amount?.errors?.['min'] ? 'Valor mínimo de R$ 1.000,00' : '') : ''" [fullWidth]="true">
                     </ds-input>
@@ -50,7 +58,7 @@
             </div>
 
             <!-- Localização -->
-            <div class="basic-info-step__row">
+            <div class="basic-info-step__row basic-info-step__row--location">
                 <div class="basic-info-step__col basic-info-step__col--country">
                     <ds-select label="País" placeholder="Selecione o país" formControlName="country" [required]="true"
                         [invalid]="!!(country?.invalid && country?.touched)"
@@ -104,6 +112,7 @@
                gracePeriod?.errors?.['min'] ? 'Carência mínima de 0 meses' : '') : ''" [fullWidth]="true">
                 </ds-input>
             </div>
+            }
 
         </div>
     </form>

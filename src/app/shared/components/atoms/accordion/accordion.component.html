@@ -5,17 +5,19 @@
         <!-- Header do item -->
         <ds-button class="accordion-header" [class.expanded]="isItemExpanded(item)"
             [class.disabled]="isItemDisabled(item)" [label]="item.title" type="button" variant="fill"
-            [disabled]="isItemDisabled(item)" (onClickEmitter)="toggleItem(item)" iconColor="white"
+            [disabled]="isItemDisabled(item)" (onClickEmitter)="toggleItem(item)"
             [attr.aria-expanded]="isItemExpanded(item)" [attr.aria-disabled]="isItemDisabled(item)"
             [icon]="iconPosition === 'left' ? 'fa-solid fa-chevron-right' : iconPosition === 'right' ? 'fa-solid fa-chevron-down' : ''"
-            [iconPosition]="iconPosition" labelAlign="left" [fullWidth]="true">
+            [iconPosition]="iconPosition" labelAlign="left" [rotateIcon]="isItemExpanded(item)" [fullWidth]="true">
         </ds-button>
 
         <!-- Conteúdo do item -->
         <div class="accordion-content" [class.expanded]="isItemExpanded(item)"
             [attr.aria-hidden]="!isItemExpanded(item)" role="region" [attr.aria-labelledby]="item.id">
             <div class="accordion-content-inner">
-                <div class="accordion-content-text" [innerHTML]="item.content"></div>
+                @if (getContentTemplate(item.id)) {
+                <ng-container *ngTemplateOutlet="getContentTemplate(item.id)!"></ng-container>
+                }
             </div>
         </div>
     </div>

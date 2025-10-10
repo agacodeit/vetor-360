@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared';
 import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
-import { BasicInfoStepComponent } from './steps/basic-info-step.component';
-import { GuaranteesStepComponent } from './steps/guarantees-step.component';
-import { DocumentsStepComponent } from './steps/documents-step.component';
+import { DocumentsStepComponent } from './steps/documents/documents-step.component';
+import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
+import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
+import { ToastService } from '../../../../shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -23,13 +24,20 @@ import { DocumentsStepComponent } from './steps/documents-step.component';
   styleUrl: './solicitation-modal.scss'
 })
 export class SolicitationModal implements OnInit {
+  private toastService = inject(ToastService);
+
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
+
+  // ViewChild para acessar os componentes dos steps
+  @ViewChild(BasicInfoStepComponent) basicInfoStepComponent!: BasicInfoStepComponent;
+  @ViewChild(GuaranteesStepComponent) guaranteesStepComponent!: GuaranteesStepComponent;
+  @ViewChild(DocumentsStepComponent) documentsStepComponent!: DocumentsStepComponent;
 
   // Formulário pai que agrupa todos os steps
   mainForm: FormGroup;
   isLoading = false;
-  currentStep = 2;
+  currentStep = 0;
 
   // Dados dos formulários de cada step
   basicInfoData: any = {};
@@ -114,8 +122,13 @@ export class SolicitationModal implements OnInit {
 
   // Navegação entre steps
   goToNextStep(): void {
+    // Marcar o step atual como touched antes de tentar avançar
+    this.markCurrentStepAsTouched();
+
     if (this.canGoNext() && this.currentStep < 2) {
       this.currentStep++;
+    } else if (!this.canGoNext()) {
+      this.toastService.error('Por favor, preencha todos os campos obrigatórios antes de continuar.');
     }
   }
 
@@ -131,6 +144,7 @@ export class SolicitationModal implements OnInit {
   }
 
   handleSubmit(): void {
+    // Verificar se todos os steps são válidos
     if (this.canFinish()) {
       this.isLoading = true;
 
@@ -146,6 +160,63 @@ export class SolicitationModal implements OnInit {
         this.isLoading = false;
         this.onSubmit.emit(formData);
       }, 2000);
+    } else {
+      // Se não pode finalizar, encontrar o primeiro step inválido e navegar para ele
+      const firstInvalidStepIndex = this.stepValidStates.findIndex(valid => !valid);
+      if (firstInvalidStepIndex !== -1 && firstInvalidStepIndex !== this.currentStep) {
+        // Mostrar mensagem de erro
+        const stepNames = ['Informações Básicas', 'Garantias', 'Documentos'];
+        this.toastService.error(
+          `Por favor, preencha todos os campos obrigatórios na etapa "${stepNames[firstInvalidStepIndex]}".`,
+          'Formulário incompleto'
+        );
+
+        // Navegar para o primeiro step inválido
+        this.currentStep = firstInvalidStepIndex;
+        // Marcar como touched após a navegação (usar setTimeout para garantir que o componente foi renderizado)
+        setTimeout(() => {
+          this.markCurrentStepAsTouched();
+        }, 0);
+      } else {
+        // Se o step atual é o inválido, apenas marcar como touched e mostrar toast
+        this.markCurrentStepAsTouched();
+        this.toastService.error(
+          'Por favor, preencha todos os campos obrigatórios antes de enviar.',
+          'Formulário incompleto'
+        );
+      }
+    }
+  }
+
+  markCurrentStepAsTouched(): void {
+    switch (this.currentStep) {
+      case 0:
+        if (this.basicInfoStepComponent?.basicInfoForm) {
+          this.basicInfoStepComponent.basicInfoForm.markAllAsTouched();
+        }
+        break;
+      case 1:
+        if (this.guaranteesStepComponent?.guaranteesForm) {
+          this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
+        }
+        break;
+      case 2:
+        if (this.documentsStepComponent?.documentsForm) {
+          this.documentsStepComponent.documentsForm.markAllAsTouched();
+        }
+        break;
+    }
+  }
+
+  markAllStepsAsTouched(): void {
+    if (this.basicInfoStepComponent?.basicInfoForm) {
+      this.basicInfoStepComponent.basicInfoForm.markAllAsTouched();
+    }
+    if (this.guaranteesStepComponent?.guaranteesForm) {
+      this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
+    }
+    if (this.documentsStepComponent?.documentsForm) {
+      this.documentsStepComponent.documentsForm.markAllAsTouched();
     }
   }
 }
