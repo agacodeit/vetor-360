@@ -66,11 +66,15 @@ export class KanbanComponent implements OnInit {
     @Output() columnAdded = new EventEmitter<KanbanColumn>();
     @Output() columnRemoved = new EventEmitter<string>();
     @Output() columnRenamed = new EventEmitter<{ columnId: string; newTitle: string }>();
+    @Output() cardClicked = new EventEmitter<{ card: KanbanCard; column: KanbanColumn }>();
 
     newColumnTitle: string = '';
     isAddingColumn: boolean = false;
     editingColumnId: string | null = null;
     editingColumnTitle: string = '';
+
+    // Track if the user is dragging to prevent click events
+    private isDragging: boolean = false;
 
     // Auto-scroll properties
     private scrollSpeed = 50;
@@ -224,7 +228,13 @@ export class KanbanComponent implements OnInit {
         return this.columns.map(column => column.id);
     }
 
+    onDragStarted() {
+        this.isDragging = true;
+    }
+
     onDragMoved(event: CdkDragMove) {
+        this.isDragging = true;
+
         if (!this.kanbanBoard) return;
 
         const boardElement = this.kanbanBoard.nativeElement;
@@ -261,6 +271,22 @@ export class KanbanComponent implements OnInit {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;
         }
+
+        // Reset drag state after a small delay to allow click events to be prevented
+        setTimeout(() => {
+            this.isDragging = false;
+        }, 100);
+    }
+
+    onCardClick(card: KanbanCard, column: KanbanColumn, event: Event) {
+        // Prevent click if user was dragging
+        if (this.isDragging) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        this.cardClicked.emit({ card, column });
     }
 
     private generateId(): string {

@@ -48,7 +48,8 @@
             <div class="kanban__column-content">
                 <!-- Cards -->
                 <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
-                    [cdkDragData]="card" (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
+                    [cdkDragData]="card" (cdkDragStarted)="onDragStarted()" (cdkDragMoved)="onDragMoved($event)"
+                    (cdkDragEnded)="onDragEnded()" (click)="onCardClick(card, column, $event)">
 
                     <!-- Template customizado se fornecido -->
                     <ng-container *ngIf="cardTemplate; else defaultCardTemplate">

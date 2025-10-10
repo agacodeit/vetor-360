@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 import { ModalComponent, ModalService, SelectOption } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
+import { SolicitationDetails } from "./solicitation-details/solicitation-details";
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +18,8 @@ import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
     ReactiveFormsModule,
     ModalComponent,
     ButtonComponent,
-    SolicitationModal
+    SolicitationModal,
+    SolicitationDetails
   ],
   providers: [
     NgModel
@@ -28,14 +30,18 @@ import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 })
 export class Dashboard implements OnInit {
   private modalService = inject(ModalService);
-  isModalOpen: boolean = false;
+  isCreateModalOpen: boolean = false;
+  isDetailsModalOpen: boolean = false;
 
   kanbanColumns: KanbanColumn[] = [];
 
   constructor() {
     effect(() => {
-      const modalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
-      this.isModalOpen = modalInstance ? modalInstance.isOpen : false;
+      const createModalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
+      this.isCreateModalOpen = createModalInstance ? createModalInstance.isOpen : false;
+
+      const detailsModalInstance = this.modalService.modals().find(m => m.id === 'solicitation-details');
+      this.isDetailsModalOpen = detailsModalInstance ? detailsModalInstance.isOpen : false;
     });
   }
 
@@ -262,7 +268,7 @@ export class Dashboard implements OnInit {
   ];
 
   openCreateSolicitationModal() {
-    this.isModalOpen = true;
+    this.isCreateModalOpen = true;
     this.modalService.open({
       id: "create-solicitation",
       title: "Nova Solicitação",
@@ -275,9 +281,14 @@ export class Dashboard implements OnInit {
     });
   }
 
-  onModalClosed(event: any) {
-    this.isModalOpen = false;
-    console.log('Modal fechado:', event);
+  onCreateModalClosed(event: any) {
+    this.isCreateModalOpen = false;
+    console.log('Modal de criação fechado:', event);
+  }
+
+  onDetailsModalClosed(event: any) {
+    this.isDetailsModalOpen = false;
+    console.log('Modal de detalhes fechado:', event);
   }
 
   /**
@@ -308,5 +319,20 @@ export class Dashboard implements OnInit {
    */
   restoreExampleSolicitations() {
     this.initializeKanbanData();
+  }
+
+  onCardClick(card: KanbanCard) {
+    console.log('Card clicado:', card);
+    this.isDetailsModalOpen = true;
+    this.modalService.open({
+      id: "solicitation-details",
+      title: "Detalhes da solicitação",
+      subtitle: "Detalhes da solicitação",
+      size: "lg",
+      showHeader: true,
+      showCloseButton: true,
+      closeOnBackdropClick: true,
+      closeOnEscapeKey: true,
+    });
   }
 }
