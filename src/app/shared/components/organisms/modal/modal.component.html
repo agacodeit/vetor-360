@@ -1,4 +1,3 @@
-
 <div class="modal-backdrop" (click)="onBackdropClick($event)" *ngIf="shouldShowModal">
 
     <div [class]="getModalClasses()" [@fade]="animationState" (@fade.done)="onAnimationDone($event)"
@@ -14,7 +13,7 @@
                 </h4>
 
                 <ds-icon (click)="closeModal()" cursorType="pointer" *ngIf="modalConfig?.showCloseButton"
-                    aria-label="Fechar modal" icon="fa-solid fa-xmark" fontSize="20px" color="white">
+                    aria-label="Fechar modal" icon="fa-regular fa-circle-xmark" fontSize="20px" color="primary-dark">
                 </ds-icon>
 
             </div>

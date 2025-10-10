@@ -1,92 +1,9 @@
 <article class="solicitation-details">
-
     <div class="solicitation-details__container">
         <div class="solicitation-details__content">
-
-            <!-- SOLICITATION DATA -->
-            <section class="solicitation-details__section d-grid columns-2 gap-24">
-                <div class="solicitation-details__info d-flex flex-column gap-12">
-                    <h2 class="title-semibold">
-                        Solicitação
-                    </h2>
-                    <p class="body">
-                        XPTO
-                    </p>
-                </div>
-                <div class="solicitation-details__info d-flex flex-column gap-12 align-items-end">
-                    <div class="solicitation-details__status">
-                        <span class="title-semibold">
-                            {{ getStatusLabel() }}
-                        </span>
-                    </div>
-                </div>
-            </section>
-            <!-- SOLICITATION DATA -->
-
-            <!-- FOLLOW-UP -->
-            <section class="solicitation-details__section d-grid columns-1 gap-24 mt-24">
-                <div class="solicitation-details__follow-up d-flex flex-column gap-12">
-                    <h2 class="title-semibold">
-                        Follow-up <button type="button" class="body solicitation-details__link">Abrir
-                            visualização</button>
-                    </h2>
-                    <div class="solicitation-details__stats body d-flex align-items-center gap-24">
-                        <p class="body">
-                            <ds-icon icon="fa-regular fa-comment-dots" fontSize="16px" color="primary" />
-                            2 mensagens
-                        </p>
-                        <p class="body">
-                            <ds-icon icon="fa-regular fa-folder" fontSize="16px" color="primary" />
-                            6/7 documentos
-                        </p>
-                    </div>
-                </div>
-            </section>
-            <!-- FOLLOW-UP -->
-
-            <!-- CLIENT DATA -->
-            <section class="solicitation-details__section d-grid columns-2 gap-24 mt-24">
-                <div class="solicitation-details__client-info d-grid columns-1">
-                    <h2 class="title-semibold mb-12">
-                        Cliente
-                    </h2>
-                    <div class="solicitation-details__client-data d-flex justify-content-between mb-8">
-                        <div class="solicitation-details__client-details d-flex flex-column gap-12">
-                            <div class="solicitation-details__client">
-                                <p class="body mb-6">{{cardData?.client}}</p>
-                                <p class="input-label font-weight-regular">{{cardData?.cnpj}}</p>
-                            </div>
-                        </div>
-                        <div class="solicitation-details__client-details d-flex flex-column">
-                            <div class="solicitation-details__client">
-                                <p class="body mb-6">Aberta em {{cardData?.dueDate | date:'dd/MM/yyyy'}}</p>
-                                <p class="body">Tecnologia</p>
-                            </div>
-                        </div>
-                    </div>
-                    <address class="solicitation-details__address">
-                        <p class="body">Alameda Afonso Schmidt, 119 - Sala 78 - Santa Terezinha, São Paulo - SP,
-                            02450-000</p>
-                    </address>
-                </div>
-
-                <div class="solicitation-details__rating-info d-flex gap-12">
-                    <div class="solicitation-details__rating-text d-flex flex-column gap-12">
-                        <h2 class="title-semibold">
-                            Rating
-                        </h2>
-                        <p class="input-label font-weight-regular">
-                            Cliente com alguns pontos de atenção, mas ainda com capacidade de pagamento adequada
-                        </p>
-                    </div>
-                    <div class="solicitation-details__rating">
-                        B
-                    </div>
-                </div>
-
-            </section>
-            <!-- CLIENT DATA -->
-
+            <app-solicitation-data [cardData]="cardData" />
+            <app-follow-up />
+            <app-client-data [cardData]="cardData" />
         </div>
     </div>
 </article>
