@@ -8,6 +8,7 @@ export * from './services';
 
 export * from './utils/form';
 export * from './utils/list-view';
+export * from './utils/solicitation-status';
 export * from './utils/status-colors';
 export * from './utils/tools';
 
