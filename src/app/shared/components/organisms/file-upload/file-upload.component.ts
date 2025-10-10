@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { IconComponent } from '../../atoms/icon/icon.component';
-// import { PieceImage } from '../../../models/developments/developments'; // Model removed
+
 
 export interface UploadedFile {
   id: string;

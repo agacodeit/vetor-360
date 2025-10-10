@@ -42,7 +42,7 @@ export class ForgotPasswordComponent {
       this.errorMessage = '';
       this.successMessage = '';
 
-      // Simular envio de email
+
       setTimeout(() => {
         this.isLoading = false;
         this.successMessage = 'Link de recuperação enviado para seu e-mail!';

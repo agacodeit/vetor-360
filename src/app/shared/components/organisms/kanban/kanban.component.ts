@@ -73,16 +73,16 @@ export class KanbanComponent implements OnInit {
     editingColumnId: string | null = null;
     editingColumnTitle: string = '';
 
-    // Track if the user is dragging to prevent click events
+
     private isDragging: boolean = false;
 
-    // Auto-scroll properties
+
     private scrollSpeed = 50;
     private scrollZone = 200; // pixels from edge to start scrolling
     private scrollInterval: any = null;
 
     ngOnInit() {
-        // Initialize with default columns if none provided
+
         if (this.columns.length === 0) {
             this.columns = [
                 { id: 'todo', title: 'To Do', cards: [] },
@@ -93,15 +93,12 @@ export class KanbanComponent implements OnInit {
     }
 
     onCardDrop(event: CdkDragDrop<KanbanCard[]>) {
-        console.log('Drop event triggered:', event);
 
         if (event.previousContainer === event.container) {
-            // Move within same column
-            console.log('Moving within same column');
+
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            // Move between columns
-            console.log('Moving between columns');
+
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
@@ -109,12 +106,11 @@ export class KanbanComponent implements OnInit {
                 event.currentIndex
             );
 
-            // Emit card moved event
+
             const card = event.item.data;
             const fromColumn = event.previousContainer.id;
             const toColumn = event.container.id;
 
-            console.log('Card moved from', fromColumn, 'to', toColumn);
 
             this.cardMoved.emit({
                 card,
@@ -241,24 +237,24 @@ export class KanbanComponent implements OnInit {
         const boardRect = boardElement.getBoundingClientRect();
         const mouseX = event.pointerPosition.x;
 
-        // Check if mouse is near the edges
+
         const distanceFromLeft = mouseX - boardRect.left;
         const distanceFromRight = boardRect.right - mouseX;
 
-        // Clear existing scroll interval
+
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;
         }
 
-        // Start scrolling if mouse is in scroll zone
+
         if (distanceFromLeft < this.scrollZone) {
-            // Scroll left
+
             this.scrollInterval = setInterval(() => {
                 boardElement.scrollLeft -= this.scrollSpeed;
             }, 16); // ~60fps
         } else if (distanceFromRight < this.scrollZone) {
-            // Scroll right
+
             this.scrollInterval = setInterval(() => {
                 boardElement.scrollLeft += this.scrollSpeed;
             }, 16); // ~60fps
@@ -266,20 +262,20 @@ export class KanbanComponent implements OnInit {
     }
 
     onDragEnded() {
-        // Stop scrolling when drag ends
+
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;
         }
 
-        // Reset drag state after a small delay to allow click events to be prevented
+
         setTimeout(() => {
             this.isDragging = false;
         }, 100);
     }
 
     onCardClick(card: KanbanCard, column: KanbanColumn, event: Event) {
-        // Prevent click if user was dragging
+
         if (this.isDragging) {
             event.preventDefault();
             event.stopPropagation();

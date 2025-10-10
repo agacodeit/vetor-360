@@ -1,4 +1,4 @@
-<!-- Mostra welcome apenas quando NÃO há solicitações -->
+
 @if (!hasSolicitations) {
 <div class="container">
     <div class="welcome-msg">
@@ -14,7 +14,7 @@
 </div>
 }@else{
 <div class="dashboard">
-    <!-- Botões de teste (apenas para desenvolvimento) -->
+
     <div class="dashboard__new-solicitation">
         <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
             (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
@@ -26,7 +26,7 @@
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
             (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event.card)">
 
-            <!-- Template customizado para os cards -->
+
             <ng-template #cardTemplate let-card let-column="column">
                 <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">
 

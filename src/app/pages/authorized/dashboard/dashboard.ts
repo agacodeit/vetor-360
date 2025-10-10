@@ -210,33 +210,27 @@ export class Dashboard implements OnInit {
   }
 
   onCardMoved(event: any) {
-    console.log('Card movido:', event);
-    // Aqui você pode implementar a lógica para salvar no backend
+
   }
 
   onCardAdded(event: any) {
-    console.log('Card adicionado:', event);
-    // Lógica para adicionar card no backend
+
   }
 
   onCardRemoved(event: any) {
-    console.log('Card removido:', event);
-    // Lógica para remover card do backend
+
   }
 
   onColumnAdded(event: any) {
-    console.log('Coluna adicionada:', event);
-    // Lógica para adicionar coluna no backend
+
   }
 
   onColumnRemoved(event: any) {
-    console.log('Coluna removida:', event);
-    // Lógica para remover coluna do backend
+
   }
 
   onColumnRenamed(event: any) {
-    console.log('Coluna renomeada:', event);
-    // Lógica para renomear coluna no backend
+
   }
 
   removeCard(card: KanbanCard, columnId: string) {
@@ -245,7 +239,6 @@ export class Dashboard implements OnInit {
       const index = column.cards.findIndex(c => c.id === card.id);
       if (index > -1) {
         column.cards.splice(index, 1);
-        console.log('Card removido:', card);
       }
     }
   }
@@ -283,12 +276,10 @@ export class Dashboard implements OnInit {
 
   onCreateModalClosed(event: any) {
     this.isCreateModalOpen = false;
-    console.log('Modal de criação fechado:', event);
   }
 
   onDetailsModalClosed(event: any) {
     this.isDetailsModalOpen = false;
-    console.log('Modal de detalhes fechado:', event);
   }
 
   /**
@@ -322,7 +313,6 @@ export class Dashboard implements OnInit {
   }
 
   onCardClick(card: KanbanCard) {
-    console.log('Card clicado:', card);
     this.isDetailsModalOpen = true;
     this.modalService.open({
       id: "solicitation-details",
