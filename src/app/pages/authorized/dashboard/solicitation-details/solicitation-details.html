@@ -2,6 +2,8 @@
 
     <div class="solicitation-details__container">
         <main class="solicitation-details__content">
+
+            <!-- SOLICITATION DATA -->
             <div class="d-grid columns-2 gap-24">
                 <div class="d-flex flex-column gap-12">
                     <div class="title-semibold">
@@ -19,6 +21,71 @@
                     </div>
                 </div>
             </div>
+            <!-- SOLICITATION DATA -->
+
+            <!-- FOLLOW-UP -->
+            <div class="d-grid columns-1 gap-24 mt-24">
+                <div class="d-flex flex-column gap-12">
+                    <div class="title-semibold">
+                        Follow-up <a href="" class="body">Abrir visualização</a>
+                    </div>
+                    <div class="body d-flex align-items-center gap-24">
+                        <p class="body">
+                            <ds-icon icon="fa-regular fa-comment-dots" fontSize="16px" color="primary" />
+                            2 mensagens
+                        </p>
+                        <p class="body">
+                            <ds-icon icon="fa-regular fa-folder" fontSize="16px" color="primary" />
+                            6/7 documentos
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- FOLLOW-UP -->
+
+            <!-- CLIENT DATA -->
+            <div class="d-grid columns-2 gap-24 mt-24">
+                <div class="d-grid columns-1">
+                    <div class="title-semibold mb-12">
+                        Cliente
+                    </div>
+                    <div class="d-flex justify-content-between mb-8">
+                        <div class="d-flex flex-column gap-12">
+                            <div class="solicitation-details__client">
+                                <p class="body mb-6">{{cardData?.client}}</p>
+                                <p class="input-label font-weight-regular">{{cardData?.cnpj}}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <div class="solicitation-details__client">
+                                <p class="body mb-6">Aberta em {{cardData?.dueDate | date:'dd/MM/yyyy'}}</p>
+                                <p class="body">Tecnologia</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="address">
+                        <p class="body">Alameda Afonso Schmidt, 119 - Sala 78 - Santa Terezinha, São Paulo - SP,
+                            02450-000</p>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-12">
+                    <div class="d-flex flex-column gap-12">
+                        <div class="title-semibold">
+                            Rating
+                        </div>
+                        <div class="input-label font-weight-regular">
+                            Cliente com alguns pontos de atenção, mas ainda com capacidade de pagamento adequada
+                        </div>
+                    </div>
+                    <div class="solicitation-details__rating">
+                        B
+                    </div>
+                </div>
+
+            </div>
+            <!-- CLIENT DATA -->
+
         </main>
     </div>
 </div>

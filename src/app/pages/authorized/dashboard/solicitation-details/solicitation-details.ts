@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { KanbanCard, ModalService, SolicitationStatusUtil } from '../../../../shared';
+import { KanbanCard, ModalService, SolicitationStatusUtil, IconComponent } from '../../../../shared';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-solicitation-details',
   imports: [
-
+    IconComponent,
+    DatePipe
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'

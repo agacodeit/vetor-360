@@ -156,6 +156,55 @@
 }
 
 // ========================================
+// MIXINS DE FONT WEIGHT
+// ========================================
+
+/// Font weight thin (100)
+@mixin font-weight-thin() {
+    font-weight: 100;
+}
+
+/// Font weight extra light (200)
+@mixin font-weight-extra-light() {
+    font-weight: 200;
+}
+
+/// Font weight light (300)
+@mixin font-weight-light() {
+    font-weight: 300;
+}
+
+/// Font weight regular/normal (400)
+@mixin font-weight-regular() {
+    font-weight: 400;
+}
+
+/// Font weight medium (500)
+@mixin font-weight-medium() {
+    font-weight: 500;
+}
+
+/// Font weight semibold (600)
+@mixin font-weight-semibold() {
+    font-weight: 600;
+}
+
+/// Font weight bold (700)
+@mixin font-weight-bold() {
+    font-weight: 700;
+}
+
+/// Font weight extra bold (800)
+@mixin font-weight-extra-bold() {
+    font-weight: 800;
+}
+
+/// Font weight black (900)
+@mixin font-weight-black() {
+    font-weight: 900;
+}
+
+// ========================================
 // MIXIN PARA CORES
 // ========================================
 
@@ -313,4 +362,44 @@
 .title-semibold {
     @include title-semibold();
     @include color-variants();
+}
+
+// ========================================
+// CLASSES UTILITÁRIAS DE FONT WEIGHT
+// ========================================
+
+.font-weight-thin {
+    @include font-weight-thin();
+}
+
+.font-weight-extra-light {
+    @include font-weight-extra-light();
+}
+
+.font-weight-light {
+    @include font-weight-light();
+}
+
+.font-weight-regular {
+    @include font-weight-regular();
+}
+
+.font-weight-medium {
+    @include font-weight-medium();
+}
+
+.font-weight-semibold {
+    @include font-weight-semibold();
+}
+
+.font-weight-bold {
+    @include font-weight-bold();
+}
+
+.font-weight-extra-bold {
+    @include font-weight-extra-bold();
+}
+
+.font-weight-black {
+    @include font-weight-black();
 }
