@@ -64,7 +64,8 @@ export class Dashboard implements OnInit {
             client: 'João Silva',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
-            tags: ['backend', 'security']
+            tags: ['backend', 'security'],
+            status: 'pending-documents'
           },
           {
             id: '2',
@@ -74,7 +75,8 @@ export class Dashboard implements OnInit {
             client: 'Maria Santos',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-20'),
-            tags: ['design', 'ui/ux']
+            tags: ['design', 'ui/ux'],
+            status: 'pending-documents'
           },
           {
             id: '3',
@@ -84,7 +86,8 @@ export class Dashboard implements OnInit {
             client: 'Pedro Costa',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-25'),
-            tags: ['devops', 'deployment']
+            tags: ['devops', 'deployment'],
+            status: 'pending-documents'
           }
         ]
       },
@@ -101,7 +104,8 @@ export class Dashboard implements OnInit {
             client: 'Ana Oliveira',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-10'),
-            tags: ['backend', 'api']
+            tags: ['backend', 'api'],
+            status: 'in-analysis'
           },
           {
             id: '5',
@@ -111,7 +115,8 @@ export class Dashboard implements OnInit {
             client: 'Carlos Lima',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-18'),
-            tags: ['testing', 'quality']
+            tags: ['testing', 'quality'],
+            status: 'in-analysis'
           }
         ]
       },
@@ -128,7 +133,8 @@ export class Dashboard implements OnInit {
             client: 'Lucas Ferreira',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-12'),
-            tags: ['refactoring', 'performance']
+            tags: ['refactoring', 'performance'],
+            status: 'negotiation'
           }
         ]
       },
@@ -145,7 +151,8 @@ export class Dashboard implements OnInit {
             client: 'Sofia Alves',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-01-30'),
-            tags: ['setup', 'configuration']
+            tags: ['setup', 'configuration'],
+            status: 'waiting-payment'
           },
           {
             id: '8',
@@ -155,7 +162,8 @@ export class Dashboard implements OnInit {
             client: 'Rafael Mendes',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-05'),
-            tags: ['design-system', 'components']
+            tags: ['design-system', 'components'],
+            status: 'waiting-payment'
           },
           {
             id: 'custom-card-1',
@@ -165,7 +173,8 @@ export class Dashboard implements OnInit {
             client: 'Desenvolvedor',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
-            tags: ['custom', 'template']
+            tags: ['custom', 'template'],
+            status: 'waiting-payment'
           }
         ]
       },
@@ -182,7 +191,8 @@ export class Dashboard implements OnInit {
             client: 'Sofia Alves',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-01-30'),
-            tags: ['setup', 'configuration']
+            tags: ['setup', 'configuration'],
+            status: 'released-resources'
           },
           {
             id: '8',
@@ -192,7 +202,8 @@ export class Dashboard implements OnInit {
             client: 'Rafael Mendes',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-05'),
-            tags: ['design-system', 'components']
+            tags: ['design-system', 'components'],
+            status: 'released-resources'
           },
           {
             id: 'custom-card-1',
@@ -202,7 +213,8 @@ export class Dashboard implements OnInit {
             client: 'Desenvolvedor',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
-            tags: ['custom', 'template']
+            tags: ['custom', 'template'],
+            status: 'released-resources'
           }
         ]
       }
@@ -316,13 +328,13 @@ export class Dashboard implements OnInit {
     this.isDetailsModalOpen = true;
     this.modalService.open({
       id: "solicitation-details",
-      title: "Detalhes da solicitação",
-      subtitle: "Detalhes da solicitação",
-      size: "lg",
+      title: "Visão geral",
+      size: "fullscreen",
       showHeader: true,
       showCloseButton: true,
       closeOnBackdropClick: true,
       closeOnEscapeKey: true,
+      data: card
     });
   }
 }

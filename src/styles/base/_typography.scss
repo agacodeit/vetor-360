@@ -62,7 +62,7 @@
 
 @mixin body() {
     font-family: $font-primary;
-    font-weight: $font-weight-bold; // 500
+    font-weight: $font-weight-md; // 500
     font-size: $font-sm; // 14px
     line-height: 20px;
     letter-spacing: 0.4px;
@@ -146,6 +146,12 @@
 @mixin title-semibold() {
     font-size: $font-xl; // 24px (ajustei porque $font-xxl não existe)
     font-weight: $font-weight-xbold;
+    letter-spacing: 0.06px;
+}
+
+@mixin title-semibold() {
+    font-size: $font-md; // 24px (ajustei porque $font-xxl não existe)
+    font-weight: $font-weight-bold;
     letter-spacing: 0.06px;
 }
 
@@ -301,5 +307,10 @@
 
 .card-medium-regular {
     @include card-medium-regular();
+    @include color-variants();
+}
+
+.title-semibold {
+    @include title-semibold();
     @include color-variants();
 }

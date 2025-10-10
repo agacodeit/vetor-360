@@ -15,6 +15,7 @@ export interface KanbanCard {
     dueDate?: Date;
     cnpj?: string;
     tags?: string[];
+    status: string;
     data?: any;
 }
 
@@ -127,7 +128,8 @@ export class KanbanComponent implements OnInit {
             id: this.generateId(),
             title: 'New Card',
             description: 'Click to edit description',
-            priority: 'medium'
+            priority: 'medium',
+            status: 'pending-documents'
         };
 
         const column = this.columns.find(col => col.id === columnId);
