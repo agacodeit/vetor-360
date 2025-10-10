@@ -46,8 +46,9 @@ export class Dashboard implements OnInit {
   private initializeKanbanData() {
     this.kanbanColumns = [
       {
-        id: 'todo',
-        title: 'Criada',
+        id: 'pending-documents',
+        title: 'Pendente de documentos',
+        color: '#FF9900',
         cards: [
           {
             id: '1',
@@ -82,8 +83,9 @@ export class Dashboard implements OnInit {
         ]
       },
       {
-        id: 'in-progress',
-        title: 'Em andamento',
+        id: 'in-analysis',
+        title: 'Em análise',
+        color: '#FFC800',
         cards: [
           {
             id: '4',
@@ -108,8 +110,9 @@ export class Dashboard implements OnInit {
         ]
       },
       {
-        id: 'review',
-        title: 'Revisão',
+        id: 'negotiation',
+        title: 'Em negociação',
+        color: '#B700FF',
         cards: [
           {
             id: '6',
@@ -124,8 +127,46 @@ export class Dashboard implements OnInit {
         ]
       },
       {
-        id: 'done',
-        title: 'Finalizado',
+        id: 'waiting-payment',
+        title: 'Aguardando pagamento',
+        color: '#204FFF',
+        cards: [
+          {
+            id: '7',
+            title: 'C76324',
+            description: 'Inicializar estrutura base do projeto com design system',
+            priority: 'low',
+            client: 'Sofia Alves',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-01-30'),
+            tags: ['setup', 'configuration']
+          },
+          {
+            id: '8',
+            title: 'C76324',
+            description: 'Desenvolver componentes reutilizáveis e documentação',
+            priority: 'high',
+            client: 'Rafael Mendes',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-02-05'),
+            tags: ['design-system', 'components']
+          },
+          {
+            id: 'custom-card-1',
+            title: 'C76324',
+            description: 'Este card usa template customizado',
+            priority: 'medium',
+            client: 'Desenvolvedor',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-02-15'),
+            tags: ['custom', 'template']
+          }
+        ]
+      },
+      {
+        id: 'released-resources',
+        title: 'Recursos liberados',
+        color: '#00B7FF',
         cards: [
           {
             id: '7',

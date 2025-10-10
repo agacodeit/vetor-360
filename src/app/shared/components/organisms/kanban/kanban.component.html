@@ -27,7 +27,8 @@
                 </div>
 
                 <div class="kanban__column-info">
-                    <span *ngIf="showCardCount" class="kanban__column-count">
+                    <span *ngIf="showCardCount" class="kanban__column-count"
+                        [ngStyle]="{'background-color': column.color}">
                         {{ getColumnCardCount(column) }}
                         <span *ngIf="column.maxCards">/ {{ column.maxCards }}</span>
                     </span>
