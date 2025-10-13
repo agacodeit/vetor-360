@@ -24,6 +24,8 @@
     max-height: 90vh;
     overflow: hidden;
     margin: 1rem;
+    display: flex;
+    flex-direction: column;
     //border: $size-xs solid var(--stroke);
     will-change: transform, opacity, filter; // Otimização para animações Angular
 
@@ -57,17 +59,19 @@
 
     &.modal-fullscreen {
         max-width: none;
-        width: 95vw;
-        height: 95vh;
+        width: 98vw;
+        height: 98vh;
         max-height: none;
-        margin: 2.5vh 2.5vw;
+        margin: 1vh 1vw;
     }
 }
 
 .modal-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
 }
 
 .modal-header {
@@ -97,9 +101,9 @@
 
 .modal-body {
     flex: 1;
-    overflow-y: scroll;
+    min-height: 0; // Necessário para overflow funcionar com flex
+    overflow-y: auto;
     background-color: var(--white);
-    max-height: 100%;
     scrollbar-width: thin;
     scrollbar-color: rgba(1, 48, 71, 0.3) transparent;
 
