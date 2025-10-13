@@ -1,8 +1,8 @@
-// Simplified status colors utility - models removed
+
 
 export type BadgeColor = 'green' | 'yellow' | 'orange' | 'red' | 'blue' | 'purple' | 'gray';
 
-// Basic status types since models were removed
+
 export type StatusType = string;
 
 /**

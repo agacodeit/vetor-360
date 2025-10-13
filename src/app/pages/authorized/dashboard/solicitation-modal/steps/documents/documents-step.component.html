@@ -2,12 +2,12 @@
     <form [formGroup]="documentsForm" class="documents-step__form">
         <div class="documents-step__content">
 
-            <!-- Accordion com informações sobre documentos -->
+
             <div class="documents-step__accordion">
                 <ds-accordion [items]="accordionItems" variant="default" size="md" [allowMultiple]="true"
                     iconPosition="right" (itemToggled)="onAccordionItemToggled($event)">
 
-                    <!-- Conteúdo do primeiro item -->
+
                     <ng-template accordionItem="doc-required" class="documents-step__accordion-content">
                         @for (document of requiredDocuments; track document.id) {
                         <div class="d-flex gap-8 justify-content-between align-items-center"

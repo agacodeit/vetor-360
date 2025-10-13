@@ -29,25 +29,25 @@ export class SolicitationModal implements OnInit {
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
 
-  // ViewChild para acessar os componentes dos steps
+
   @ViewChild(BasicInfoStepComponent) basicInfoStepComponent!: BasicInfoStepComponent;
   @ViewChild(GuaranteesStepComponent) guaranteesStepComponent!: GuaranteesStepComponent;
   @ViewChild(DocumentsStepComponent) documentsStepComponent!: DocumentsStepComponent;
 
-  // Formulário pai que agrupa todos os steps
+
   mainForm: FormGroup;
   isLoading = false;
   currentStep = 0;
 
-  // Dados dos formulários de cada step
+
   basicInfoData: any = {};
   guaranteesData: any = {};
   documentsData: any = {};
 
-  // Estados de validação de cada step
+
   stepValidStates = [false, false, true]; // Step 3 (documentos) sempre válido por enquanto
 
-  // Configuração dos steps do stepper
+
   stepperSteps: StepperStep[] = [
     {
       id: 'basic-info',
@@ -67,20 +67,20 @@ export class SolicitationModal implements OnInit {
   ];
 
   constructor(private fb: FormBuilder) {
-    // Formulário pai vazio, os dados serão gerenciados pelos componentes filhos
+
     this.mainForm = this.fb.group({});
   }
 
   ngOnInit(): void {
-    // Inicialização se necessário
+
   }
 
-  // Métodos para gerenciar o stepper
+
   onStepChanged(stepIndex: number): void {
     this.currentStep = stepIndex;
   }
 
-  // Métodos para receber dados dos componentes filhos
+
   onBasicInfoDataChange(data: any): void {
     this.basicInfoData = data;
   }
@@ -105,24 +105,24 @@ export class SolicitationModal implements OnInit {
     this.stepValidStates[2] = isValid;
   }
 
-  // Verificar se pode avançar para o próximo step
+
   canGoNext(): boolean {
     return this.stepValidStates[this.currentStep];
   }
 
-  // Verificar se pode voltar
+
   canGoPrevious(): boolean {
     return this.currentStep > 0;
   }
 
-  // Verificar se pode finalizar
+
   canFinish(): boolean {
     return this.currentStep === 2 && this.stepValidStates.every(valid => valid);
   }
 
-  // Navegação entre steps
+
   goToNextStep(): void {
-    // Marcar o step atual como touched antes de tentar avançar
+
     this.markCurrentStepAsTouched();
 
     if (this.canGoNext() && this.currentStep < 2) {
@@ -138,47 +138,47 @@ export class SolicitationModal implements OnInit {
     }
   }
 
-  // Métodos principais
+
   handleClose(): void {
     this.onClose.emit();
   }
 
   handleSubmit(): void {
-    // Verificar se todos os steps são válidos
+
     if (this.canFinish()) {
       this.isLoading = true;
 
-      // Combinar todos os dados dos steps
+
       const formData = {
         ...this.basicInfoData,
         ...this.guaranteesData,
         ...this.documentsData
       };
 
-      // Simular envio
+
       setTimeout(() => {
         this.isLoading = false;
         this.onSubmit.emit(formData);
       }, 2000);
     } else {
-      // Se não pode finalizar, encontrar o primeiro step inválido e navegar para ele
+
       const firstInvalidStepIndex = this.stepValidStates.findIndex(valid => !valid);
       if (firstInvalidStepIndex !== -1 && firstInvalidStepIndex !== this.currentStep) {
-        // Mostrar mensagem de erro
+
         const stepNames = ['Informações Básicas', 'Garantias', 'Documentos'];
         this.toastService.error(
           `Por favor, preencha todos os campos obrigatórios na etapa "${stepNames[firstInvalidStepIndex]}".`,
           'Formulário incompleto'
         );
 
-        // Navegar para o primeiro step inválido
+
         this.currentStep = firstInvalidStepIndex;
-        // Marcar como touched após a navegação (usar setTimeout para garantir que o componente foi renderizado)
+
         setTimeout(() => {
           this.markCurrentStepAsTouched();
         }, 0);
       } else {
-        // Se o step atual é o inválido, apenas marcar como touched e mostrar toast
+
         this.markCurrentStepAsTouched();
         this.toastService.error(
           'Por favor, preencha todos os campos obrigatórios antes de enviar.',

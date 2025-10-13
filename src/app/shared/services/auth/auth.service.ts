@@ -45,7 +45,7 @@ export class AuthService {
     public currentUser$ = this.currentUserSubject.asObservable();
 
     constructor(private http: HttpClient) {
-        // Verificar se há token salvo ao inicializar
+
         this.loadStoredToken();
     }
 
@@ -118,12 +118,11 @@ export class AuthService {
     private loadStoredToken(): void {
         const token = this.getToken();
         if (token && !this.isTokenExpired(token)) {
-            // Decodificar token JWT para obter dados do usuário
+
             try {
                 const payload = this.decodeJWT(token);
                 this.currentUserSubject.next(payload);
             } catch (error) {
-                console.error('Erro ao decodificar token:', error);
                 this.removeToken();
             }
         }

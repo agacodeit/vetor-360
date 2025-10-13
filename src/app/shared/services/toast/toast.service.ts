@@ -15,7 +15,6 @@ export class ToastService {
         if (container) {
             container.addToast(config);
         } else {
-            console.error('Toast container não encontrado. Certifique-se de que <ds-toast-container> está no template.');
         }
     }
 

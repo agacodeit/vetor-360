@@ -26,7 +26,7 @@ export class BasicInfoStepComponent implements OnInit {
     basicInfoForm: FormGroup;
     showRestOfForm: boolean = false;
 
-    // Opções para os selects
+
     operationTypeOptions = [
         { value: 'financing', label: 'Financiamento' },
         { value: 'credit', label: 'Crédito' },
@@ -84,7 +84,7 @@ export class BasicInfoStepComponent implements OnInit {
             gracePeriod: ['', [Validators.required, Validators.min(0)]]
         });
 
-        // Emitir mudanças do formulário
+
         this.basicInfoForm.valueChanges.subscribe(value => {
             this.formDataChange.emit(value);
             this.formValid.emit(this.basicInfoForm.valid);
@@ -92,21 +92,21 @@ export class BasicInfoStepComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Carregar dados salvos se existirem
+
         if (this.formData && Object.keys(this.formData).length > 0) {
             this.basicInfoForm.patchValue(this.formData, { emitEvent: false });
 
-            // Restaurar o estado showRestOfForm se houver dados além da finalidade
+
             if (this.formData.purpose) {
                 this.showRestOfForm = true;
             }
         }
 
-        // Emitir estado inicial de validade
+
         this.formValid.emit(this.basicInfoForm.valid);
     }
 
-    // Getters para facilitar o acesso aos controles
+
     get purpose() { return this.basicInfoForm.get('purpose'); }
     get operationType() { return this.basicInfoForm.get('operationType'); }
     get amount() { return this.basicInfoForm.get('amount'); }
@@ -120,11 +120,11 @@ export class BasicInfoStepComponent implements OnInit {
     get gracePeriod() { return this.basicInfoForm.get('gracePeriod'); }
 
     identifyOperation(): void {
-        // Validar se o campo finalidade está preenchido
+
         if (this.purpose?.valid) {
             this.showRestOfForm = true;
         } else {
-            // Marcar o campo como touched para mostrar erro
+
             this.purpose?.markAsTouched();
         }
     }

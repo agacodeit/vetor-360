@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ContentChildren, Directive, EventEmitter, Input, OnInit, Output, QueryList, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 
-// Diretiva para capturar conteúdo de cada item do accordion
+
 @Directive({
     selector: '[accordionItem]',
     standalone: true
@@ -39,11 +39,11 @@ export class AccordionComponent implements OnInit {
     @Output() itemExpanded = new EventEmitter<AccordionItem>();
     @Output() itemCollapsed = new EventEmitter<AccordionItem>();
 
-    // Captura todos os templates de conteúdo
+
     @ContentChildren(AccordionItemDirective) contentItems!: QueryList<AccordionItemDirective>;
 
     ngOnInit(): void {
-        // Inicializar estado dos itens se não definido
+
         this.items.forEach(item => {
             if (item.expanded === undefined) {
                 item.expanded = false;
@@ -56,7 +56,7 @@ export class AccordionComponent implements OnInit {
 
         const wasExpanded = item.expanded;
 
-        // Se não permite múltiplos, fechar todos os outros
+
         if (!this.allowMultiple && !wasExpanded) {
             this.items.forEach(otherItem => {
                 if (otherItem.id !== item.id) {
@@ -65,10 +65,10 @@ export class AccordionComponent implements OnInit {
             });
         }
 
-        // Alternar estado do item atual
+
         item.expanded = !item.expanded;
 
-        // Emitir eventos
+
         this.itemToggled.emit(item);
 
         if (item.expanded) {
@@ -86,7 +86,7 @@ export class AccordionComponent implements OnInit {
         return !!item.disabled || this.disabled;
     }
 
-    // Obter o template de conteúdo para um item específico
+
     getContentTemplate(itemId: string): TemplateRef<any> | null {
         const contentItem = this.contentItems?.find(item => item.id === itemId);
         return contentItem?.template || null;

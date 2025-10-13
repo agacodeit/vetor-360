@@ -57,7 +57,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   private onTouched = () => { };
 
   constructor() {
-    // Removido NgControl para evitar dependência circular
+
   }
 
   ngOnInit() {
@@ -119,7 +119,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   }
 
 
-
   onInputFocus(): void {
     this.isFocused = true;
   }
@@ -160,7 +159,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
    * Se tiver máscara de moeda, força type="text" para evitar erro de parse
    */
   get effectiveType(): string {
-    // Máscaras de moeda devem usar type="text"
+
     const currencyMasks = ['BRL', 'USD', 'EUR', 'GBP'];
     if (this.libMask && currencyMasks.includes(this.libMask.toUpperCase())) {
       return 'text';

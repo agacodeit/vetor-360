@@ -48,12 +48,10 @@ export class Login implements OnInit {
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('Login realizado com sucesso:', response);
           this.router.navigate(['/authorized/dashboard']);
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Erro no login:', error);
 
           if (error.status === 401) {
             this.errorMessage = 'E-mail ou senha incorretos';
