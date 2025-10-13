@@ -2,22 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SolicitationDetails } from './solicitation-details';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
-import { KanbanCard } from '../../../../shared';
+import { MOCK_COMPLETE_KANBAN_CARD } from '../../../../shared/__mocks__';
 
 describe('SolicitationDetails', () => {
   let component: SolicitationDetails;
   let fixture: ComponentFixture<SolicitationDetails>;
   let modalService: ModalService;
   let compiled: HTMLElement;
-
-  const mockCardData: KanbanCard = {
-    id: '1',
-    title: 'Test Solicitation',
-    status: 'in-progress',
-    client: 'Test Client',
-    cnpj: '12.345.678/0001-90',
-    dueDate: new Date('2024-12-31')
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -44,12 +35,12 @@ describe('SolicitationDetails', () => {
     });
 
     it('should retrieve cardData from modal service if available', () => {
-      modalService.open({ id: 'solicitation-details', data: mockCardData });
+      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
 
       const newFixture = TestBed.createComponent(SolicitationDetails);
       const newComponent = newFixture.componentInstance;
 
-      expect(newComponent.cardData).toEqual(mockCardData);
+      expect(newComponent.cardData).toEqual(MOCK_COMPLETE_KANBAN_CARD);
     });
 
     it('should handle missing modal data gracefully', () => {
@@ -68,7 +59,7 @@ describe('SolicitationDetails', () => {
     });
 
     it('should find modal by id "solicitation-details"', () => {
-      modalService.open({ id: 'solicitation-details', data: mockCardData });
+      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
 
       const modal = modalService.modals().find(m => m.id === 'solicitation-details');
 
@@ -77,11 +68,11 @@ describe('SolicitationDetails', () => {
     });
 
     it('should access modal config data', () => {
-      modalService.open({ id: 'solicitation-details', data: mockCardData });
+      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
 
       const modal = modalService.modals().find(m => m.id === 'solicitation-details');
 
-      expect(modal?.config.data).toEqual(mockCardData);
+      expect(modal?.config.data).toEqual(MOCK_COMPLETE_KANBAN_CARD);
     });
   });
 
@@ -127,7 +118,7 @@ describe('SolicitationDetails', () => {
 
   describe('Component Integration', () => {
     it('should pass cardData to solicitation-data component', () => {
-      modalService.open({ id: 'solicitation-details', data: mockCardData });
+      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
 
       const newFixture = TestBed.createComponent(SolicitationDetails);
       newFixture.detectChanges();
@@ -137,7 +128,7 @@ describe('SolicitationDetails', () => {
     });
 
     it('should pass cardData to client-data component', () => {
-      modalService.open({ id: 'solicitation-details', data: mockCardData });
+      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
 
       const newFixture = TestBed.createComponent(SolicitationDetails);
       newFixture.detectChanges();

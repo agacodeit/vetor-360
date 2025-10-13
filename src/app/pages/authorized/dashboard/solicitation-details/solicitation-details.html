@@ -1,9 +1,28 @@
 <article class="solicitation-details">
-    <div class="solicitation-details__container">
+    <div class="solicitation-details__container mt-24">
         <div class="solicitation-details__content">
             <app-solicitation-data [cardData]="cardData" />
             <app-follow-up />
-            <app-client-data [cardData]="cardData" />
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-client-data [cardData]="cardData" />
+                <app-rating [cardData]="cardData" />
+            </div>
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-financial-agent [cardData]="cardData" />
+                <app-credit-operation [cardData]="cardData" />
+            </div>
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-financial-summary [cardData]="cardData" />
+                <app-cash-flow-chart [cardData]="cardData" />
+            </div>
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-documentation [cardData]="cardData" />
+                <app-risk-indicators [cardData]="cardData" />
+            </div>
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-conclusion [cardData]="cardData" />
+                <app-risk-classification [cardData]="cardData" />
+            </div>
         </div>
     </div>
 </article>
