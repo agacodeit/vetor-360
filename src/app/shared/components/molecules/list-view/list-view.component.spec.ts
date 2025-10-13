@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListViewComponent } from './list-view.component';
+import { DsListViewComponent } from './list-view.component';
 
 describe('ListViewComponent', () => {
-  let component: ListViewComponent;
-  let fixture: ComponentFixture<ListViewComponent>;
+  let component: DsListViewComponent;
+  let fixture: ComponentFixture<DsListViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListViewComponent]
+      imports: [DsListViewComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(ListViewComponent);
+    fixture = TestBed.createComponent(DsListViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
