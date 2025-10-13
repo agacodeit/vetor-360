@@ -6,7 +6,9 @@ import {
   ClientDataComponent,
   RatingComponent,
   FinancialAgentComponent,
-  CreditOperationComponent
+  CreditOperationComponent,
+  FinancialSummaryComponent,
+  CashFlowChartComponent
 } from './components';
 
 @Component({
@@ -18,7 +20,9 @@ import {
     ClientDataComponent,
     RatingComponent,
     FinancialAgentComponent,
-    CreditOperationComponent
+    CreditOperationComponent,
+    FinancialSummaryComponent,
+    CashFlowChartComponent
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'

@@ -11,6 +11,10 @@
                 <app-financial-agent [cardData]="cardData" />
                 <app-credit-operation [cardData]="cardData" />
             </div>
+            <div class="d-grid columns-2 gap-48 mt-24">
+                <app-financial-summary [cardData]="cardData" />
+                <app-cash-flow-chart [cardData]="cardData" />
+            </div>
         </div>
     </div>
 </article>

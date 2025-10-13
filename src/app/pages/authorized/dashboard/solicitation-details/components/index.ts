@@ -4,4 +4,6 @@ export * from './client-data/client-data.component';
 export * from './rating/rating.component';
 export * from './financial-agent/financial-agent.component';
 export * from './credit-operation/credit-operation.component';
+export * from './financial-summary/financial-summary.component';
+export * from './cash-flow-chart/cash-flow-chart.component';
 
