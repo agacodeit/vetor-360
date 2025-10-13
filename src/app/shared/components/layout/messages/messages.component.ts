@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../atoms/icon/icon.component';
 
 export interface Message {
     id: string;
@@ -17,7 +18,7 @@ export interface Message {
 @Component({
     selector: 'app-messages',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, IconComponent],
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })

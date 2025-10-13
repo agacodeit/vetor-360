@@ -21,7 +21,7 @@
 
     <!-- Messages Component -->
     @if (isVisualizationOpen) {
-    <div class="follow-up__visualization">
+    <div class="follow-up__visualization d-grid columns-2 gap-24">
         <app-messages [messages]="messages" [showHeader]="false" (messageSent)="onMessageSent($event)"
             (closed)="onClosed()" (minimized)="onMinimized($event)">
         </app-messages>

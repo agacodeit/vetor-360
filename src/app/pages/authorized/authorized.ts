@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '../../shared';
+import { HeaderComponent, MessageContainerComponent } from '../../shared';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
   selector: 'app-authorized',
   imports: [
     RouterOutlet,
-    HeaderComponent
+    HeaderComponent,
+    MessageContainerComponent
   ],
   templateUrl: './authorized.html',
   styleUrl: './authorized.scss'

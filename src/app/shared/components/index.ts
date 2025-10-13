@@ -40,3 +40,4 @@ export * from './general/general-modal-content/general-modal-content.component';
 export * from './layout/header/header.component';
 export * from './layout/menu/menu.component';
 export * from './layout/messages/messages.component';
+export * from './layout/message-container/message-container.component';

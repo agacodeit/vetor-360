@@ -1,0 +1,16 @@
+<!-- Floating Action Button -->
+<button class="message-fab" (click)="toggleChat()" [class.message-fab--active]="isOpen" aria-label="Abrir chat">
+    @if (hasNewMessages && !isOpen) {
+    <span class="message-fab__badge"></span>
+    }
+    <ds-icon icon="fa-regular fa-comment-dots" fontSize="28px" color="white" class="message-fab__icon"></ds-icon>
+</button>
+
+<!-- Messages Component -->
+@if (isOpen) {
+<div class="message-popup">
+    <app-messages [messages]="messages" [showHeader]="true" (messageSent)="onMessageSent($event)" (closed)="onClosed()"
+        (minimized)="onMinimized($event)">
+    </app-messages>
+</div>
+}
