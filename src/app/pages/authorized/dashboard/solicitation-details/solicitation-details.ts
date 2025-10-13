@@ -3,7 +3,16 @@ import { KanbanCard, ModalService } from '../../../../shared';
 import {
   SolicitationDataComponent,
   FollowUpComponent,
-  ClientDataComponent
+  ClientDataComponent,
+  RatingComponent,
+  FinancialAgentComponent,
+  CreditOperationComponent,
+  FinancialSummaryComponent,
+  CashFlowChartComponent,
+  DocumentationComponent,
+  RiskIndicatorsComponent,
+  ConclusionComponent,
+  RiskClassificationComponent
 } from './components';
 
 @Component({
@@ -12,7 +21,16 @@ import {
   imports: [
     SolicitationDataComponent,
     FollowUpComponent,
-    ClientDataComponent
+    ClientDataComponent,
+    RatingComponent,
+    FinancialAgentComponent,
+    CreditOperationComponent,
+    FinancialSummaryComponent,
+    CashFlowChartComponent,
+    DocumentationComponent,
+    RiskIndicatorsComponent,
+    ConclusionComponent,
+    RiskClassificationComponent
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'
