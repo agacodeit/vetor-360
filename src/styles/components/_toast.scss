@@ -133,8 +133,8 @@
     // ========================================
     .toast-icon {
         flex-shrink: 0;
-        font-size: 20px;
-        margin-top: 2px;
+        font-size: $font-lg;
+        margin-top: $size-xs;
     }
 
     .toast-content {
@@ -163,7 +163,7 @@
         padding: $spacing-xs;
         border-radius: $border-radius-sm;
         cursor: pointer;
-        font-size: 16px;
+        font-size: $font-md;
         transition: background-color 0.2s ease;
         display: flex;
         align-items: center;
@@ -189,7 +189,7 @@
         min-height: 50px;
 
         .toast-icon {
-            font-size: 18px;
+            font-size: $font-xmd;
         }
 
         .toast-content {
@@ -203,9 +203,9 @@
         }
 
         .toast-close {
-            width: 28px;
-            height: 28px;
-            font-size: 14px;
+            width: $font-xxl;
+            height: $font-xxl;
+            font-size: $font-sm;
         }
     }
 }

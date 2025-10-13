@@ -1,5 +1,7 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/typography' as *;
+@use '../abstracts/spacing' as *;
+
 
 // ============================================
 // COMPONENTE DS-STEPPER
@@ -315,14 +317,14 @@
     border-radius: 50%;
 
     i {
-        font-size: 14px;
+        font-size: $font-sm;
 
         .size-sm & {
-            font-size: 12px;
+            font-size: $font-xs;
         }
 
         .size-lg & {
-            font-size: 18px;
+            font-size: $font-xmd;
         }
     }
 }

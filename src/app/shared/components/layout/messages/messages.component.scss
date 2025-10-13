@@ -32,8 +32,8 @@
     }
 
     &__title {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: $font-xmd;
+        font-weight: $font-weight-xbold;
         color: white;
         margin: 0;
     }
@@ -48,8 +48,8 @@
         border: none;
         color: white;
         cursor: pointer;
-        padding: 4px 8px;
-        font-size: 20px;
+        padding: $padding-xsm $padding-xs;
+        font-size: $font-lg;
         line-height: 1;
         transition: opacity 0.2s;
 
@@ -108,7 +108,7 @@
         justify-content: center;
         flex-shrink: 0;
         color: #0F5132;
-        font-size: 18px;
+        font-size: $font-xmd;
     }
 
     &__content {
@@ -125,21 +125,21 @@
     }
 
     &__author {
-        font-size: 14px;
-        font-weight: 600;
+        font-size: $font-sm;
+        font-weight: $font-weight-xbold;
         color: #1f2937;
     }
 
     &__timestamp {
-        font-size: 11px;
+        font-size: $font-xs;
         color: $label;
     }
 
     &__text {
         background: white;
-        padding: 12px 16px;
+        padding: $padding-s $padding-ssm;
         border-radius: $border-radius-md;
-        font-size: 14px;
+        font-size: $font-sm;
         line-height: 1.5;
         color: #1f2937;
         word-wrap: break-word;
@@ -147,24 +147,24 @@
         // Mentions styling
         :deep(.mention) {
             color: $secondary-medium;
-            font-weight: 600;
+            font-weight: $font-weight-xbold;
         }
     }
 
     &__attachment {
         background: white;
-        padding: 12px 16px;
+        padding: $padding-s $padding-ssm;
         border-radius: $border-radius-md;
         border: 1px solid $stroke;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: $size-xl;
     }
 
 
     &__attachment-name {
         flex: 1;
-        font-size: 14px;
+        font-size: $font-sm;
         color: #1f2937;
         white-space: nowrap;
         overflow: hidden;
@@ -176,7 +176,7 @@
         border: none;
         color: $label;
         cursor: pointer;
-        padding: 4px;
+        padding: $padding-xsm;
         transition: color 0.2s;
 
         &:hover {
@@ -192,11 +192,11 @@
 
     &__input {
         width: 100%;
-        padding: 12px 16px;
+        padding: $padding-s $padding-ssm;
         border: 1px solid $stroke;
         border-radius: $border-radius-sm;
-        font-size: 14px;
-        margin-bottom: 12px;
+        font-size: $font-sm;
+        margin-bottom: $padding-s;
         transition: border-color 0.2s;
 
         &:focus {
@@ -225,8 +225,8 @@
         border: none;
         color: $label;
         cursor: pointer;
-        padding: 8px;
-        font-size: 18px;
+        padding: $padding-xs;
+        font-size: $font-xmd;
         transition: color 0.2s;
 
         &:hover:not(:disabled) {
@@ -244,14 +244,14 @@
         background: $primary-gradient;
         border: none;
         color: white;
-        padding: 10px 24px;
+        padding: $size-xl $padding-md;
         border-radius: $border-radius-max;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: $font-sm;
+        font-weight: $font-weight-xbold;
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: $padding-xs;
         transition: opacity 0.2s;
 
         &:hover:not(:disabled) {
@@ -275,7 +275,7 @@
 
     &__container::-webkit-scrollbar-thumb {
         background: $stroke;
-        border-radius: 3px;
+        border-radius: $border-radius-xxs;
 
         &:hover {
             background: $label;

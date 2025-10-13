@@ -84,8 +84,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: $padding-xs;
+    padding: $padding-xs $padding-ssm;
     background: none;
     border: none;
     border-radius: $border-radius-sm;
@@ -100,12 +100,12 @@
     >span {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: $padding-xs;
         pointer-events: none;
         z-index: 1;
 
         i {
-            font-size: 16px;
+            font-size: $font-md;
         }
 
         span {

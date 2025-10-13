@@ -14,7 +14,7 @@
         width: 100%;
         max-width: 1280px;
         margin: 0 auto;
-        padding: 24px;
+        padding: $padding-md;
     }
 
     &__logo {
@@ -39,7 +39,7 @@
         justify-content: center;
         background: transparent;
         border: none;
-        padding: 8px;
+        padding: $padding-xs;
         cursor: pointer;
         transition: all 0.2s ease;
         color: var(--primary-medium);
@@ -59,7 +59,7 @@
 @media (max-width: 768px) {
     .header {
         &__container {
-            padding: 16px;
+            padding: $padding-ssm;
         }
 
         &__logo-image {

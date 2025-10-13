@@ -198,14 +198,14 @@
     justify-content: center;
     transition: transform 0.3s ease;
     color: var(--placeholder);
-    font-size: 14px;
+    font-size: $font-sm;
 
     .size-sm & {
-        font-size: 12px;
+        font-size: $font-xs;
     }
 
     .size-lg & {
-        font-size: 16px;
+        font-size: $font-md;
     }
 
     &.accordion-icon--left {
@@ -321,7 +321,7 @@
     }
 
     .accordion-icon {
-        font-size: 12px;
+        font-size: $font-xs;
     }
 }
 

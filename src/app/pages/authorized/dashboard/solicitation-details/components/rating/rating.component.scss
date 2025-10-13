@@ -3,8 +3,8 @@
 .rating {
 
     &__badge {
-        border-radius: 12px;
-        font-size: 48px;
+        border-radius: $border-radius-md;
+        font-size: $font-xxxxl;
         color: var(--white);
         background-color: #3A00E5;
         padding: 0;

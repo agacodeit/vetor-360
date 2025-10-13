@@ -51,7 +51,7 @@
         align-items: center;
 
         i {
-            font-size: 30px;
+            font-size: $size-xxxxxxxxxl;
         }
 
         p,
@@ -60,7 +60,7 @@
         }
 
         .bold {
-            font-weight: 500;
+            font-weight: $font-weight-bold;
         }
     }
 }
