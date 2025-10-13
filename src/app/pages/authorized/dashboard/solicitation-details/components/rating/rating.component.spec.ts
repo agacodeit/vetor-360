@@ -1,22 +1,124 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RatingComponent } from './rating.component';
+import { MOCK_KANBAN_CARD } from '../../../../../../shared/__mocks__';
 
 describe('RatingComponent', () => {
     let component: RatingComponent;
     let fixture: ComponentFixture<RatingComponent>;
+    let compiled: HTMLElement;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RatingComponent]
-        }).compileComponents();
+        })
+            .compileComponents();
 
         fixture = TestBed.createComponent(RatingComponent);
         component = fixture.componentInstance;
+        compiled = fixture.nativeElement;
         fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
+    describe('Component Initialization', () => {
+        it('should create', () => {
+            expect(component).toBeTruthy();
+        });
+
+        it('should initialize cardData as null', () => {
+            expect(component.cardData).toBeNull();
+        });
+    });
+
+    describe('Input Properties', () => {
+        it('should accept cardData input', () => {
+            component.cardData = MOCK_KANBAN_CARD;
+            fixture.detectChanges();
+
+            expect(component.cardData).toEqual(MOCK_KANBAN_CARD);
+        });
+
+        it('should handle null cardData', () => {
+            component.cardData = null;
+            fixture.detectChanges();
+
+            expect(component.cardData).toBeNull();
+        });
+
+        it('should update when cardData changes', () => {
+            const newData = { ...MOCK_KANBAN_CARD, id: '2' };
+
+            component.cardData = newData;
+            fixture.detectChanges();
+
+            expect(component.cardData?.id).toBe('2');
+        });
+    });
+
+    describe('Template Rendering', () => {
+        it('should render section element', () => {
+            const section = compiled.querySelector('.rating');
+            expect(section).toBeTruthy();
+        });
+
+        it('should have flex layout with gap', () => {
+            const section = compiled.querySelector('.rating');
+            expect(section?.classList.contains('d-flex')).toBe(true);
+            expect(section?.classList.contains('gap-12')).toBe(true);
+        });
+
+        it('should render "Rating" title', () => {
+            const title = compiled.querySelector('.title-semibold');
+            expect(title?.textContent?.trim()).toBe('Rating');
+        });
+
+        it('should display rating badge with "B"', () => {
+            const badge = compiled.querySelector('.rating__badge');
+            expect(badge?.textContent?.trim()).toBe('B');
+        });
+
+        it('should display rating description', () => {
+            const content = compiled.textContent || '';
+            expect(content).toContain('Cliente com alguns pontos de atenção');
+            expect(content).toContain('capacidade de pagamento adequada');
+        });
+
+        it('should have correct CSS classes for text section', () => {
+            const text = compiled.querySelector('.rating__text');
+            expect(text).toBeTruthy();
+            expect(text?.classList.contains('d-flex')).toBe(true);
+            expect(text?.classList.contains('flex-column')).toBe(true);
+        });
+
+        it('should have correct CSS classes for badge', () => {
+            const badge = compiled.querySelector('.rating__badge');
+            expect(badge).toBeTruthy();
+        });
+    });
+
+    describe('Integration Tests', () => {
+        it('should display complete rating information', () => {
+            component.cardData = MOCK_KANBAN_CARD;
+            fixture.detectChanges();
+
+            const content = compiled.textContent || '';
+
+            expect(content).toContain('Rating');
+            expect(content).toContain('B');
+            expect(content).toContain('Cliente com alguns pontos de atenção');
+        });
+
+        it('should maintain structure without cardData', () => {
+            component.cardData = null;
+            fixture.detectChanges();
+
+            const section = compiled.querySelector('.rating');
+            const text = compiled.querySelector('.rating__text');
+            const badge = compiled.querySelector('.rating__badge');
+
+            expect(section).toBeTruthy();
+            expect(text).toBeTruthy();
+            expect(badge).toBeTruthy();
+        });
     });
 });
 
