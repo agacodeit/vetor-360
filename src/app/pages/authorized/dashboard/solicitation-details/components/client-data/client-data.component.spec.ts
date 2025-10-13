@@ -70,9 +70,9 @@ describe('ClientDataComponent', () => {
             expect(section).toBeTruthy();
         });
 
-        it('should have grid layout with 2 columns', () => {
+        it('should have grid layout with 1 column', () => {
             const section = compiled.querySelector('.client-data');
-            expect(section?.classList.contains('columns-2')).toBe(true);
+            expect(section?.classList.contains('columns-1')).toBe(true);
         });
 
         it('should render "Cliente" title', () => {
@@ -114,31 +114,19 @@ describe('ClientDataComponent', () => {
             expect(address?.textContent).toContain('Alameda Afonso Schmidt');
         });
 
-        it('should render "Rating" section', () => {
+        it('should display technology information', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Rating');
-        });
-
-        it('should display rating value "B"', () => {
-            const rating = compiled.querySelector('.client-data__rating');
-            expect(rating?.textContent?.trim()).toBe('B');
-        });
-
-        it('should display rating description', () => {
-            const content = compiled.textContent || '';
-            expect(content).toContain('Cliente com alguns pontos de atenção');
+            expect(content).toContain('Tecnologia');
         });
 
         it('should have correct CSS classes', () => {
             const info = compiled.querySelector('.client-data__info');
             const data = compiled.querySelector('.client-data__data');
             const details = compiled.querySelector('.client-data__details');
-            const rating = compiled.querySelector('.client-data__rating');
 
             expect(info).toBeTruthy();
             expect(data).toBeTruthy();
             expect(details).toBeTruthy();
-            expect(rating).toBeTruthy();
         });
     });
 
@@ -171,8 +159,6 @@ describe('ClientDataComponent', () => {
             expect(content).toContain('12.345.678/0001-90');
             expect(content).toContain('Aberta em');
             expect(content).toContain('Tecnologia');
-            expect(content).toContain('Rating');
-            expect(content).toContain('B');
         });
 
         it('should update display when cardData changes', () => {
@@ -189,14 +175,10 @@ describe('ClientDataComponent', () => {
             expect(content).toContain('Updated Company');
         });
 
-        it('should have rating section with correct structure', () => {
-            const ratingWrapper = compiled.querySelector('.client-data__rating-wrapper');
-            const ratingText = compiled.querySelector('.client-data__rating-text');
-            const rating = compiled.querySelector('.client-data__rating');
-
-            expect(ratingWrapper).toBeTruthy();
-            expect(ratingText).toBeTruthy();
-            expect(rating).toBeTruthy();
+        it('should have address with proper structure', () => {
+            const address = compiled.querySelector('.client-data__address');
+            expect(address).toBeTruthy();
+            expect(address?.tagName.toLowerCase()).toBe('address');
         });
     });
 });

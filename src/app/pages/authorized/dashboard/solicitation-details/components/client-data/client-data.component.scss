@@ -5,23 +5,4 @@
     &__address {
         font-style: normal;
     }
-
-    &__rating {
-        border-radius: 12px;
-        font-size: 48px;
-        color: var(--white);
-        background-color: #3A00E5;
-        padding: 0;
-        width: 80px;
-        height: 80px;
-        min-width: 80px;
-        min-height: 80px;
-        max-width: 80px;
-        max-height: 80px;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
 }
