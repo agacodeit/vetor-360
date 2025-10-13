@@ -37,7 +37,7 @@ export class SolicitationModal implements OnInit {
 
   mainForm: FormGroup;
   isLoading = false;
-  currentStep = 0;
+  currentStep = 2;
 
 
   basicInfoData: any = {};

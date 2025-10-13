@@ -16,15 +16,15 @@
 
     &__title {
         font-family: 'Work Sans', sans-serif;
-        font-size: $font-xl;
+        font-size: $font-xmd;
         font-weight: $font-weight-md;
         color: var(--secondary);
-        margin: 0 0 $padding-sm 0;
+        margin: 0 0 $padding-xs 0;
     }
 
     &__description {
         font-family: 'Work Sans', sans-serif;
-        font-size: $font-sm;
+        font-size: $font-xs;
         color: var(--placeholder);
         margin: 0;
     }
@@ -62,7 +62,7 @@
 
         p {
             font-family: 'Work Sans', sans-serif;
-            font-size: $font-sm;
+            font-size: $font-xs;
             color: var(--secondary);
             margin: 0;
             line-height: 1.5;
@@ -84,14 +84,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: $padding-xs;
-    padding: $padding-xs $padding-ssm;
+    gap: $padding-xsm;
+    padding: $padding-xsm $padding-sm;
     background: none;
     border: none;
     border-radius: $border-radius-sm;
     color: var(--primary-dark);
     font-family: 'Work Sans', sans-serif;
-    font-size: $font-sm;
+    font-size: $font-xs;
     font-weight: $font-weight-md;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -100,12 +100,12 @@
     >span {
         display: inline-flex;
         align-items: center;
-        gap: $padding-xs;
+        gap: $padding-xsm;
         pointer-events: none;
         z-index: 1;
 
         i {
-            font-size: $font-md;
+            font-size: $font-sm;
         }
 
         span {

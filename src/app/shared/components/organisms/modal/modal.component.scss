@@ -78,11 +78,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $padding-md $padding-md 0 $padding-md; //24px
+    padding: $padding-ssm $padding-ssm 0 $padding-ssm; //16px
 
     .modal-title {
         margin: 0;
-        font-size: $font-xl;
+        font-size: $font-xmd;
         font-weight: $font-weight-md;
         color: var(--black);
     }
@@ -90,10 +90,10 @@
 
 .modal-subtitle {
     margin-top: 12px;
-    padding: 0 $padding-md; //24px
+    padding: 0 $padding-ssm; //16px
 
     p {
-        font-size: $font-sm;
+        font-size: $font-xs;
         font-weight: $font-weight-md;
         color: var(--gray-dark);
     }
