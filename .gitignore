@@ -6,3 +6,6 @@ dist/
 angular/
 .angular/
 
+# TypeScript cache
+*.tsbuildinfo
+
