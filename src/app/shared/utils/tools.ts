@@ -1,4 +1,4 @@
-// Simplified tools utility - models removed
+
 
 export function copyToClipboard(internalReference: string, event?: MouseEvent) {
     if (event) {
@@ -8,12 +8,10 @@ export function copyToClipboard(internalReference: string, event?: MouseEvent) {
 
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(internalReference).then(() => {
-            console.log('Texto copiado para a área de transferência');
         }).catch(err => {
-            console.error('Erro ao copiar para a área de transferência:', err);
         });
     } else {
-        // Fallback para navegadores mais antigos
+
         const textArea = document.createElement('textarea');
         textArea.value = internalReference;
         document.body.appendChild(textArea);
@@ -21,9 +19,7 @@ export function copyToClipboard(internalReference: string, event?: MouseEvent) {
         textArea.select();
         try {
             document.execCommand('copy');
-            console.log('Texto copiado para a área de transferência (fallback)');
         } catch (err) {
-            console.error('Erro ao copiar para a área de transferência (fallback):', err);
         }
         document.body.removeChild(textArea);
     }

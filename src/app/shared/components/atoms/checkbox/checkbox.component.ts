@@ -46,7 +46,7 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  // ControlValueAccessor methods
+
   writeValue(value: any): void {
     this.value = !!value;
   }
@@ -63,7 +63,7 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  // Event handlers
+
   onCheckboxChange(event: any): void {
     if (this.disabled) return;
 
@@ -79,7 +79,7 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
     this.onTouched();
   }
 
-  // Computed properties
+
   get containerClasses(): string {
     const classes = ['checkbox-container'];
 

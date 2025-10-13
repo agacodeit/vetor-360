@@ -4,9 +4,9 @@
         <div [class]="stepClasses" [class.active]="isStepActive(step, i)" [class.completed]="isStepCompleted(step, i)"
             [class.disabled]="step.disabled" [class.error]="step.error" [class.accessible]="isStepAccessible(step, i)"
             [attr.data-status]="getStepStatus(step, i)" (click)="selectStep(step, i)">
-            <!-- Step Marker -->
+
             <div class="step-marker">
-                <!-- Variant: Numbers -->
+
                 @if (variant === 'numbers') {
                 <span class="step-number">
                     @if (step.icon && isStepCompleted(step, i)) {
@@ -21,7 +21,7 @@
                 </span>
                 }
 
-                <!-- Variant: Dots -->
+
                 @if (variant === 'dots') {
                 <span class="step-dot">
                     @if (step.icon && isStepCompleted(step, i)) {
@@ -33,7 +33,7 @@
                 </span>
                 }
 
-                <!-- Variant: Default -->
+
                 @if (variant === 'default') {
                 <span class="step-circle">
                     @if (step.icon && isStepCompleted(step, i)) {
@@ -49,12 +49,12 @@
                 }
             </div>
 
-            <!-- Step Content -->
+
             <div class="step-content">
                 <h4 class="step-title">{{ step.title }}</h4>
             </div>
 
-            <!-- Connector Line -->
+
             @if (showConnector && i < steps.length - 1) { <div class="step-connector"
                 [class.completed]="isStepCompleted(step, i)">
         </div>

@@ -1,5 +1,4 @@
-// Design System Services - Export Index
-// This file exports all services from the design system for easy importing
+
 
 export * from './auth';
 export * from './image-upload/image-upload.service';

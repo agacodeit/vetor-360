@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, CheckboxComponent, IconComponent } from '../../../../../../shared';
 
-// Interface para documentos
+
 export interface DocumentItem {
     id: string;
     label: string;
@@ -35,7 +35,7 @@ export class DocumentsStepComponent implements OnInit {
 
     documentsForm: FormGroup;
 
-    // Itens do accordion (apenas metadados, sem content)
+
     accordionItems: AccordionItem[] = [
         {
             id: 'doc-required',
@@ -44,7 +44,7 @@ export class DocumentsStepComponent implements OnInit {
         }
     ];
 
-    // Lista de documentos obrigatórios
+
     requiredDocuments: DocumentItem[] = [
         {
             id: 'rg-cnh',
@@ -70,7 +70,7 @@ export class DocumentsStepComponent implements OnInit {
     ];
 
     constructor(private fb: FormBuilder) {
-        // Criar um FormControl para cada documento
+
         const formControls: { [key: string]: any } = {};
         this.requiredDocuments.forEach(doc => {
             formControls[doc.id] = [false]; // Checkbox começa desmarcado
@@ -78,9 +78,9 @@ export class DocumentsStepComponent implements OnInit {
 
         this.documentsForm = this.fb.group(formControls);
 
-        // Emitir mudanças do formulário
+
         this.documentsForm.valueChanges.subscribe(value => {
-            // Atualizar a propriedade uploaded dos documentos baseado no form
+
             this.requiredDocuments.forEach(doc => {
                 doc.uploaded = value[doc.id] || false;
             });
@@ -94,14 +94,14 @@ export class DocumentsStepComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Carregar dados salvos se existirem
+
         if (this.formData && Object.keys(this.formData).length > 0) {
-            // Se houver checkboxes salvos, restaurá-los
+
             if (this.formData.checkboxes) {
                 this.documentsForm.patchValue(this.formData.checkboxes, { emitEvent: false });
             }
 
-            // Se houver documentos salvos (com arquivos), restaurá-los
+
             if (this.formData.documents) {
                 this.formData.documents.forEach((savedDoc: DocumentItem) => {
                     const doc = this.requiredDocuments.find(d => d.id === savedDoc.id);
@@ -113,12 +113,11 @@ export class DocumentsStepComponent implements OnInit {
             }
         }
 
-        // Emitir estado inicial de validade
+
         this.formValid.emit(this.documentsForm.valid);
     }
 
     onAccordionItemToggled(item: AccordionItem): void {
-        console.log('Accordion item toggled:', item.title);
     }
 
     /**
@@ -134,12 +133,11 @@ export class DocumentsStepComponent implements OnInit {
                 document.file = file;
                 document.uploaded = true;
 
-                // Marcar o checkbox no formulário
+
                 this.documentsForm.patchValue({
                     [documentId]: true
                 });
 
-                console.log(`Arquivo selecionado para ${document.label}:`, file.name);
             }
         }
     }
@@ -162,12 +160,11 @@ export class DocumentsStepComponent implements OnInit {
             document.file = undefined;
             document.uploaded = false;
 
-            // Desmarcar o checkbox no formulário
+
             this.documentsForm.patchValue({
                 [documentId]: false
             });
 
-            console.log(`Arquivo removido de ${document.label}`);
         }
     }
 }

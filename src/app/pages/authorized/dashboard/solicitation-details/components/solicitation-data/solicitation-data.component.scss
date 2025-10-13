@@ -1,0 +1,13 @@
+@use '../../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../../styles/abstracts/spacing' as *;
+
+.solicitation-data {
+
+    &__status {
+        background-color: hsla(47, 100%, 50%, 0.2);
+        padding: $padding-s;
+        width: fit-content;
+        border-radius: $border-radius-md;
+        border: 1px solid #FFC800;
+    }
+}

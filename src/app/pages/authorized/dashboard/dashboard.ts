@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 import { ModalComponent, ModalService, SelectOption } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
+import { SolicitationDetails } from "./solicitation-details/solicitation-details";
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +18,8 @@ import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
     ReactiveFormsModule,
     ModalComponent,
     ButtonComponent,
-    SolicitationModal
+    SolicitationModal,
+    SolicitationDetails
   ],
   providers: [
     NgModel
@@ -28,14 +30,18 @@ import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 })
 export class Dashboard implements OnInit {
   private modalService = inject(ModalService);
-  isModalOpen: boolean = false;
+  isCreateModalOpen: boolean = false;
+  isDetailsModalOpen: boolean = false;
 
   kanbanColumns: KanbanColumn[] = [];
 
   constructor() {
     effect(() => {
-      const modalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
-      this.isModalOpen = modalInstance ? modalInstance.isOpen : false;
+      const createModalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
+      this.isCreateModalOpen = createModalInstance ? createModalInstance.isOpen : false;
+
+      const detailsModalInstance = this.modalService.modals().find(m => m.id === 'solicitation-details');
+      this.isDetailsModalOpen = detailsModalInstance ? detailsModalInstance.isOpen : false;
     });
   }
 
@@ -46,8 +52,9 @@ export class Dashboard implements OnInit {
   private initializeKanbanData() {
     this.kanbanColumns = [
       {
-        id: 'todo',
-        title: 'Criada',
+        id: 'pending-documents',
+        title: 'Pendente de documentos',
+        color: '#FF9900',
         cards: [
           {
             id: '1',
@@ -57,7 +64,8 @@ export class Dashboard implements OnInit {
             client: 'João Silva',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
-            tags: ['backend', 'security']
+            tags: ['backend', 'security'],
+            status: 'pending-documents'
           },
           {
             id: '2',
@@ -67,7 +75,8 @@ export class Dashboard implements OnInit {
             client: 'Maria Santos',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-20'),
-            tags: ['design', 'ui/ux']
+            tags: ['design', 'ui/ux'],
+            status: 'pending-documents'
           },
           {
             id: '3',
@@ -77,13 +86,15 @@ export class Dashboard implements OnInit {
             client: 'Pedro Costa',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-25'),
-            tags: ['devops', 'deployment']
+            tags: ['devops', 'deployment'],
+            status: 'pending-documents'
           }
         ]
       },
       {
-        id: 'in-progress',
-        title: 'Em andamento',
+        id: 'in-analysis',
+        title: 'Em análise',
+        color: '#FFC800',
         cards: [
           {
             id: '4',
@@ -93,7 +104,8 @@ export class Dashboard implements OnInit {
             client: 'Ana Oliveira',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-10'),
-            tags: ['backend', 'api']
+            tags: ['backend', 'api'],
+            status: 'in-analysis'
           },
           {
             id: '5',
@@ -103,13 +115,15 @@ export class Dashboard implements OnInit {
             client: 'Carlos Lima',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-18'),
-            tags: ['testing', 'quality']
+            tags: ['testing', 'quality'],
+            status: 'in-analysis'
           }
         ]
       },
       {
-        id: 'review',
-        title: 'Revisão',
+        id: 'negotiation',
+        title: 'Em negociação',
+        color: '#B700FF',
         cards: [
           {
             id: '6',
@@ -119,13 +133,15 @@ export class Dashboard implements OnInit {
             client: 'Lucas Ferreira',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-12'),
-            tags: ['refactoring', 'performance']
+            tags: ['refactoring', 'performance'],
+            status: 'negotiation'
           }
         ]
       },
       {
-        id: 'done',
-        title: 'Finalizado',
+        id: 'waiting-payment',
+        title: 'Aguardando pagamento',
+        color: '#204FFF',
         cards: [
           {
             id: '7',
@@ -135,7 +151,8 @@ export class Dashboard implements OnInit {
             client: 'Sofia Alves',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-01-30'),
-            tags: ['setup', 'configuration']
+            tags: ['setup', 'configuration'],
+            status: 'waiting-payment'
           },
           {
             id: '8',
@@ -145,7 +162,8 @@ export class Dashboard implements OnInit {
             client: 'Rafael Mendes',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-05'),
-            tags: ['design-system', 'components']
+            tags: ['design-system', 'components'],
+            status: 'waiting-payment'
           },
           {
             id: 'custom-card-1',
@@ -155,7 +173,48 @@ export class Dashboard implements OnInit {
             client: 'Desenvolvedor',
             cnpj: '27.722.892/0001-90',
             dueDate: new Date('2024-02-15'),
-            tags: ['custom', 'template']
+            tags: ['custom', 'template'],
+            status: 'waiting-payment'
+          }
+        ]
+      },
+      {
+        id: 'released-resources',
+        title: 'Recursos liberados',
+        color: '#00B7FF',
+        cards: [
+          {
+            id: '7',
+            title: 'C76324',
+            description: 'Inicializar estrutura base do projeto com design system',
+            priority: 'low',
+            client: 'Sofia Alves',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-01-30'),
+            tags: ['setup', 'configuration'],
+            status: 'released-resources'
+          },
+          {
+            id: '8',
+            title: 'C76324',
+            description: 'Desenvolver componentes reutilizáveis e documentação',
+            priority: 'high',
+            client: 'Rafael Mendes',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-02-05'),
+            tags: ['design-system', 'components'],
+            status: 'released-resources'
+          },
+          {
+            id: 'custom-card-1',
+            title: 'C76324',
+            description: 'Este card usa template customizado',
+            priority: 'medium',
+            client: 'Desenvolvedor',
+            cnpj: '27.722.892/0001-90',
+            dueDate: new Date('2024-02-15'),
+            tags: ['custom', 'template'],
+            status: 'released-resources'
           }
         ]
       }
@@ -163,33 +222,27 @@ export class Dashboard implements OnInit {
   }
 
   onCardMoved(event: any) {
-    console.log('Card movido:', event);
-    // Aqui você pode implementar a lógica para salvar no backend
+
   }
 
   onCardAdded(event: any) {
-    console.log('Card adicionado:', event);
-    // Lógica para adicionar card no backend
+
   }
 
   onCardRemoved(event: any) {
-    console.log('Card removido:', event);
-    // Lógica para remover card do backend
+
   }
 
   onColumnAdded(event: any) {
-    console.log('Coluna adicionada:', event);
-    // Lógica para adicionar coluna no backend
+
   }
 
   onColumnRemoved(event: any) {
-    console.log('Coluna removida:', event);
-    // Lógica para remover coluna do backend
+
   }
 
   onColumnRenamed(event: any) {
-    console.log('Coluna renomeada:', event);
-    // Lógica para renomear coluna no backend
+
   }
 
   removeCard(card: KanbanCard, columnId: string) {
@@ -198,7 +251,6 @@ export class Dashboard implements OnInit {
       const index = column.cards.findIndex(c => c.id === card.id);
       if (index > -1) {
         column.cards.splice(index, 1);
-        console.log('Card removido:', card);
       }
     }
   }
@@ -221,7 +273,7 @@ export class Dashboard implements OnInit {
   ];
 
   openCreateSolicitationModal() {
-    this.isModalOpen = true;
+    this.isCreateModalOpen = true;
     this.modalService.open({
       id: "create-solicitation",
       title: "Nova Solicitação",
@@ -234,9 +286,12 @@ export class Dashboard implements OnInit {
     });
   }
 
-  onModalClosed(event: any) {
-    this.isModalOpen = false;
-    console.log('Modal fechado:', event);
+  onCreateModalClosed(event: any) {
+    this.isCreateModalOpen = false;
+  }
+
+  onDetailsModalClosed(event: any) {
+    this.isDetailsModalOpen = false;
   }
 
   /**
@@ -267,5 +322,19 @@ export class Dashboard implements OnInit {
    */
   restoreExampleSolicitations() {
     this.initializeKanbanData();
+  }
+
+  onCardClick(card: KanbanCard) {
+    this.isDetailsModalOpen = true;
+    this.modalService.open({
+      id: "solicitation-details",
+      title: "Visão geral",
+      size: "fullscreen",
+      showHeader: true,
+      showCloseButton: true,
+      closeOnBackdropClick: true,
+      closeOnEscapeKey: true,
+      data: card
+    });
   }
 }

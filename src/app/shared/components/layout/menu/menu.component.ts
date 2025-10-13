@@ -45,7 +45,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    debugger
     setTimeout(() => {
       this.menuService.updateActiveItemFromCurrentRoute();
     }, 100); // Pequeno delay para garantir que tudo está carregado
@@ -158,7 +157,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    // TODO: Implement logout functionality
+
     this.router.navigate(['/login']);
   }
 }

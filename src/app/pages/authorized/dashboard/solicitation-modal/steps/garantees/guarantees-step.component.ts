@@ -27,7 +27,7 @@ export class GuaranteesStepComponent implements OnInit {
             guarantees: ['', [Validators.required, Validators.maxLength(1000)]]
         });
 
-        // Emitir mudanças do formulário
+
         this.guaranteesForm.valueChanges.subscribe(value => {
             this.formDataChange.emit(value);
             this.formValid.emit(this.guaranteesForm.valid);
@@ -35,15 +35,15 @@ export class GuaranteesStepComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Carregar dados salvos se existirem
+
         if (this.formData && Object.keys(this.formData).length > 0) {
             this.guaranteesForm.patchValue(this.formData, { emitEvent: false });
         }
 
-        // Emitir estado inicial de validade
+
         this.formValid.emit(this.guaranteesForm.valid);
     }
 
-    // Getter para facilitar o acesso ao controle
+
     get guarantees() { return this.guaranteesForm.get('guarantees'); }
 }

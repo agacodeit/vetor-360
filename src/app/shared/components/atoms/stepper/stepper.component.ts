@@ -32,7 +32,7 @@ export class StepperComponent implements OnInit {
     @Output() stepChanged = new EventEmitter<number>();
 
     ngOnInit(): void {
-        // Validar se currentStep está dentro dos limites
+
         if (this.currentStep < 0 || this.currentStep >= this.steps.length) {
             this.currentStep = 0;
         }

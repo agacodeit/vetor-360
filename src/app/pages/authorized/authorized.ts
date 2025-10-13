@@ -21,8 +21,7 @@ export class Authorized {
   ) { }
 
   onProfileClick() {
-    console.log('Profile clicked');
-    // Implementar lógica do perfil do usuário
-    // Por exemplo: abrir modal de perfil, navegar para página de perfil, etc.
+
+
   }
 }
