@@ -1,0 +1,284 @@
+@use '../../../../../styles/abstracts/variables' as *;
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    width: 100%;
+    max-width: 740px;
+    background: white;
+    border-radius: $border-radius-bg;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: height 0.3s ease;
+
+    &--minimized {
+        height: 56px;
+    }
+
+    &--no-header {
+        .messages__container {
+            border-radius: $border-radius-bg $border-radius-bg 0 0;
+        }
+    }
+
+    &__header {
+        background: $primary-gradient;
+        padding: $padding-ssm $padding-md;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 56px;
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        margin: 0;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    &__action-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 4px 8px;
+        font-size: 20px;
+        line-height: 1;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+
+    &__container {
+        flex: 1;
+        overflow-y: auto;
+        padding: $padding-md;
+        background: $background;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: $padding-ssm;
+    }
+
+    &__message {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+
+        &--own {
+            flex-direction: row-reverse;
+
+            .messages__content {
+                align-items: flex-end;
+            }
+
+            .messages__message-header {
+                flex-direction: row-reverse;
+            }
+
+            .messages__text {
+                background: #E6F2FF;
+            }
+
+            .messages__avatar {
+                background: $secondary-medium;
+            }
+        }
+    }
+
+    &__avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #D1E7DD;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #0F5132;
+        font-size: 18px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-width: 70%;
+    }
+
+    &__message-header {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+    }
+
+    &__author {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    &__timestamp {
+        font-size: 11px;
+        color: $label;
+    }
+
+    &__text {
+        background: white;
+        padding: 12px 16px;
+        border-radius: $border-radius-md;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #1f2937;
+        word-wrap: break-word;
+
+        // Mentions styling
+        :deep(.mention) {
+            color: $secondary-medium;
+            font-weight: 600;
+        }
+    }
+
+    &__attachment {
+        background: white;
+        padding: 12px 16px;
+        border-radius: $border-radius-md;
+        border: 1px solid $stroke;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    &__attachment-name {
+        flex: 1;
+        font-size: 14px;
+        color: #1f2937;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__attachment-download {
+        background: transparent;
+        border: none;
+        color: $label;
+        cursor: pointer;
+        padding: 4px;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $secondary-medium;
+        }
+    }
+
+    &__input-container {
+        padding: $padding-ssm $padding-md;
+        background: white;
+        border-top: 1px solid $stroke;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid $stroke;
+        border-radius: $border-radius-sm;
+        font-size: 14px;
+        margin-bottom: 12px;
+        transition: border-color 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: $secondary-medium;
+        }
+
+        &::placeholder {
+            color: $placeholder;
+        }
+
+        &:disabled {
+            background: $background;
+            cursor: not-allowed;
+        }
+    }
+
+    &__input-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    &__input-btn {
+        background: transparent;
+        border: none;
+        color: $label;
+        cursor: pointer;
+        padding: 8px;
+        font-size: 18px;
+        transition: color 0.2s;
+
+        &:hover:not(:disabled) {
+            color: $secondary-medium;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    &__send-btn {
+        margin-left: auto;
+        background: $primary-gradient;
+        border: none;
+        color: white;
+        padding: 10px 24px;
+        border-radius: $border-radius-max;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: opacity 0.2s;
+
+        &:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    // Scrollbar customization
+    &__container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &__container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &__container::-webkit-scrollbar-thumb {
+        background: $stroke;
+        border-radius: 3px;
+
+        &:hover {
+            background: $label;
+        }
+    }
+}
