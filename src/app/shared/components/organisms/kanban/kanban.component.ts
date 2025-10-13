@@ -15,6 +15,7 @@ export interface KanbanCard {
     dueDate?: Date;
     cnpj?: string;
     tags?: string[];
+    status: string;
     data?: any;
 }
 
@@ -66,19 +67,23 @@ export class KanbanComponent implements OnInit {
     @Output() columnAdded = new EventEmitter<KanbanColumn>();
     @Output() columnRemoved = new EventEmitter<string>();
     @Output() columnRenamed = new EventEmitter<{ columnId: string; newTitle: string }>();
+    @Output() cardClicked = new EventEmitter<{ card: KanbanCard; column: KanbanColumn }>();
 
     newColumnTitle: string = '';
     isAddingColumn: boolean = false;
     editingColumnId: string | null = null;
     editingColumnTitle: string = '';
 
-    // Auto-scroll properties
+
+    private isDragging: boolean = false;
+
+
     private scrollSpeed = 50;
     private scrollZone = 200; // pixels from edge to start scrolling
     private scrollInterval: any = null;
 
     ngOnInit() {
-        // Initialize with default columns if none provided
+
         if (this.columns.length === 0) {
             this.columns = [
                 { id: 'todo', title: 'To Do', cards: [] },
@@ -89,15 +94,12 @@ export class KanbanComponent implements OnInit {
     }
 
     onCardDrop(event: CdkDragDrop<KanbanCard[]>) {
-        console.log('Drop event triggered:', event);
 
         if (event.previousContainer === event.container) {
-            // Move within same column
-            console.log('Moving within same column');
+
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-            // Move between columns
-            console.log('Moving between columns');
+
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
@@ -105,12 +107,11 @@ export class KanbanComponent implements OnInit {
                 event.currentIndex
             );
 
-            // Emit card moved event
+
             const card = event.item.data;
             const fromColumn = event.previousContainer.id;
             const toColumn = event.container.id;
 
-            console.log('Card moved from', fromColumn, 'to', toColumn);
 
             this.cardMoved.emit({
                 card,
@@ -127,7 +128,8 @@ export class KanbanComponent implements OnInit {
             id: this.generateId(),
             title: 'New Card',
             description: 'Click to edit description',
-            priority: 'medium'
+            priority: 'medium',
+            status: 'pending-documents'
         };
 
         const column = this.columns.find(col => col.id === columnId);
@@ -224,31 +226,37 @@ export class KanbanComponent implements OnInit {
         return this.columns.map(column => column.id);
     }
 
+    onDragStarted() {
+        this.isDragging = true;
+    }
+
     onDragMoved(event: CdkDragMove) {
+        this.isDragging = true;
+
         if (!this.kanbanBoard) return;
 
         const boardElement = this.kanbanBoard.nativeElement;
         const boardRect = boardElement.getBoundingClientRect();
         const mouseX = event.pointerPosition.x;
 
-        // Check if mouse is near the edges
+
         const distanceFromLeft = mouseX - boardRect.left;
         const distanceFromRight = boardRect.right - mouseX;
 
-        // Clear existing scroll interval
+
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;
         }
 
-        // Start scrolling if mouse is in scroll zone
+
         if (distanceFromLeft < this.scrollZone) {
-            // Scroll left
+
             this.scrollInterval = setInterval(() => {
                 boardElement.scrollLeft -= this.scrollSpeed;
             }, 16); // ~60fps
         } else if (distanceFromRight < this.scrollZone) {
-            // Scroll right
+
             this.scrollInterval = setInterval(() => {
                 boardElement.scrollLeft += this.scrollSpeed;
             }, 16); // ~60fps
@@ -256,11 +264,27 @@ export class KanbanComponent implements OnInit {
     }
 
     onDragEnded() {
-        // Stop scrolling when drag ends
+
         if (this.scrollInterval) {
             clearInterval(this.scrollInterval);
             this.scrollInterval = null;
         }
+
+
+        setTimeout(() => {
+            this.isDragging = false;
+        }, 100);
+    }
+
+    onCardClick(card: KanbanCard, column: KanbanColumn, event: Event) {
+
+        if (this.isDragging) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        this.cardClicked.emit({ card, column });
     }
 
     private generateId(): string {

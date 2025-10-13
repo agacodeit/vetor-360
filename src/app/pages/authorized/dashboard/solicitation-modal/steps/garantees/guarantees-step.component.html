@@ -7,12 +7,12 @@
     <form [formGroup]="guaranteesForm" class="guarantees-step__form">
         <div class="guarantees-step__content">
 
-            <!-- Garantias -->
+
             <div class="guarantees-step__field">
                 <ds-textarea label="Garantias" placeholder="Descreva as garantias oferecidas para esta solicitação..."
                     formControlName="guarantees" [required]="true"
-                    [invalid]="!!(guarantees?.invalid && guarantees?.touched)" [errorMessage]="guarantees?.invalid && guarantees?.touched ? 
-              (guarantees?.errors?.['required'] ? 'Garantias são obrigatórias' : 
+                    [invalid]="!!(guarantees?.invalid && guarantees?.touched)" [errorMessage]="guarantees?.invalid && guarantees?.touched ?
+              (guarantees?.errors?.['required'] ? 'Garantias são obrigatórias' :
                guarantees?.errors?.['maxlength'] ? 'Máximo de 1000 caracteres' : '') : ''" [fullWidth]="true"
                     [maxlength]="1000" resize="vertical" [rows]="8">
                 </ds-textarea>

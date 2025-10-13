@@ -1,4 +1,4 @@
-<!-- Mostra welcome apenas quando NÃO há solicitações -->
+
 @if (!hasSolicitations) {
 <div class="container">
     <div class="welcome-msg">
@@ -14,7 +14,7 @@
 </div>
 }@else{
 <div class="dashboard">
-    <!-- Botões de teste (apenas para desenvolvimento) -->
+
     <div class="dashboard__new-solicitation">
         <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
             (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
@@ -24,9 +24,9 @@
         <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
-            (columnRenamed)="onColumnRenamed($event)">
+            (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event.card)">
 
-            <!-- Template customizado para os cards -->
+
             <ng-template #cardTemplate let-card let-column="column">
                 <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">
 
@@ -62,9 +62,15 @@
 }
 
 
-@if(isModalOpen) {
-<ds-modal modalId="create-solicitation" (modalClosed)="onModalClosed($event)">
-    <app-solicitation-modal (onClose)="onModalClosed($event)"
-        (onSubmit)="onModalClosed($event)"></app-solicitation-modal>
+@if(isCreateModalOpen) {
+<ds-modal modalId="create-solicitation" (modalClosed)="onCreateModalClosed($event)">
+    <app-solicitation-modal (onClose)="onCreateModalClosed($event)"
+        (onSubmit)="onCreateModalClosed($event)"></app-solicitation-modal>
+</ds-modal>
+}
+
+@if(isDetailsModalOpen) {
+<ds-modal modalId="solicitation-details" (modalClosed)="onDetailsModalClosed($event)">
+    <app-solicitation-details (onClose)="onDetailsModalClosed($event)"></app-solicitation-details>
 </ds-modal>
 }

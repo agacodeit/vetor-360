@@ -63,13 +63,12 @@ export class Signup implements OnInit {
         next: () => {
           this.isLoading = false;
           this.successMessage = 'Conta criada com sucesso! Redirecionando para o login...';
-          // Redireciona para login após 2 segundos
+
           this.router.navigate(['/unauthorized/login']);
 
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Erro no cadastro:', error);
 
           if (error.status === 400) {
             this.errorMessage = 'Dados inválidos. Verifique as informações fornecidas';

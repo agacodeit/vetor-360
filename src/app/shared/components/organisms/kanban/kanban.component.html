@@ -9,7 +9,7 @@
     </div>
 
     <div class="kanban__board" #kanbanBoard>
-        <!-- Existing Columns -->
+
         <div *ngFor="let column of columns; trackBy: trackByColumnId" class="kanban__column" cdkDropList
             [id]="column.id" [cdkDropListData]="column.cards" [cdkDropListConnectedTo]="getConnectedDropLists()"
             (cdkDropListDropped)="onCardDrop($event)">
@@ -27,7 +27,8 @@
                 </div>
 
                 <div class="kanban__column-info">
-                    <span *ngIf="showCardCount" class="kanban__column-count">
+                    <span *ngIf="showCardCount" class="kanban__column-count"
+                        [ngStyle]="{'background-color': column.color}">
                         {{ getColumnCardCount(column) }}
                         <span *ngIf="column.maxCards">/ {{ column.maxCards }}</span>
                     </span>
@@ -45,17 +46,18 @@
             </div>
 
             <div class="kanban__column-content">
-                <!-- Cards -->
-                <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
-                    [cdkDragData]="card" (cdkDragMoved)="onDragMoved($event)" (cdkDragEnded)="onDragEnded()">
 
-                    <!-- Template customizado se fornecido -->
+                <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
+                    [cdkDragData]="card" (cdkDragStarted)="onDragStarted()" (cdkDragMoved)="onDragMoved($event)"
+                    (cdkDragEnded)="onDragEnded()" (click)="onCardClick(card, column, $event)">
+
+
                     <ng-container *ngIf="cardTemplate; else defaultCardTemplate">
                         <ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: card, column: column }">
                         </ng-container>
                     </ng-container>
 
-                    <!-- Template padrão -->
+
                     <ng-template #defaultCardTemplate>
                         <ds-card [title]="card.title" [subtitle]="card.description" size="sm" variant="bordered"
                             borderRadius="md" class="kanban__card-content">
@@ -91,12 +93,12 @@
                     </ng-template>
                 </div>
 
-                <!-- Add Card Button -->
+
                 <ds-button *ngIf="allowAddCards && !isColumnAtMaxCapacity(column)" label="Add Card" variant="outline"
                     icon="add" [fullWidth]="true" (onClickEmitter)="addCard(column.id)" class="kanban__add-card-btn">
                 </ds-button>
 
-                <!-- Column at max capacity message -->
+
                 <div *ngIf="isColumnAtMaxCapacity(column)" class="kanban__max-capacity">
                     <ds-icon icon="info" fontSize="16px"></ds-icon>
                     <span>Column at maximum capacity</span>
@@ -104,7 +106,7 @@
             </div>
         </div>
 
-        <!-- Add Column Form -->
+
         <div *ngIf="isAddingColumn" class="kanban__add-column">
             <div class="kanban__add-column-form">
                 <input [(ngModel)]="newColumnTitle" placeholder="Column title" class="kanban__add-column-input"
