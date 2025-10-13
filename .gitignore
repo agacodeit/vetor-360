@@ -1,6 +1,11 @@
 node_modules
+coverage
 
 # Angular cache
 dist/
 angular/
 .angular/
+
+# TypeScript cache
+*.tsbuildinfo
+
