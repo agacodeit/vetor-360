@@ -4,9 +4,29 @@
         Fluxo de caixa mensal (Entradas x Saídas)
     </h2>
     <div class="cash-flow-chart__container">
-        <p class="body text-center">
-            Gráfico de fluxo de caixa mensal
-        </p>
-        <!-- Aqui você pode adicionar um componente de gráfico no futuro -->
+        <div class="cash-flow-chart__chart">
+            <!-- Y Axis -->
+            <div class="cash-flow-chart__y-axis">
+                @for (value of yAxisValues; track value) {
+                <span class="cash-flow-chart__y-label">{{ formatYAxisValue(value) }}</span>
+                }
+            </div>
+            <!-- Bars -->
+            <div class="cash-flow-chart__bars">
+                @for (month of chartData; track month.name) {
+                <div class="cash-flow-chart__bar-group">
+                    <div class="cash-flow-chart__bar-wrapper">
+                        <div class="cash-flow-chart__bar cash-flow-chart__bar--entry"
+                            [style.height.%]="getBarHeight(month.entry)">
+                        </div>
+                        <div class="cash-flow-chart__bar cash-flow-chart__bar--exit"
+                            [style.height.%]="getBarHeight(month.exit)">
+                        </div>
+                    </div>
+                    <span class="cash-flow-chart__label">{{ month.name }}</span>
+                </div>
+                }
+            </div>
+        </div>
     </div>
 </section>
