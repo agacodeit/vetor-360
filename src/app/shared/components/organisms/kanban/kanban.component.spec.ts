@@ -40,7 +40,8 @@ describe('KanbanComponent', () => {
         const testCard: KanbanCard = {
             id: '1',
             title: 'Test Card',
-            description: 'Test Description'
+            description: 'Test Description',
+            status: 'todo'
         };
 
         component.columns[0].cards.push(testCard);
@@ -88,8 +89,8 @@ describe('KanbanComponent', () => {
 
     it('should get correct card count for column', () => {
         component.columns[0].cards = [
-            { id: '1', title: 'Card 1' },
-            { id: '2', title: 'Card 2' }
+            { id: '1', title: 'Card 1', status: 'todo' },
+            { id: '2', title: 'Card 2', status: 'todo' }
         ];
 
         expect(component.getColumnCardCount(component.columns[0])).toBe(2);
@@ -98,8 +99,8 @@ describe('KanbanComponent', () => {
     it('should check if column is at max capacity', () => {
         component.columns[0].maxCards = 2;
         component.columns[0].cards = [
-            { id: '1', title: 'Card 1' },
-            { id: '2', title: 'Card 2' }
+            { id: '1', title: 'Card 1', status: 'todo' },
+            { id: '2', title: 'Card 2', status: 'todo' }
         ];
 
         expect(component.isColumnAtMaxCapacity(component.columns[0])).toBe(true);
