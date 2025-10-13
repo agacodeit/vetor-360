@@ -4,7 +4,7 @@
         <h2 class="title-semibold">
             Follow-up
             <button type="button" class="body follow-up__link" (click)="onOpenVisualization()">
-                Abrir visualização
+                {{ isVisualizationOpen ? 'Fechar visualização' : 'Abrir visualização' }}
             </button>
         </h2>
         <div class="follow-up__stats body d-flex align-items-center gap-24">
@@ -18,4 +18,13 @@
             </p>
         </div>
     </div>
+
+    <!-- Messages Component -->
+    @if (isVisualizationOpen) {
+    <div class="follow-up__visualization">
+        <app-messages [messages]="messages" [showHeader]="false" (messageSent)="onMessageSent($event)"
+            (closed)="onClosed()" (minimized)="onMinimized($event)">
+        </app-messages>
+    </div>
+    }
 </section>
