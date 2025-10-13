@@ -1,6 +1,8 @@
 node_modules
+coverage
 
 # Angular cache
 dist/
 angular/
 .angular/
+
