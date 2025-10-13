@@ -2,27 +2,23 @@ import { TestBed } from '@angular/core/testing';
 
 import { ToastService } from './toast.service';
 import { ToastConfig } from '../../components/atoms/toast/toast.component';
+import { setupToastContainerMock, cleanupToastContainerMock, MockToastContainer } from '../../__mocks__';
 
 describe('ToastService', () => {
     let service: ToastService;
-    let mockContainer: any;
+    let mockContainer: MockToastContainer;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(ToastService);
 
-        // Mock do toast container
-        mockContainer = {
-            addToast: jasmine.createSpy('addToast'),
-            clearAllToasts: jasmine.createSpy('clearAllToasts')
-        };
-
-        (window as any).toastContainer = mockContainer;
+        // Configurar mock do toast container usando helper
+        mockContainer = setupToastContainerMock();
     });
 
     afterEach(() => {
-        // Limpar o mock após cada teste
-        delete (window as any).toastContainer;
+        // Limpar o mock após cada teste usando helper
+        cleanupToastContainerMock();
     });
 
     describe('Service Initialization', () => {
