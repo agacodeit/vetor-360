@@ -36,6 +36,20 @@
     &__new-solicitation {
         text-align: center;
     }
+
+    &__filters {
+        margin: $padding-md 0;
+
+        .filters-grid {
+            display: flex;
+            gap: $padding-md;
+
+            @media (max-width: 768px) {
+                grid-template-columns: 1fr;
+                gap: $padding-sm;
+            }
+        }
+    }
 }
 
 .container {

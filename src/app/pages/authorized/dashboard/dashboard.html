@@ -1,4 +1,3 @@
-
 @if (!hasSolicitations) {
 <div class="container">
     <div class="welcome-msg">
@@ -18,6 +17,18 @@
     <div class="dashboard__new-solicitation">
         <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
             (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
+    </div>
+
+    <div class="dashboard__filters">
+        <div class="filters-grid">
+            <ds-input label="Busca" width="400px"
+                placeholder="Busque por nome do cliente, CNPJ ou título da solicitação" type="text"
+                icon="fa-regular fa-user" iconPosition="left" [(ngModel)]="filterClientName"
+                (ngModelChange)="applyFilters()" />
+
+            <ds-select label="Status" width="200px" placeholder="Selecione" [options]="statusFilterOptions"
+                [(ngModel)]="filterStatus" (selectionChanged)="applyFilters()" />
+        </div>
     </div>
 
     <div class="dashboard__content">

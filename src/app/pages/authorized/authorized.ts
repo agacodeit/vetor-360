@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../../shared';
 import { AuthService } from '../../shared/services/auth/auth.service';
@@ -14,6 +14,12 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 })
 export class Authorized {
 
-  onProfileClick() { }
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  onProfileClick() {
+    this.authService.logout();
+    this.router.navigate(['/unauthorized/login']);
+  }
 
 }
