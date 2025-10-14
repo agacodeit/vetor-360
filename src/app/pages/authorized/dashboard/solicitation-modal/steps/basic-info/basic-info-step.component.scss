@@ -36,7 +36,7 @@
     &__content {
         display: flex;
         flex-direction: column;
-        gap: $padding-md;
+        gap: $padding-ssm;
     }
 
     &__field {
@@ -46,7 +46,7 @@
     &__row {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: $padding-md;
+        gap: $padding-ssm;
 
         &--location {
             grid-template-columns: 1fr 1fr 1fr;
@@ -65,7 +65,7 @@
             grid-column: 2;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: $padding-sm;
+            gap: $padding-ssm;
         }
 
         &--country {
@@ -95,7 +95,7 @@
     .basic-info-step {
         &__row {
             grid-template-columns: 1fr;
-            gap: $padding-sm;
+            gap: $padding-ssm;
 
             &--location {
                 grid-template-columns: 1fr;
@@ -107,7 +107,7 @@
 
             &--value-currency {
                 grid-template-columns: 1fr;
-                gap: $padding-sm;
+                gap: $padding-ssm;
             }
         }
     }

@@ -4,6 +4,7 @@
 
 .dashboard {
     background: var(--background);
+    padding: $padding-md;
 
     &__header {
         margin-bottom: $padding-md;

@@ -1,10 +1,11 @@
 @use '../../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../../styles/abstracts/typography' as *;
 
 .rating {
 
     &__badge {
         border-radius: $border-radius-md;
-        font-size: $font-xxxxl;
+        font-size: $font-xxxl;
         color: var(--white);
         background-color: #3A00E5;
         padding: 0;

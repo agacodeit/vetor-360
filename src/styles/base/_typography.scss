@@ -18,7 +18,7 @@
 @mixin title-page() {
     font-family: $font-primary;
     font-weight: $font-weight-xbold; // 600
-    font-size: $font-xl;
+    font-size: $font-md;
     line-height: 24px;
     letter-spacing: 0.16px;
     vertical-align: middle;
@@ -144,7 +144,7 @@
 
 // Mixin já existente (verificar se você tem $font-xxl, se não usar $font-xl)
 @mixin title-semibold() {
-    font-size: $font-xmd; // 18px
+    font-size: $font-md; // 18px
     font-weight: $font-weight-xbold;
     letter-spacing: 0.06px;
 }
