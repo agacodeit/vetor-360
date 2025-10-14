@@ -20,11 +20,11 @@
     </div>
 
     <div class="dashboard__filters">
+        <h2 class="filters-title">Filtros</h2>
         <div class="filters-grid">
             <ds-input label="Busca" width="400px"
                 placeholder="Busque por nome do cliente, CNPJ ou título da solicitação" type="text"
-                icon="fa-regular fa-user" iconPosition="left" [(ngModel)]="filterClientName"
-                (ngModelChange)="applyFilters()" />
+                [(ngModel)]="filterClientName" (ngModelChange)="applyFilters()" />
 
             <ds-select label="Status" width="200px" placeholder="Selecione" [options]="statusFilterOptions"
                 [(ngModel)]="filterStatus" (selectionChanged)="applyFilters()" />

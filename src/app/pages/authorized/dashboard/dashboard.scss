@@ -40,6 +40,13 @@
     &__filters {
         margin: $padding-md 0;
 
+        .filters-title {
+            font-size: $font-xmd;
+            font-weight: $font-weight-bold;
+            color: var(--primary-dark);
+            margin-bottom: $padding-ssm;
+        }
+
         .filters-grid {
             display: flex;
             gap: $padding-md;
