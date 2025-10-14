@@ -30,15 +30,35 @@
     &__board {
         display: flex;
         gap: $padding-ssm;
-        overflow-x: hidden;
+        overflow-x: auto;
+        overflow-y: hidden;
         flex: 1;
         padding-bottom: $padding-xs;
         scroll-behavior: smooth;
+
+        // Custom scrollbar
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--surface-light);
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--stroke);
+            border-radius: 4px;
+
+            &:hover {
+                background: var(--stroke-dark);
+            }
+        }
     }
 
     &__column {
-        flex: 1 1 0;
-        min-width: 0;
+        flex: 0 0 280px; // Fixed width for smaller cards
+        min-width: 280px;
         background: var(--primary-dark-hover-dark);
         border-radius: $border-radius-xxb;
         display: flex;
@@ -154,7 +174,7 @@
         }
 
         hr {
-            margin: 16px 0;
+            margin: 8px 0;
         }
 
         .__card-header {
@@ -162,19 +182,20 @@
             align-items: center;
             justify-content: space-between;
             gap: $padding-xs;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             color: var(--primary-dark);
 
             h4 {
-                font-size: $font-xmd;
+                font-size: $font-sm;
                 font-weight: $font-weight-md;
             }
         }
 
         .__card-description {
             p {
-                font-size: $font-sm;
+                font-size: $font-xs;
                 color: var(--gray-medium);
+                margin: 2px 0;
             }
 
             .card-icon {
@@ -182,6 +203,7 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
+                font-size: $font-xs;
             }
         }
     }
