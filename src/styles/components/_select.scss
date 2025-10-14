@@ -67,7 +67,7 @@
             padding: $padding-xsm $padding-xs;
             border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
-            background-color: inherit;
+            background-color: var(--white);
             color: var(--secondary);
             font-size: $font-xs;
             box-sizing: border-box;
