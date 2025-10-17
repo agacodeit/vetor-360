@@ -1,5 +1,8 @@
 @use '../abstracts/variables' as *;
 @use '../abstracts/typography' as *;
+@use '../abstracts/spacing' as *;
+
+
 
 .form-group {
     display: flex;
@@ -10,7 +13,7 @@
         margin-bottom: 8px;
         font-family: "Work Sans", sans-serif;
         font-weight: $font-weight-md;
-        font-size: $font-sm;
+        font-size: $font-xs;
         color: var(--label);
         /*  position: relative;
         top: 12px;
@@ -35,24 +38,24 @@
         &.has-icon {
             .select-field {
                 &.has-icon-left {
-                    padding-left: $padding-xxsmmm;
+                    padding-left: $padding-xxsmm;
                 }
 
                 &.has-icon-right {
-                    padding-right: $padding-xxsmmm;
+                    padding-right: $padding-xxsmm;
                 }
             }
 
             .icon-left {
                 position: absolute;
-                left: 12px;
+                left: 8px;
                 z-index: 2;
                 pointer-events: none;
             }
 
             .icon-right {
                 position: absolute;
-                right: 40px;
+                right: 32px;
                 z-index: 2;
                 pointer-events: none;
             }
@@ -60,13 +63,13 @@
 
         .select-field {
             width: 100%;
-            min-height: 44px;
-            padding: 0 $padding-s;
+            min-height: 36px;
+            padding: $padding-xsm $padding-xs;
             border: 1px solid var(--stroke);
             border-radius: $border-radius-sm;
-            background-color: inherit;
+            background-color: var(--white);
             color: var(--secondary);
-            font-size: $font-md;
+            font-size: $font-xs;
             box-sizing: border-box;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -87,10 +90,10 @@
 
             &.invalid {
                 border: 2px solid var(--tertiary);
-                padding: 0 $padding-s;
+                padding: $padding-xsm $padding-xs;
 
                 &.has-icon-left {
-                    padding-left: $padding-xxsmm;
+                    padding-left: $padding-ssm;
                 }
             }
 
@@ -123,9 +126,9 @@
                         align-items: center;
                         background-color: var(--primary-dark);
                         color: white;
-                        padding: $padding-xsm $padding-xs;
-                        border-radius: $border-radius-sm;
-                        font-size: $font-md;
+                        padding: 2px $padding-xsm;
+                        border-radius: $border-radius-xs;
+                        font-size: $font-xs;
                         max-width: 150px;
 
                         .chip-remove {
@@ -134,7 +137,7 @@
                             color: white;
                             margin-left: 4px;
                             cursor: pointer;
-                            font-size: $font-md;
+                            font-size: $font-xs;
                             line-height: 1;
                             padding: 0;
                             width: 24px;
@@ -157,7 +160,7 @@
                 }
 
                 .select-display-text {
-                    font-size: $font-md;
+                    font-size: $font-xs;
                     color: var(--secondary);
                     white-space: nowrap;
                     overflow: hidden;
@@ -185,11 +188,11 @@
                     border: none;
                     color: var(--placeholder);
                     cursor: pointer;
-                    font-size: $font-xmd;
+                    font-size: $font-sm;
                     line-height: 1;
-                    padding: $padding-xxs;
-                    width: 20px;
-                    height: 20px;
+                    padding: $padding-xsm;
+                    width: 18px;
+                    height: 18px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -240,15 +243,15 @@
 
             .search-container {
                 position: relative;
-                padding: $padding-s;
+                padding: $padding-xsm;
                 border-bottom: 1px solid var(--stroke);
 
                 .search-input {
                     width: 100%;
-                    padding: $padding-xs $padding-bg $padding-xs $padding-s;
+                    padding: $padding-xsm;
                     border: 1px solid var(--stroke);
                     border-radius: $border-radius-sm;
-                    font-size: $font-sm;
+                    font-size: $font-xs;
                     outline: none;
 
                     &:focus {
@@ -258,7 +261,7 @@
 
                 .search-icon {
                     position: absolute;
-                    right: 24px;
+                    right: 12px;
                     top: 50%;
                     transform: translateY(-50%);
                     pointer-events: none;
@@ -272,10 +275,10 @@
                 .option-item {
                     display: flex;
                     align-items: center;
-                    padding: $padding-s;
+                    padding: $padding-xs;
                     cursor: pointer;
                     transition: background-color 0.2s ease;
-                    font-size: $font-md;
+                    font-size: $font-xs;
 
                     &:last-child {
                         border-bottom: none;

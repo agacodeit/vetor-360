@@ -3,18 +3,18 @@
 
 // Componentes base
 .btn {
-    font-size: $font-sm;
-    padding: $padding-s $padding-ssm;
+    font-size: $font-xs;
+    padding: $padding-xsm $padding-sm;
     border: none;
     border-radius: $border-radius-sm;
     cursor: pointer;
     font-weight: $font-weight-md;
     transition: background-color 0.5s, color 0.5s, border-color 0.5s, opacity 0.5s, scale 0.2s;
     outline: 0;
-    min-height: 44px;
+    min-height: 36px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     // box-shadow: var(--shadow-box);
 
     &:hover {
@@ -62,7 +62,7 @@
 
     // Retrocompatibilidade com ícones antigos (i sem classe)
     i:not(.button-icon):not(:empty) {
-        margin-right: 6px;
+        margin-right: 4px;
     }
 
 

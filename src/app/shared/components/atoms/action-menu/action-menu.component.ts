@@ -10,6 +10,7 @@ export interface ActionMenuItem {
 
 @Component({
     selector: 'ds-action-menu',
+    standalone: true,
     imports: [CommonModule],
     templateUrl: './action-menu.component.html',
     styleUrl: './action-menu.component.scss'

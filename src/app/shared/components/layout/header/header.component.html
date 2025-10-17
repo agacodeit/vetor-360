@@ -7,9 +7,9 @@
 
 
         <div class="header__profile">
-            <button class="header__profile-button" (click)="handleProfileClick()" aria-label="Perfil do usuário">
-                <ds-icon icon="fa-solid fa-user" fontSize="20px" />
-            </button>
+            <ds-action-menu [items]="profileMenuItems" [triggerIcon]="'fa-solid fa-user'"
+                (itemSelected)="onMenuSelected($event)">
+            </ds-action-menu>
         </div>
     </div>
 </header>

@@ -1,28 +1,25 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent, MessageContainerComponent } from '../../shared';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../../shared';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-authorized',
   imports: [
     RouterOutlet,
-    HeaderComponent,
-    MessageContainerComponent
+    HeaderComponent
   ],
   templateUrl: './authorized.html',
   styleUrl: './authorized.scss'
 })
 export class Authorized {
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   onProfileClick() {
-
-
+    this.authService.logout();
+    this.router.navigate(['/unauthorized/login']);
   }
+
 }
