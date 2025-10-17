@@ -14,10 +14,10 @@
 
     &__title {
         font-family: 'Work Sans', sans-serif;
-        font-size: $font-xl;
+        font-size: $font-xmd;
         font-weight: $font-weight-md;
         color: var(--secondary);
-        margin: 0 0 $padding-sm 0;
+        margin: 0 0 $padding-xs 0;
     }
 
     &__description {

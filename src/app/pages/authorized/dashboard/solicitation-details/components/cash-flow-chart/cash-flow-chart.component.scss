@@ -4,8 +4,8 @@
 
     &__container {
         border: 1px solid var(--border-color, #e0e0e0);
-        border-radius: 8px;
-        padding: 16px;
+        border-radius: $border-radius-sm;
+        padding: $padding-ssm;
         min-height: 200px;
         background-color: var(--background-light, #f8f9fa);
         overflow-x: auto; // Permite scroll horizontal se necessário
@@ -30,7 +30,7 @@
     }
 
     &__y-label {
-        font-size: 10px;
+        font-size: $size-xl;
         color: var(--text-secondary, #6b7280);
         text-align: right;
         line-height: 1;
@@ -64,9 +64,9 @@
     }
 
     &__bar {
-        width: 12px;
-        min-height: 4px;
-        border-radius: 3px 3px 0 0;
+        width: $padding-s;
+        min-height: $padding-xsm;
+        border-radius: $border-radius-xxs $border-radius-xxs 0 0;
         transition: all 0.3s ease;
         flex-shrink: 0; // Impede que as barras encolham demais
 
@@ -84,7 +84,7 @@
     }
 
     &__label {
-        font-size: 10px;
+        font-size: $size-xl;
         color: var(--text-secondary, #6b7280);
         text-align: center;
         white-space: nowrap;
@@ -93,7 +93,7 @@
     // Responsividade para telas menores
     @media (max-width: 1024px) {
         &__container {
-            padding: 12px;
+            padding: $padding-s;
         }
 
         &__y-axis {
@@ -118,7 +118,7 @@
 
     @media (max-width: 768px) {
         &__container {
-            padding: 8px;
+            padding: $padding-xs;
             overflow-x: auto;
         }
 

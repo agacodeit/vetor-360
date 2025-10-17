@@ -64,23 +64,23 @@
     // Tamanhos
     &.size-sm {
         .accordion-header {
-            font-size: $font-sm;
-            min-height: 36px;
+            font-size: $font-xs;
+            min-height: 32px;
         }
 
     }
 
     &.size-md {
         .accordion-header {
-            font-size: $font-md;
-            min-height: 44px;
+            font-size: $font-sm;
+            min-height: 36px;
         }
     }
 
     &.size-lg {
         .accordion-header {
-            font-size: $font-lg;
-            min-height: 52px;
+            font-size: $font-md;
+            min-height: 44px;
         }
     }
 
@@ -198,14 +198,14 @@
     justify-content: center;
     transition: transform 0.3s ease;
     color: var(--placeholder);
-    font-size: 14px;
+    font-size: $font-xs;
 
     .size-sm & {
-        font-size: 12px;
+        font-size: $font-xs;
     }
 
     .size-lg & {
-        font-size: 16px;
+        font-size: $font-sm;
     }
 
     &.accordion-icon--left {
@@ -236,7 +236,7 @@
 
 .accordion-content-text {
     font-family: 'Work Sans', sans-serif;
-    font-size: $font-sm;
+    font-size: $font-xs;
     line-height: 1.6;
     color: var(--secondary);
 
@@ -245,7 +245,7 @@
     }
 
     .size-lg & {
-        font-size: $font-md;
+        font-size: $font-sm;
     }
 
     // Estilização para conteúdo HTML
@@ -293,35 +293,35 @@
     .accordion-container {
         &.size-md {
             .accordion-header {
-                padding: $padding-sm $padding-md;
-                font-size: $font-sm;
-                min-height: 40px;
+                padding: $padding-xs $padding-sm;
+                font-size: $font-xs;
+                min-height: 36px;
             }
 
             .accordion-content-inner {
-                padding: $padding-sm $padding-md $padding-md $padding-md;
+                padding: $padding-xs $padding-sm $padding-sm $padding-sm;
             }
         }
 
         &.size-lg {
             .accordion-header {
-                padding: $padding-md $padding-lg;
-                font-size: $font-md;
-                min-height: 44px;
+                padding: $padding-sm $padding-ssm;
+                font-size: $font-sm;
+                min-height: 40px;
             }
 
             .accordion-content-inner {
-                padding: $padding-md $padding-lg $padding-lg $padding-lg;
+                padding: $padding-sm $padding-ssm $padding-ssm $padding-ssm;
             }
         }
     }
 
     .accordion-title {
-        font-size: $font-sm;
+        font-size: $font-xs;
     }
 
     .accordion-icon {
-        font-size: 12px;
+        font-size: $font-xs;
     }
 }
 

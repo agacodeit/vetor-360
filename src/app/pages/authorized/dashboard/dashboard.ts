@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalComponent, ModalService, SelectOption } from '../../../shared';
+import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 import { SolicitationDetails } from "./solicitation-details/solicitation-details";
@@ -19,7 +19,9 @@ import { SolicitationDetails } from "./solicitation-details/solicitation-details
     ModalComponent,
     ButtonComponent,
     SolicitationModal,
-    SolicitationDetails
+    SolicitationDetails,
+    InputComponent,
+    SelectComponent
   ],
   providers: [
     NgModel
@@ -34,6 +36,12 @@ export class Dashboard implements OnInit {
   isDetailsModalOpen: boolean = false;
 
   kanbanColumns: KanbanColumn[] = [];
+  private allKanbanColumns: KanbanColumn[] = [];
+
+  // Filters
+  filterClientName: string = '';
+  filterStatus: string | null = null;
+  statusFilterOptions: SelectOption[] = [];
 
   constructor() {
     effect(() => {
@@ -50,7 +58,7 @@ export class Dashboard implements OnInit {
   }
 
   private initializeKanbanData() {
-    this.kanbanColumns = [
+    this.allKanbanColumns = [
       {
         id: 'pending-documents',
         title: 'Pendente de documentos',
@@ -219,6 +227,9 @@ export class Dashboard implements OnInit {
         ]
       }
     ];
+
+    this.buildStatusFilterOptions();
+    this.applyFilters();
   }
 
   onCardMoved(event: any) {
@@ -336,5 +347,15 @@ export class Dashboard implements OnInit {
       closeOnEscapeKey: true,
       data: card
     });
+  }
+
+  // Build status options from columns
+  private buildStatusFilterOptions() {
+    this.statusFilterOptions = this.allKanbanColumns.map(col => ({ value: col.id, label: col.title }));
+  }
+
+  // Apply filters to columns/cards
+  applyFilters() {
+    this.kanbanColumns = this.allKanbanColumns;
   }
 }

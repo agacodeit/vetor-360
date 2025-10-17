@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { ButtonComponent, CardComponent, InputComponent } from '../../../shared';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../shared/services';
+import { AuthService, ToastService } from '../../../shared/services';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +14,9 @@ import { AuthService } from '../../../shared/services';
     InputComponent,
     ButtonComponent
   ],
+  providers: [
+    NgModel
+  ],
   standalone: true,
   templateUrl: './login.html',
   styleUrl: './login.scss'
@@ -22,10 +25,10 @@ export class Login implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   loginForm!: FormGroup;
   isLoading = false;
-  errorMessage = '';
 
   ngOnInit() {
     this.initializeForm();
@@ -41,30 +44,27 @@ export class Login implements OnInit {
   login() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
 
       const { email, password } = this.loginForm.value;
 
       this.authService.login({ email, password }).subscribe({
-        next: (response) => {
+        next: () => {
           this.isLoading = false;
           this.router.navigate(['/authorized/dashboard']);
         },
         error: (error) => {
           this.isLoading = false;
-
-          if (error.status === 401) {
-            this.errorMessage = 'E-mail ou senha incorretos';
+          if (error.status === 400) {
+            this.toastService.error('E-mail ou senha incorretos', 'Falha no login');
           } else if (error.status === 0) {
-            this.errorMessage = 'Erro de conexão. Verifique sua internet';
+            this.toastService.error('Erro de conexão. Verifique sua internet', 'Falha de conexão');
           } else {
-            this.errorMessage = 'Erro interno do servidor. Tente novamente';
+            this.toastService.error('Erro interno do servidor. Tente novamente', 'Erro');
           }
         }
       });
     } else {
       this.markFormGroupTouched();
-      this.errorMessage = 'Por favor, preencha todos os campos corretamente';
     }
   }
 
