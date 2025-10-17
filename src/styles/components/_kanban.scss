@@ -13,10 +13,10 @@
     max-height: calc(100vh - 128px);
     background: var(--background);
     border-radius: $border-radius-md;
-    gap: $padding-md;
+    gap: $padding-ssm;
 
     &__title {
-        font-size: $font-xl;
+        font-size: $font-xmd;
         font-weight: $font-weight-bold;
         color: var(--primary-dark);
         margin: 0;
@@ -31,14 +31,34 @@
         display: flex;
         gap: $padding-ssm;
         overflow-x: auto;
+        overflow-y: hidden;
         flex: 1;
         padding-bottom: $padding-xs;
         scroll-behavior: smooth;
+
+        // Custom scrollbar
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--surface-light);
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--stroke);
+            border-radius: 4px;
+
+            &:hover {
+                background: var(--stroke-dark);
+            }
+        }
     }
 
     &__column {
-        min-width: 300px;
-        max-width: 300px;
+        flex: 0 0 280px; // Fixed width for smaller cards
+        min-width: 280px;
         background: var(--primary-dark-hover-dark);
         border-radius: $border-radius-xxb;
         display: flex;
@@ -54,13 +74,13 @@
     }
 
     &__column-header {
-        padding: $padding-sm $padding-s 0 $padding-s;
+        padding: $padding-xs $padding-xs 0 $padding-xs;
         background: var(--primary-dark-hover-dark);
         border-radius: $border-radius-md $border-radius-md 0 0;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        gap: $padding-xs;
+        gap: $padding-xsm;
     }
 
     &__column-title {
@@ -69,7 +89,7 @@
 
     &__column-title-text {
         font-family: $font-primary;
-        font-size: $font-md;
+        font-size: $font-sm;
         font-weight: $font-weight-bold;
         color: var(--primary-dark);
         display: block;
@@ -91,7 +111,7 @@
 
     &__column-edit-input {
         font-family: $font-primary;
-        font-size: $font-md;
+        font-size: $font-sm;
         font-weight: $font-weight-bold;
         color: var(--primary-green);
         border: 1px solid var(--primary-blue);
@@ -115,13 +135,13 @@
 
     &__column-count {
         font-family: $font-primary;
-        font-size: $font-sm;
+        font-size: $font-xs;
         font-weight: $font-weight-md;
         color: var(--white);
         background: var(--kanban-count-bg);
         border-radius: $border-radius-max;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -134,10 +154,10 @@
     }
 
     &__column-content {
-        padding: $padding-ssm;
+        padding: $padding-xs;
         display: flex;
         flex-direction: column;
-        gap: $padding-s;
+        gap: $padding-xs;
         flex: 1;
         overflow-y: auto;
         min-height: 0;
@@ -154,7 +174,7 @@
         }
 
         hr {
-            margin: 16px 0;
+            margin: 8px 0;
         }
 
         .__card-header {
@@ -162,19 +182,20 @@
             align-items: center;
             justify-content: space-between;
             gap: $padding-xs;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             color: var(--primary-dark);
 
             h4 {
-                font-size: $font-xl;
+                font-size: $font-sm;
                 font-weight: $font-weight-md;
             }
         }
 
         .__card-description {
             p {
-                font-size: $font-md;
+                font-size: $font-xs;
                 color: var(--gray-medium);
+                margin: 2px 0;
             }
 
             .card-icon {
@@ -182,6 +203,7 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
+                font-size: $font-xs;
             }
         }
     }
@@ -200,7 +222,7 @@
 
     &__card-title {
         font-family: $font-primary;
-        font-size: $font-sm;
+        font-size: $font-xs;
         font-weight: $font-weight-bold;
         color: var(--primary-medium);
         margin: 0;
@@ -284,7 +306,7 @@
             transform: translate(-50%, -50%);
             color: var(--gray-dark);
             font-family: $font-primary;
-            font-size: $font-sm;
+            font-size: $font-xs;
             font-weight: $font-weight-md;
             opacity: 0.6;
             pointer-events: none;
@@ -295,8 +317,8 @@
     &__max-capacity {
         display: flex;
         align-items: center;
-        gap: $padding-xs;
-        padding: $padding-s;
+        gap: $padding-xsm;
+        padding: $padding-xs;
         background: var(--primary-blue-hover-light);
         border-radius: $border-radius-xs;
         font-family: $font-primary;
@@ -308,29 +330,29 @@
     }
 
     &__add-column {
-        min-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
-        max-width: $size-xxxxxxxxxxxxxxxxxxxxxl; // 300px
+        flex: 1 1 0;
+        min-width: 0;
     }
 
     &__add-column-form {
         background: var(--white);
         border: 2px dashed var(--stroke);
         border-radius: $border-radius-md;
-        padding: $padding-md;
+        padding: $padding-sm;
         display: flex;
         flex-direction: column;
-        gap: $padding-s;
+        gap: $padding-xs;
         height: fit-content;
     }
 
     &__add-column-input {
         font-family: $font-primary;
-        font-size: $font-md;
+        font-size: $font-sm;
         font-weight: $font-weight-bold;
         color: var(--primary-dark);
         border: 1px solid var(--stroke);
         border-radius: $border-radius-xs;
-        padding: $padding-s;
+        padding: $padding-xs;
         background: var(--white);
         outline: none;
         width: 100%;

@@ -1,12 +1,12 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../atoms/icon/icon.component';
+import { ActionMenuComponent, ActionMenuItem } from '../../atoms/action-menu/action-menu.component';
 
 @Component({
     selector: 'ds-header',
     imports: [
         CommonModule,
-        IconComponent
+        ActionMenuComponent
     ],
     standalone: true,
     templateUrl: './header.component.html',
@@ -15,7 +15,13 @@ import { IconComponent } from '../../atoms/icon/icon.component';
 export class HeaderComponent {
     @Output() onProfileClick = new EventEmitter<void>();
 
-    handleProfileClick() {
-        this.onProfileClick.emit();
+    profileMenuItems: ActionMenuItem[] = [
+        { label: 'Sair', value: 'logout', icon: 'fa-solid fa-right-from-bracket' }
+    ];
+
+    onMenuSelected(item: ActionMenuItem) {
+        if (item.value === 'logout') {
+            this.onProfileClick.emit();
+        }
     }
 }

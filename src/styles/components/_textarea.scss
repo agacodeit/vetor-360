@@ -10,7 +10,7 @@
         margin-bottom: 8px;
         font-family: "Work Sans", sans-serif;
         font-weight: $font-weight-md;
-        font-size: $font-sm;
+        font-size: $font-xs;
         color: var(--label);
 
         &.required::after {
@@ -27,27 +27,27 @@
 
         .textarea-field {
             width: 100%;
-            padding: $padding-s;
+            padding: $padding-xsm $padding-xs;
             border-radius: $border-radius-sm;
             outline: none;
             border: 1px solid var(--stroke);
             min-height: 80px;
             background-color: inherit;
             color: var(--gray-medium);
-            font-size: $font-sm;
+            font-size: $font-xs;
             box-sizing: border-box;
             transition: border-color 0.3s, box-shadow 0.3s;
             line-height: 1.5;
 
             &.invalid {
                 border: 2px solid var(--tertiary);
-                padding: $padding-xxsm $padding-s;
+                padding: $padding-xsm $padding-xs;
             }
 
             &::placeholder {
                 color: var(--placeholder);
                 font-weight: $font-weight-lt;
-                font-size: $font-md;
+                font-size: $font-xs;
                 line-height: 100%;
                 letter-spacing: 0px;
             }
@@ -88,10 +88,10 @@
 
             // Estados com ícone - ajustar padding
             &.has-icon-left {
-                padding-left: $padding-xxsmmmm;
+                padding-left: $padding-xxsmmm;
 
                 &.invalid {
-                    padding-left: $padding-xbg;
+                    padding-left: $padding-bg;
                     padding-top: $padding-xxsm;
                     padding-bottom: $padding-xxsm;
                     padding-right: $padding-xxsm;
@@ -99,10 +99,10 @@
             }
 
             &.has-icon-right {
-                padding-right: $padding-xxsmmmmm;
+                padding-right: $padding-xxsmmmm;
 
                 &.invalid {
-                    padding-right: $padding-xxsmmmmm;
+                    padding-right: $padding-xxsmmmm;
                     padding-top: $padding-xxsm;
                     padding-bottom: $padding-xxsm;
                     padding-left: $padding-xxsm;
@@ -181,7 +181,7 @@
 @media (max-width: 768px) {
     .form-group {
         .textarea-field {
-            font-size: $font-md; // Evita zoom no iOS
+            font-size: $font-xs; // Evita zoom no iOS
             min-height: 60px; // Altura menor em mobile
         }
 

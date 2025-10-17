@@ -4,6 +4,7 @@
 
 .dashboard {
     background: var(--background);
+    padding: $padding-md;
 
     &__header {
         margin-bottom: $padding-md;
@@ -35,6 +36,27 @@
     &__new-solicitation {
         text-align: center;
     }
+
+    &__filters {
+        margin: $padding-md 0;
+
+        .filters-title {
+            font-size: $font-xmd;
+            font-weight: $font-weight-bold;
+            color: var(--primary-dark);
+            margin-bottom: $padding-ssm;
+        }
+
+        .filters-grid {
+            display: flex;
+            gap: $padding-md;
+
+            @media (max-width: 768px) {
+                grid-template-columns: 1fr;
+                gap: $padding-sm;
+            }
+        }
+    }
 }
 
 .container {
@@ -51,7 +73,7 @@
         align-items: center;
 
         i {
-            font-size: 30px;
+            font-size: $size-xxxxxxxxxl;
         }
 
         p,
@@ -60,7 +82,7 @@
         }
 
         .bold {
-            font-weight: 500;
+            font-weight: $font-weight-bold;
         }
     }
 }
