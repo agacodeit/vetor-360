@@ -29,6 +29,7 @@ export class Login implements OnInit {
 
   loginForm!: FormGroup;
   isLoading = false;
+  errorMessage = '';
 
   ngOnInit() {
     this.initializeForm();
@@ -55,10 +56,13 @@ export class Login implements OnInit {
         error: (error) => {
           this.isLoading = false;
           if (error.status === 400) {
+            this.errorMessage = 'E-mail ou senha incorretos';
             this.toastService.error('E-mail ou senha incorretos', 'Falha no login');
           } else if (error.status === 0) {
+            this.errorMessage = 'Erro de conexão. Verifique sua internet';
             this.toastService.error('Erro de conexão. Verifique sua internet', 'Falha de conexão');
           } else {
+            this.errorMessage = 'Erro interno do servidor. Tente novamente';
             this.toastService.error('Erro interno do servidor. Tente novamente', 'Erro');
           }
         }
