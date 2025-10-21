@@ -1,18 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { KanbanCard, ModalService } from '../../../../shared';
 import {
-  SolicitationDataComponent,
-  FollowUpComponent,
-  ClientDataComponent,
-  RatingComponent,
-  FinancialAgentComponent,
-  CreditOperationComponent,
-  FinancialSummaryComponent,
   CashFlowChartComponent,
-  DocumentationComponent,
-  RiskIndicatorsComponent,
-  ConclusionComponent,
-  RiskClassificationComponent
+  ClientDataComponent,
+  CreditOperationComponent,
+  FinancialAgentComponent,
+  FinancialSummaryComponent,
+  FollowUpComponent,
+  RatingComponent,
+  SolicitationDataComponent
 } from './components';
 
 @Component({
@@ -26,11 +22,7 @@ import {
     FinancialAgentComponent,
     CreditOperationComponent,
     FinancialSummaryComponent,
-    CashFlowChartComponent,
-    DocumentationComponent,
-    RiskIndicatorsComponent,
-    ConclusionComponent,
-    RiskClassificationComponent
+    CashFlowChartComponent
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'

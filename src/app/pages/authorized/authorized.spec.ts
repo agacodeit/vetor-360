@@ -124,7 +124,7 @@ describe('Authorized', () => {
 
       spyOn(component, 'onProfileClick');
 
-      headerComponent.handleProfileClick();
+      headerComponent.onProfileClick.emit();
 
       expect(component.onProfileClick).toHaveBeenCalledTimes(1);
     });

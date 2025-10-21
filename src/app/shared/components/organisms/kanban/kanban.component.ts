@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnInit, TrackByFunction, ViewChild, ElementRef, HostListener, ContentChild, TemplateRef } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDragMove, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CdkDragDrop, CdkDrag, CdkDropList, moveItemInArray, transferArrayItem, CdkDragMove } from '@angular/cdk/drag-drop';
-import { CardComponent } from '../../organisms/card/card.component';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { CardComponent } from '../../organisms/card/card.component';
 
 export interface KanbanCard {
     id: string;
@@ -34,7 +34,7 @@ export interface KanbanColumn {
     templateUrl: './kanban.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class KanbanComponent implements OnInit {
+export class KanbanComponent {
     @ViewChild('kanbanBoard', { static: false }) kanbanBoard!: ElementRef<HTMLElement>;
     @ContentChild('cardTemplate', { static: false }) cardTemplate!: TemplateRef<any>;
 
@@ -81,17 +81,6 @@ export class KanbanComponent implements OnInit {
     private scrollSpeed = 50;
     private scrollZone = 200; // pixels from edge to start scrolling
     private scrollInterval: any = null;
-
-    ngOnInit() {
-
-        if (this.columns.length === 0) {
-            this.columns = [
-                { id: 'todo', title: 'To Do', cards: [] },
-                { id: 'in-progress', title: 'In Progress', cards: [] },
-                { id: 'done', title: 'Done', cards: [] }
-            ];
-        }
-    }
 
     onCardDrop(event: CdkDragDrop<KanbanCard[]>) {
 
