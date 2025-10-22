@@ -41,28 +41,20 @@ export class Login implements OnInit {
     });
   }
 
-  login() {
+  async login() {
     if (this.loginForm.valid) {
       this.isLoading = true;
 
       const { email, password } = this.loginForm.value;
 
-      this.authService.login({ email, password }).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.router.navigate(['/authorized/dashboard']);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          if (error.status === 400) {
-            this.toastService.error('E-mail ou senha incorretos', 'Falha no login');
-          } else if (error.status === 0) {
-            this.toastService.error('Erro de conexão. Verifique sua internet', 'Falha de conexão');
-          } else {
-            this.toastService.error('Erro interno do servidor. Tente novamente', 'Erro');
-          }
-        }
-      });
+      const user = await this.authService.login({ email, password });
+      if (user) {
+        this.router.navigate(['/authorized/dashboard']);
+      } else {
+        this.isLoading = false;
+        this.toastService.error('E-mail ou senha incorretos', 'Falha no login');
+      }
+
     } else {
       this.markFormGroupTouched();
     }
