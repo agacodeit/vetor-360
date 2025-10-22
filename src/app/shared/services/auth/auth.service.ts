@@ -212,21 +212,22 @@ export class AuthService {
     }
 
     /**
-     * Verifica se o usuário tem uma role específica
+     * Verifica se o usuário tem uma role específica (deprecated - use ProfileService)
      */
     hasRole(role: string): boolean {
         const user = this.getCurrentUser();
-        return user && user.roles && user.roles.includes(role);
+        // Para compatibilidade com testes antigos
+        return user && (user as any).roles && (user as any).roles.includes(role);
     }
 
     /**
-     * Verifica se o usuário tem alguma das roles especificadas
+     * Verifica se o usuário tem alguma das roles especificadas (deprecated - use ProfileService)
      */
     hasAnyRole(roles: string[]): boolean {
         const user = this.getCurrentUser();
-        if (!user || !user.roles) return false;
+        if (!user || !(user as any).roles) return false;
 
-        return roles.some(role => user.roles.includes(role));
+        return roles.some(role => (user as any).roles.includes(role));
     }
 
     /**

@@ -29,6 +29,7 @@ export class Login implements OnInit {
 
   loginForm!: FormGroup;
   isLoading = false;
+  errorMessage = '';
 
   ngOnInit() {
     this.initializeForm();
