@@ -4,22 +4,30 @@
 
 import { LoginRequest, SignupRequest, LoginResponse, SignupResponse } from '../services/auth/auth.service';
 import { VALID_JWT_TOKEN } from './jwt-tokens.mock';
-import { MOCK_ADMIN_USER, MOCK_NEW_USER, MOCK_USER } from './user-data.mock';
+import { MOCK_GESTOR_USER, MOCK_PARCEIRO_USER } from './user-data.mock';
 
 /**
- * Requisição de login padrão
+ * Requisição de login Gestor
  */
-export const MOCK_LOGIN_REQUEST: LoginRequest = {
-    email: 'test@example.com',
-    password: 'password123'
+export const MOCK_LOGIN_REQUEST_GESTOR: LoginRequest = {
+    email: 'gestor@acessebank.com.br',
+    password: 'senha123'
+};
+
+/**
+ * Requisição de login Parceiro
+ */
+export const MOCK_LOGIN_REQUEST_PARCEIRO: LoginRequest = {
+    email: 'parceiro@acessebank.com.br',
+    password: 'senha123'
 };
 
 /**
  * Requisição de login com credenciais inválidas
  */
 export const MOCK_INVALID_LOGIN_REQUEST: LoginRequest = {
-    email: 'test@example.com',
-    password: 'wrongpassword'
+    email: 'gestor@acessebank.com.br',
+    password: 'senhaerrada'
 };
 
 /**
@@ -43,20 +51,20 @@ export const MOCK_EXISTING_EMAIL_SIGNUP_REQUEST: SignupRequest = {
 };
 
 /**
- * Resposta de login bem-sucedido
+ * Resposta de login bem-sucedido Gestor
  */
-export const MOCK_LOGIN_RESPONSE: LoginResponse = {
+export const MOCK_LOGIN_RESPONSE_GESTOR: LoginResponse = {
     token: VALID_JWT_TOKEN,
-    user: MOCK_USER,
+    user: MOCK_GESTOR_USER,
     expiresIn: 3600
 };
 
 /**
- * Resposta de login bem-sucedido com admin
+ * Resposta de login bem-sucedido Parceiro
  */
-export const MOCK_ADMIN_LOGIN_RESPONSE: LoginResponse = {
+export const MOCK_LOGIN_RESPONSE_PARCEIRO: LoginResponse = {
     token: VALID_JWT_TOKEN,
-    user: MOCK_ADMIN_USER,
+    user: MOCK_PARCEIRO_USER,
     expiresIn: 3600
 };
 
@@ -65,7 +73,7 @@ export const MOCK_ADMIN_LOGIN_RESPONSE: LoginResponse = {
  */
 export const MOCK_SIGNUP_RESPONSE: SignupResponse = {
     message: 'User created successfully',
-    user: MOCK_NEW_USER
+    user: MOCK_GESTOR_USER
 };
 
 /**

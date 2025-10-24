@@ -27,3 +27,9 @@ export * from './interceptors';
 
 
 export * from './guards';
+
+// Profile System
+export * from './types';
+export * from './config';
+export * from './directives';
+export * from './pipes';
