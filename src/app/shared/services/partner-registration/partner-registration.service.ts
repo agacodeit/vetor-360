@@ -75,14 +75,6 @@ export class PartnerRegistrationService {
     }
 
     /**
-     * Busca informações de CEP
-     */
-    getCepInfo(cep: string): Observable<any> {
-        // Usando ViaCEP como exemplo - pode ser substituído por API específica
-        return this.http.get(`https://viacep.com.br/ws/${cep}/json/`);
-    }
-
-    /**
      * Upload de arquivo
      */
     uploadFile(file: File, documentId: string): Observable<any> {

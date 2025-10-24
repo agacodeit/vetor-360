@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ButtonComponent, DocumentItem, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { ButtonComponent, CepService, DocumentItem, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 
 
 export interface PartnerRegistrationData {
@@ -95,7 +95,8 @@ export class PartnerRegistrationComponent implements OnInit {
         private fb: FormBuilder,
         private router: Router,
         @Inject(ToastService) private toastService: ToastService,
-        @Inject(PartnerRegistrationService) private partnerRegistrationService: PartnerRegistrationService
+        @Inject(PartnerRegistrationService) private partnerRegistrationService: PartnerRegistrationService,
+        @Inject(CepService) private cepService: CepService
     ) {
         this.registrationForm = this.fb.group({
             personType: ['', Validators.required],
@@ -468,30 +469,34 @@ export class PartnerRegistrationComponent implements OnInit {
         this.router.navigate(['/unauthorized/login']);
     }
 
-    async onCepChange(event: any): Promise<void> {
+    onCepChange(event: any): void {
         const cep = event?.target?.value || '';
         if (!cep) return;
-        const cleanCep = cep.replace(/\D/g, '');
 
-        if (cleanCep.length === 8) {
-            try {
-                const cepData = await this.partnerRegistrationService.getCepInfo(cleanCep).toPromise();
+        // Valida se o CEP está completo
+        if (this.cepService.isValidCep(cep)) {
+            this.cepService.getCepInfo(cep).subscribe({
+                next: (cepData) => {
+                    if (cepData) {
+                        const addressGroup = this.registrationForm.get('address') as FormGroup;
+                        addressGroup?.patchValue({
+                            street: cepData.logradouro || '',
+                            neighbourhood: cepData.bairro || '',
+                            city: cepData.localidade || '',
+                            state: cepData.uf || ''
+                        });
 
-                if (cepData && !cepData.erro) {
-                    const addressGroup = this.registrationForm.get('address') as FormGroup;
-                    addressGroup?.patchValue({
-                        street: cepData.logradouro || '',
-                        neighbourhood: cepData.bairro || '',
-                        city: cepData.localidade || '',
-                        state: cepData.uf || ''
-                    });
-                } else {
-                    this.toastService.error('CEP não encontrado');
+                        // Mostra sucesso se encontrou o CEP
+                        this.toastService.success('Endereço preenchido automaticamente');
+                    } else {
+                        this.toastService.error('CEP não encontrado');
+                    }
+                },
+                error: (error) => {
+                    console.error('Erro ao buscar CEP:', error);
+                    this.toastService.error('Erro ao buscar informações do CEP');
                 }
-            } catch (error) {
-                console.error('Erro ao buscar CEP:', error);
-                this.toastService.error('Erro ao buscar informações do CEP');
-            }
+            });
         }
     }
 

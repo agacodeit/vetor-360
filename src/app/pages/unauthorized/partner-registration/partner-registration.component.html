@@ -102,7 +102,7 @@
                     <div class="form-fields" formGroupName="address">
                         <div class="field-row">
                             <ds-input label="CEP" [fullWidth]="true" formControlName="cep" placeholder="00000-000"
-                                libMask="00000-000" [required]="true" class="field-cep" (blur)="onCepChange($event)"
+                                libMask="00000-000" [required]="true" class="field-cep" (input)="onCepChange($event)"
                                 [invalid]="isAddressFieldInvalid('cep')"
                                 [errorMessage]="getAddressFieldErrorMessage('cep')">
                             </ds-input>
