@@ -25,7 +25,7 @@ export class StepperComponent implements OnInit {
     @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
     @Input() variant: 'default' | 'dots' | 'numbers' = 'default';
     @Input() size: 'sm' | 'md' | 'lg' = 'md';
-    @Input() clickable: boolean = true;
+    @Input() clickable: boolean = false;
     @Input() showConnector: boolean = true;
 
     @Output() stepClicked = new EventEmitter<StepperStep>();

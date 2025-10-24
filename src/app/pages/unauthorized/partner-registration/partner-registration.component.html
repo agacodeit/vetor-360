@@ -11,8 +11,8 @@
 
         <!-- Stepper -->
         <div class="partner-registration__stepper">
-            <ds-stepper [steps]="steps" [currentStep]="currentStep" [clickable]="true" [showConnector]="true"
-                variant="default" size="md" (stepClicked)="onStepClick($event)" (stepChanged)="onStepChanged($event)">
+            <ds-stepper [steps]="steps" [currentStep]="currentStep" [showConnector]="true" variant="default" size="md"
+                (stepChanged)="onStepChanged($event)">
             </ds-stepper>
         </div>
 
@@ -51,7 +51,7 @@
                         </ds-input>
 
                         <ds-input label="CPF" [fullWidth]="true" formControlName="cpfCnpj" placeholder="000.000.000-00"
-                            mask="000.000.000-00" [required]="true" [invalid]="isFieldInvalid('cpfCnpj')"
+                            libMask="000.000.000-00" [required]="true" [invalid]="isFieldInvalid('cpfCnpj')"
                             [errorMessage]="getFieldErrorMessage('cpfCnpj')">
                         </ds-input>
                         } @else {
@@ -62,7 +62,7 @@
                         </ds-input>
 
                         <ds-input label="CNPJ" [fullWidth]="true" formControlName="cpfCnpj"
-                            placeholder="00.000.000/0000-00" mask="00.000.000/0000-00" [required]="true"
+                            placeholder="00.000.000/0000-00" libMask="00.000.000/0000-00" [required]="true"
                             [invalid]="isFieldInvalid('cpfCnpj')" [errorMessage]="getFieldErrorMessage('cpfCnpj')">
                         </ds-input>
 
@@ -79,13 +79,13 @@
                         </ds-input>
 
                         <ds-input label="Celular" [fullWidth]="true" formControlName="cellphone"
-                            placeholder="(00) 00000-0000" mask="(00) 00000-0000" [required]="true"
+                            placeholder="(00) 00000-0000" libMask="(00) 00000-0000" [required]="true"
                             [invalid]="isFieldInvalid('cellphone')" [errorMessage]="getFieldErrorMessage('cellphone')">
                         </ds-input>
 
                         @if (isPersonJuridica) {
                         <ds-input label="Telefone comercial" [fullWidth]="true" formControlName="comercialPhone"
-                            placeholder="(00) 0000-0000" mask="(00) 0000-0000"
+                            placeholder="(00) 0000-0000" libMask="(00) 0000-0000"
                             [invalid]="isFieldInvalid('comercialPhone')"
                             [errorMessage]="getFieldErrorMessage('comercialPhone')">
                         </ds-input>
@@ -102,7 +102,7 @@
                     <div class="form-fields" formGroupName="address">
                         <div class="field-row">
                             <ds-input label="CEP" [fullWidth]="true" formControlName="cep" placeholder="00000-000"
-                                mask="00000-000" [required]="true" class="field-cep" (blur)="onCepChange($event)"
+                                libMask="00000-000" [required]="true" class="field-cep" (blur)="onCepChange($event)"
                                 [invalid]="isAddressFieldInvalid('cep')"
                                 [errorMessage]="getAddressFieldErrorMessage('cep')">
                             </ds-input>
@@ -144,6 +144,7 @@
                 <!-- Step 4: Documentos -->
                 @if (currentStep === 3) {
                 <div class="step-content">
+                    <h2 class="step-title">Anexe os documentos abaixo</h2>
                     <div class="documents-section">
                         <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
                             (documentUploaded)="onDocumentUploaded($event)"

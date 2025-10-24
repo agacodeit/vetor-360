@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StepperComponent, ButtonComponent, IconComponent, DocumentsComponent, DocumentsConfig, StepperStep, ToastService, PartnerRegistrationService, DocumentItem, PartnerRegistrationRequest, InputComponent, RadioComponent, RadioOption } from '../../../shared';
+import { ButtonComponent, DocumentItem, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 
 
 export interface PartnerRegistrationData {
@@ -53,7 +53,7 @@ export class PartnerRegistrationComponent implements OnInit {
     registrationForm: FormGroup;
     documentsConfig: DocumentsConfig = {
         title: 'Documentos Obrigatórios',
-        showAccordion: false,
+        showAccordion: true,
         allowMultiple: true,
         documents: []
     };
@@ -144,7 +144,7 @@ export class PartnerRegistrationComponent implements OnInit {
 
         this.documentsConfig = {
             title: 'Documentos Obrigatórios',
-            showAccordion: false,
+            showAccordion: true,
             allowMultiple: true,
             documents: isPersonFisica ? this.getPersonFisicaDocuments() : this.getPersonJuridicaDocuments()
         };

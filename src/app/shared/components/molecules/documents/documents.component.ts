@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, IconComponent } from '../../index';
@@ -35,7 +35,7 @@ export interface DocumentsConfig {
     styleUrls: ['./documents.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DocumentsComponent implements OnInit {
+export class DocumentsComponent implements OnInit, OnChanges {
     @Input() config: DocumentsConfig = {
         title: 'Documentos Obrigatórios',
         showAccordion: true,
@@ -71,6 +71,14 @@ export class DocumentsComponent implements OnInit {
         this.setupAccordion();
         this.loadInitialData();
         this.setupFormSubscriptions();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['config'] && changes['config'].currentValue) {
+            this.initializeForm();
+            this.setupAccordion();
+            this.loadInitialData();
+        }
     }
 
     private initializeForm(): void {
