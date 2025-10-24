@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ButtonComponent, CepService, DocumentItem, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 
 
 export interface PartnerRegistrationData {
@@ -96,7 +96,8 @@ export class PartnerRegistrationComponent implements OnInit {
         private router: Router,
         @Inject(ToastService) private toastService: ToastService,
         @Inject(PartnerRegistrationService) private partnerRegistrationService: PartnerRegistrationService,
-        @Inject(CepService) private cepService: CepService
+        @Inject(CepService) private cepService: CepService,
+        @Inject(DocumentService) private documentService: DocumentService
     ) {
         this.registrationForm = this.fb.group({
             personType: ['', Validators.required],
@@ -141,8 +142,47 @@ export class PartnerRegistrationComponent implements OnInit {
     }
 
     private setupDocumentsConfig(): void {
-        const isPersonFisica = this.registrationForm.get('personType')?.value === 'F';
+        this.documentsConfig = {
+            title: 'Documentos Obrigatórios',
+            showAccordion: true,
+            allowMultiple: true,
+            documents: []
+        };
+    }
 
+    private loadDocumentsFromApi(personType: 'F' | 'J'): void {
+        if (!personType) return;
+
+        this.documentService.createDocument(personType).subscribe({
+            next: (documents) => {
+                // Converter resposta da API para DocumentItem
+                const documentItems: DocumentItem[] = documents.map(doc => ({
+                    id: doc.id,
+                    label: doc.description,
+                    required: true,
+                    uploaded: false,
+                    acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+                }));
+
+                this.documentsConfig = {
+                    title: 'Documentos Obrigatórios',
+                    showAccordion: true,
+                    allowMultiple: true,
+                    documents: documentItems
+                };
+            },
+            error: (error) => {
+                console.error('Erro ao carregar documentos:', error);
+                this.toastService.error('Erro ao carregar documentos. Tente novamente.');
+
+                // Fallback para documentos mock em caso de erro
+                this.setupFallbackDocuments(personType);
+            }
+        });
+    }
+
+    private setupFallbackDocuments(personType: 'F' | 'J'): void {
+        const isPersonFisica = personType === 'F';
         this.documentsConfig = {
             title: 'Documentos Obrigatórios',
             showAccordion: true,
@@ -297,6 +337,14 @@ export class PartnerRegistrationComponent implements OnInit {
     onStepClick(step: StepperStep): void {
         const stepIndex = this.steps.findIndex(s => s.id === step.id);
         if (stepIndex !== -1 && stepIndex <= this.currentStep) {
+            // Se está indo para a etapa de documentos (índice 3), carregar documentos
+            if (stepIndex === 3) {
+                const personType = this.registrationForm.get('personType')?.value;
+                if (personType) {
+                    this.loadDocumentsFromApi(personType);
+                }
+            }
+
             this.currentStep = stepIndex;
         }
     }
@@ -308,6 +356,14 @@ export class PartnerRegistrationComponent implements OnInit {
     nextStep(): void {
         if (this.currentStep < this.steps.length - 1) {
             if (this.validateCurrentStep()) {
+                // Se está saindo do passo 1 (tipo de pessoa), carregar documentos
+                if (this.currentStep === 0) {
+                    const personType = this.registrationForm.get('personType')?.value;
+                    if (personType) {
+                        this.loadDocumentsFromApi(personType);
+                    }
+                }
+
                 this.currentStep++;
                 this.updateStepStatus();
             }
@@ -415,8 +471,7 @@ export class PartnerRegistrationComponent implements OnInit {
             });
         }
 
-        // Reconfigurar documentos baseado no tipo de pessoa
-        this.setupDocumentsConfig();
+        // Não carregar documentos aqui - será carregado quando avançar para o passo 2
     }
 
     async onSubmit(): Promise<void> {
@@ -509,12 +564,34 @@ export class PartnerRegistrationComponent implements OnInit {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
-        // Aqui você pode adicionar lógica adicional se necessário
+        // Implementar upload real para a API usando o DocumentService
+        if (event.file && event.documentId) {
+            this.documentService.uploadFile(event.file, event.documentId).subscribe({
+                next: (response) => {
+                    console.log('Upload realizado com sucesso:', response);
+                    this.toastService.success('Documento enviado com sucesso!');
+                },
+                error: (error) => {
+                    console.error('Erro no upload:', error);
+                    this.toastService.error('Erro ao enviar documento. Tente novamente.');
+                }
+            });
+        }
     }
 
     onDocumentRemoved(documentId: string): void {
         console.log('Documento removido:', documentId);
-        // Aqui você pode adicionar lógica adicional se necessário
+        // Implementar remoção real na API usando o DocumentService
+        this.documentService.removeDocument(documentId).subscribe({
+            next: (response) => {
+                console.log('Documento removido com sucesso:', response);
+                this.toastService.success('Documento removido com sucesso!');
+            },
+            error: (error) => {
+                console.error('Erro ao remover documento:', error);
+                this.toastService.error('Erro ao remover documento. Tente novamente.');
+            }
+        });
     }
 
     onFormValid(isValid: boolean): void {

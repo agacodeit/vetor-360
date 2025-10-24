@@ -2,6 +2,7 @@
 
 export * from './auth';
 export * from './cep/cep.service';
+export * from './document/document.service';
 export * from './image-upload/image-upload.service';
 export * from './list-view/list-view.service';
 export * from './menu/menu.service';
