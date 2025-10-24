@@ -145,12 +145,13 @@ describe('GuaranteesStepComponent', () => {
             expect(form).toBeTruthy();
         });
 
-        it('should render header with title and description', () => {
-            const title = compiled.querySelector('.guarantees-step__title');
-            const description = compiled.querySelector('.guarantees-step__description');
+        it('should render textarea with correct label and placeholder', () => {
+            const textarea = compiled.querySelector('ds-textarea[formControlName="guarantees"]');
+            expect(textarea).toBeTruthy();
 
-            expect(title?.textContent).toContain('Garantias');
-            expect(description?.textContent).toContain('Descreva as garantias oferecidas para esta solicitação');
+            // Check if the textarea has the correct label and placeholder attributes
+            expect(textarea?.getAttribute('label')).toBe('Garantias');
+            expect(textarea?.getAttribute('placeholder')).toContain('Descreva as garantias oferecidas para esta solicitação');
         });
 
         it('should render guarantees textarea', () => {

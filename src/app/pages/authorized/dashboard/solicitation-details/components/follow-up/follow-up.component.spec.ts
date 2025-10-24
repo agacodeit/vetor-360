@@ -26,12 +26,14 @@ describe('FollowUpComponent', () => {
     });
 
     describe('onOpenVisualization Method', () => {
-        it('should call console.log when onOpenVisualization is invoked', () => {
-            spyOn(console, 'log');
+        it('should toggle isVisualizationOpen when onOpenVisualization is invoked', () => {
+            expect(component.isVisualizationOpen).toBe(false);
 
             component.onOpenVisualization();
+            expect(component.isVisualizationOpen).toBe(true);
 
-            expect(console.log).toHaveBeenCalledWith('Abrir visualização de follow-up');
+            component.onOpenVisualization();
+            expect(component.isVisualizationOpen).toBe(false);
         });
 
         it('should not throw error when called', () => {
@@ -101,13 +103,13 @@ describe('FollowUpComponent', () => {
             expect(component.onOpenVisualization).toHaveBeenCalled();
         });
 
-        it('should trigger console.log on button click', () => {
-            spyOn(console, 'log');
+        it('should toggle visualization state on button click', () => {
+            expect(component.isVisualizationOpen).toBe(false);
 
             const button = compiled.querySelector('.follow-up__link') as HTMLButtonElement;
             button?.click();
 
-            expect(console.log).toHaveBeenCalledWith('Abrir visualização de follow-up');
+            expect(component.isVisualizationOpen).toBe(true);
         });
     });
 
