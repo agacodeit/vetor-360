@@ -1,28 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AccordionComponent, AccordionItem, AccordionItemDirective, CheckboxComponent, IconComponent } from '../../../../../../shared';
+import { DocumentsComponent, DocumentsConfig, DocumentItem } from '../../../../../../shared';
 
 
-export interface DocumentItem {
-    id: string;
-    label: string;
-    required: boolean;
-    file?: File;
-    uploaded: boolean;
-    acceptedFormats: string;
-}
+// DocumentItem interface is now imported from the shared component
 
 @Component({
     selector: 'app-documents-step',
     standalone: true,
     imports: [
         CommonModule,
-        ReactiveFormsModule,
-        AccordionComponent,
-        AccordionItemDirective,
-        CheckboxComponent,
-        IconComponent
+        DocumentsComponent
     ],
     templateUrl: './documents-step.component.html',
     styleUrls: ['./documents-step.component.scss'],
@@ -33,138 +21,68 @@ export class DocumentsStepComponent implements OnInit {
     @Output() formValid = new EventEmitter<boolean>();
     @Output() formDataChange = new EventEmitter<any>();
 
-    documentsForm: FormGroup;
+    documentsConfig: DocumentsConfig = {
+        title: 'Documentos Obrigatórios',
+        showAccordion: true,
+        allowMultiple: true,
+        documents: [
+            {
+                id: 'rg-cnh',
+                label: 'RG ou CNH - Documento de identidade',
+                required: true,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'cpf',
+                label: 'CPF - Cadastro de Pessoa Física',
+                required: true,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'comprovante-residencia',
+                label: 'Comprovante de Residência (últimos 3 meses)',
+                required: true,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            }
+        ]
+    };
 
-
-    accordionItems: AccordionItem[] = [
-        {
-            id: 'doc-required',
-            title: 'Documentos Obrigatórios',
-            expanded: true
-        }
-    ];
-
-
-    requiredDocuments: DocumentItem[] = [
-        {
-            id: 'rg-cnh',
-            label: 'RG ou CNH - Documento de identidade',
-            required: true,
-            uploaded: false,
-            acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-        },
-        {
-            id: 'cpf',
-            label: 'CPF - Cadastro de Pessoa Física',
-            required: true,
-            uploaded: false,
-            acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-        },
-        {
-            id: 'comprovante-residencia',
-            label: 'Comprovante de Residência (últimos 3 meses)',
-            required: true,
-            uploaded: false,
-            acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-        }
-    ];
-
-    constructor(private fb: FormBuilder) {
-
-        const formControls: { [key: string]: any } = {};
-        this.requiredDocuments.forEach(doc => {
-            formControls[doc.id] = [false]; // Checkbox começa desmarcado
-        });
-
-        this.documentsForm = this.fb.group(formControls);
-
-
-        this.documentsForm.valueChanges.subscribe(value => {
-
-            this.requiredDocuments.forEach(doc => {
-                doc.uploaded = value[doc.id] || false;
-            });
-
-            this.formDataChange.emit({
-                checkboxes: value,
-                documents: this.requiredDocuments
-            });
-            this.formValid.emit(this.documentsForm.valid);
-        });
-    }
+    constructor() { }
 
     ngOnInit(): void {
-
-        if (this.formData && Object.keys(this.formData).length > 0) {
-
-            if (this.formData.checkboxes) {
-                this.documentsForm.patchValue(this.formData.checkboxes, { emitEvent: false });
-            }
-
-
-            if (this.formData.documents) {
-                this.formData.documents.forEach((savedDoc: DocumentItem) => {
-                    const doc = this.requiredDocuments.find(d => d.id === savedDoc.id);
-                    if (doc) {
-                        doc.file = savedDoc.file;
-                        doc.uploaded = savedDoc.uploaded;
-                    }
-                });
-            }
-        }
-
-
-        this.formValid.emit(this.documentsForm.valid);
-    }
-
-    onAccordionItemToggled(item: AccordionItem): void {
+        // O componente ds-documents já gerencia a inicialização
     }
 
     /**
-     * Manipula o upload de arquivo
+     * Manipula mudanças nos documentos
      */
-    onFileSelected(event: Event, documentId: string): void {
-        const input = event.target as HTMLInputElement;
-        if (input.files && input.files.length > 0) {
-            const file = input.files[0];
-            const document = this.requiredDocuments.find(doc => doc.id === documentId);
-
-            if (document) {
-                document.file = file;
-                document.uploaded = true;
-
-
-                this.documentsForm.patchValue({
-                    [documentId]: true
-                });
-
-            }
-        }
+    onDocumentsChange(event: any): void {
+        this.formDataChange.emit(event);
     }
 
     /**
-     * Retorna o nome do arquivo ou texto padrão
+     * Manipula upload de documento
      */
-    getFileName(documentId: string): string {
-        const document = this.requiredDocuments.find(doc => doc.id === documentId);
-        return document?.file?.name || 'Selecionar';
+    onDocumentUploaded(event: any): void {
+        console.log('Document uploaded:', event);
+        // Aqui você pode adicionar lógica adicional se necessário
     }
 
     /**
-     * Remove o arquivo do documento
+     * Manipula remoção de documento
      */
-    removeDocument(documentId: string): void {
-        const document = this.requiredDocuments.find(doc => doc.id === documentId);
+    onDocumentRemoved(documentId: string): void {
+        console.log('Document removed:', documentId);
+        // Aqui você pode adicionar lógica adicional se necessário
+    }
 
-        if (document) {
-            document.file = undefined;
-            document.uploaded = false;
-
-
-            this.documentsForm.patchValue({
-                [documentId]: false
-            });
-
-        }
+    /**
+     * Manipula validade do formulário
+     */
+    onFormValid(isValid: boolean): void {
+        this.formValid.emit(isValid);
     }
 }

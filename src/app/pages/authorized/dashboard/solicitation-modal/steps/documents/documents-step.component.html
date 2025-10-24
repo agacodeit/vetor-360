@@ -1,39 +1,6 @@
 <div class="documents-step">
-    <form [formGroup]="documentsForm" class="documents-step__form">
-        <div class="documents-step__content">
-
-
-            <div class="documents-step__accordion">
-                <ds-accordion [items]="accordionItems" variant="default" size="md" [allowMultiple]="true"
-                    iconPosition="right" (itemToggled)="onAccordionItemToggled($event)">
-
-
-                    <ng-template accordionItem="doc-required" class="documents-step__accordion-content">
-                        @for (document of requiredDocuments; track document.id) {
-                        <div class="d-flex gap-8 justify-content-between align-items-center"
-                            [style.margin-top]="$index > 0 ? '12px' : '0'">
-                            <ds-checkbox [label]="document.label" [formControlName]="document.id" />
-                            <div class="d-flex gap-8 align-items-center">
-                                <button type="button" class="btn-file" [class.uploaded]="document.uploaded">
-                                    <span>
-                                        <i [class]="document.uploaded ? 'fa-solid fa-check' : 'fa-solid fa-upload'"></i>
-                                        <span>{{ getFileName(document.id) }}</span>
-                                    </span>
-                                    <input type="file" [accept]="document.acceptedFormats"
-                                        (change)="onFileSelected($event, document.id)" />
-                                </button>
-                                @if (document.uploaded) {
-                                <ds-icon icon="fa-solid fa-trash" fontSize="14px" color="primary-dark"
-                                    cursorType="pointer" (click)="removeDocument(document.id)" />
-                                }
-                            </div>
-                        </div>
-                        }
-                    </ng-template>
-
-                </ds-accordion>
-            </div>
-
-        </div>
-    </form>
+    <ds-documents [config]="documentsConfig" [initialData]="formData" (documentsChange)="onDocumentsChange($event)"
+        (documentUploaded)="onDocumentUploaded($event)" (documentRemoved)="onDocumentRemoved($event)"
+        (formValid)="onFormValid($event)">
+    </ds-documents>
 </div>

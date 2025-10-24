@@ -26,7 +26,6 @@ export class MessagesComponent {
     @Input() messages: Message[] = [];
     @Input() showHeader = true;
     @Output() messageSent = new EventEmitter<string>();
-    @Output() closed = new EventEmitter<void>();
     @Output() minimized = new EventEmitter<boolean>();
 
     @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -43,13 +42,6 @@ export class MessagesComponent {
             this.messageText = '';
             this.scrollToBottom();
         }
-    }
-
-    /**
-     * Fecha o chat
-     */
-    close(): void {
-        this.closed.emit();
     }
 
     /**
