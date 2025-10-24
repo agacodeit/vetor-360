@@ -4,7 +4,7 @@
 
 
     @if (label) {
-    <label [for]="uniqueId" [class]="labelClasses">
+    <label [id]="uniqueId + '-label'" [class]="labelClasses">
         {{ label }}
     </label>
     }
@@ -19,7 +19,9 @@
         }
 
 
-        <div [id]="uniqueId" [class]="selectClasses" [attr.tabindex]="disabled ? -1 : 0" (click)="toggleDropdown()"
+        <div [id]="uniqueId" [class]="selectClasses" [attr.tabindex]="disabled ? -1 : 0"
+            [attr.aria-labelledby]="label ? uniqueId + '-label' : null" [attr.aria-expanded]="isOpen"
+            [attr.aria-haspopup]="'listbox'" [attr.role]="'combobox'" (click)="toggleDropdown()"
             (keydown.enter)="toggleDropdown()" (keydown.space)="toggleDropdown()" (keydown.escape)="closeDropdown()"
             (blur)="onTouched()">
 
@@ -67,7 +69,8 @@
 
 
         @if (isOpen) {
-        <div [class]="dropdownClasses">
+        <div [class]="dropdownClasses" [attr.role]="'listbox'"
+            [attr.aria-labelledby]="label ? uniqueId + '-label' : null">
 
 
             @if (searchable) {
@@ -101,7 +104,8 @@
 
                 @for (option of filteredOptions; track option) {
                 <div class="option-item" [class.selected]="isOptionSelected(option)" [class.disabled]="option.disabled"
-                    (click)="selectOption(option)">
+                    [attr.role]="'option'" [attr.aria-selected]="isOptionSelected(option)"
+                    [attr.aria-disabled]="option.disabled" (click)="selectOption(option)">
 
 
                     @if (multiple) {

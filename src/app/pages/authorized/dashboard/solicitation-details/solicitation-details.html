@@ -1,19 +1,27 @@
 <article class="solicitation-details">
     <div class="solicitation-details__container mt-24">
         <div class="solicitation-details__content">
+            <!-- Dados da solicitação - visível para todos -->
             <app-solicitation-data [cardData]="cardData" />
             <app-follow-up />
+
+            <!-- Dados do cliente e rating - visível para todos -->
             <div class="d-grid columns-2 gap-48 mt-24">
                 <app-client-data [cardData]="cardData" />
                 <app-rating [cardData]="cardData" />
             </div>
+
+            <!-- Agente financeiro e Operação de Crédito - apenas para Gestor -->
+            @if(isGestor) {
             <div class="d-grid columns-2 gap-48 mt-24">
                 <app-financial-agent [cardData]="cardData" />
                 <app-credit-operation [cardData]="cardData" />
             </div>
+            }
+            <!-- Resumo financeiro - visível para todos -->
             <div class="d-grid columns-2 gap-48 mt-24">
                 <app-financial-summary [cardData]="cardData" />
-                <app-cash-flow-chart [cardData]="cardData" />
+                <!-- Gráfico de fluxo de caixa removido conforme critérios -->
             </div>
         </div>
     </div>
