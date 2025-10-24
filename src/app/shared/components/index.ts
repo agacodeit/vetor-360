@@ -18,6 +18,7 @@ export * from './atoms/toast/toast-container.component';
 
 
 export * from './molecules/breadcrumb/breadcrumb.component';
+export * from './molecules/documents/documents.component';
 export * from './molecules/dropdown/dropdown.component';
 export * from './molecules/form-field/form-field.component';
 export * from './molecules/list-view/list-view.component';

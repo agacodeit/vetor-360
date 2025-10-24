@@ -66,82 +66,61 @@ describe('FinancialAgentComponent', () => {
             expect(section?.classList.contains('columns-1')).toBe(true);
         });
 
-        it('should render "Agente financeiro" title', () => {
+        it('should render "Agentes Financeiros" title', () => {
             const title = compiled.querySelector('.title-semibold');
-            expect(title?.textContent?.trim()).toBe('Agente financeiro');
+            expect(title?.textContent?.trim()).toBe('Agentes Financeiros');
         });
 
-        it('should display bank name', () => {
+        it('should display bank names in table', () => {
             const content = compiled.textContent || '';
             expect(content).toContain('Banco Inter');
+            expect(content).toContain('Banco do Brasil');
+            expect(content).toContain('Itaú');
         });
 
-        it('should display FGI value', () => {
+        it('should display operation values in table', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('FGI');
             expect(content).toContain('R$ 500.000,00');
+            expect(content).toContain('R$ 750.000,00');
+            expect(content).toContain('R$ 300.000,00');
         });
 
-        it('should display interest rate', () => {
+        it('should display matching dates in table', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Taxa');
-            expect(content).toContain('1,3% a.m');
+            expect(content).toContain('01/02/2021 17:56');
+            expect(content).toContain('02/02/2021 14:30');
+            expect(content).toContain('03/02/2021 09:15');
         });
 
-        it('should display term period', () => {
-            const content = compiled.textContent || '';
-            expect(content).toContain('Prazo');
-            expect(content).toContain('36 meses');
+        it('should have table structure', () => {
+            const table = compiled.querySelector('ds-table');
+            expect(table).toBeTruthy();
         });
 
-        it('should display grace period', () => {
-            const content = compiled.textContent || '';
-            expect(content).toContain('Carência');
-            expect(content).toContain('6 meses');
+        it('should have table header with correct columns', () => {
+            const headerCells = compiled.querySelectorAll('ds-table-cell');
+            expect(headerCells.length).toBeGreaterThanOrEqual(3);
         });
 
-        it('should display matching date', () => {
-            const content = compiled.textContent || '';
-            expect(content).toContain('Matching 01/02/2021 17:56');
-        });
-
-        it('should have 2-column grid for data', () => {
-            const dataGrid = compiled.querySelector('.financial-agent__data');
-            expect(dataGrid?.classList.contains('d-grid')).toBe(true);
-            expect(dataGrid?.classList.contains('columns-2')).toBe(true);
-        });
-
-        it('should have info section with correct structure', () => {
-            const info = compiled.querySelector('.financial-agent__info');
-            expect(info).toBeTruthy();
-            expect(info?.classList.contains('d-flex')).toBe(true);
-            expect(info?.classList.contains('flex-column')).toBe(true);
-        });
-
-        it('should have values section with correct structure', () => {
-            const values = compiled.querySelector('.financial-agent__values');
-            expect(values).toBeTruthy();
-            expect(values?.classList.contains('d-flex')).toBe(true);
-            expect(values?.classList.contains('flex-column')).toBe(true);
+        it('should have table rows for each financial agent', () => {
+            const dataRows = compiled.querySelectorAll('ds-table-row');
+            expect(dataRows.length).toBeGreaterThanOrEqual(3);
         });
     });
 
     describe('Data Fields', () => {
-        it('should display all financial agent labels', () => {
-            const infoBlocks = compiled.querySelectorAll('.financial-agent__info .financial-agent__block');
-            expect(infoBlocks.length).toBe(5);
+        it('should display all financial agent data in table', () => {
+            const tableCells = compiled.querySelectorAll('ds-table-cell');
+            expect(tableCells.length).toBeGreaterThanOrEqual(9); // 3 agents × 3 columns each
         });
 
-        it('should display all financial agent values', () => {
-            const valueBlocks = compiled.querySelectorAll('.financial-agent__values .financial-agent__block');
-            expect(valueBlocks.length).toBe(5);
+        it('should display all financial agent values in table', () => {
+            const content = compiled.textContent || '';
+            expect(content).toContain('Banco Inter');
+            expect(content).toContain('Banco do Brasil');
+            expect(content).toContain('Itaú');
         });
 
-        it('should have matching number of labels and values', () => {
-            const infoBlocks = compiled.querySelectorAll('.financial-agent__info .financial-agent__block');
-            const valueBlocks = compiled.querySelectorAll('.financial-agent__values .financial-agent__block');
-            expect(infoBlocks.length).toBe(valueBlocks.length);
-        });
     });
 
     describe('Integration Tests', () => {
@@ -151,16 +130,16 @@ describe('FinancialAgentComponent', () => {
 
             const content = compiled.textContent || '';
 
-            expect(content).toContain('Agente financeiro');
+            expect(content).toContain('Agentes Financeiros');
             expect(content).toContain('Banco Inter');
-            expect(content).toContain('FGI');
+            expect(content).toContain('Banco do Brasil');
+            expect(content).toContain('Itaú');
             expect(content).toContain('R$ 500.000,00');
-            expect(content).toContain('Taxa');
-            expect(content).toContain('1,3% a.m');
-            expect(content).toContain('Prazo');
-            expect(content).toContain('36 meses');
-            expect(content).toContain('Carência');
-            expect(content).toContain('6 meses');
+            expect(content).toContain('R$ 750.000,00');
+            expect(content).toContain('R$ 300.000,00');
+            expect(content).toContain('01/02/2021 17:56');
+            expect(content).toContain('02/02/2021 14:30');
+            expect(content).toContain('03/02/2021 09:15');
         });
 
         it('should maintain structure without cardData', () => {
@@ -168,14 +147,12 @@ describe('FinancialAgentComponent', () => {
             fixture.detectChanges();
 
             const section = compiled.querySelector('.financial-agent');
-            const data = compiled.querySelector('.financial-agent__data');
-            const info = compiled.querySelector('.financial-agent__info');
-            const values = compiled.querySelector('.financial-agent__values');
+            const table = compiled.querySelector('ds-table');
+            const title = compiled.querySelector('.title-semibold');
 
             expect(section).toBeTruthy();
-            expect(data).toBeTruthy();
-            expect(info).toBeTruthy();
-            expect(values).toBeTruthy();
+            expect(table).toBeTruthy();
+            expect(title).toBeTruthy();
         });
     });
 });

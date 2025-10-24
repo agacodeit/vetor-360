@@ -4,15 +4,20 @@ import { inject } from '@angular/core';
 export const authGuard: CanActivateFn = (route, state) => {
     const router = inject(Router);
 
+    const token = localStorage.getItem('bearerToken'); // Corrigido para usar a chave correta
+    const isUnauthorizedRoute = state.url.startsWith('/unauthorized');
 
-    const token = localStorage.getItem('authToken');
-    if (state.url === '/' && token) {
+    // Se está tentando acessar rota não autorizada, permitir
+    if (isUnauthorizedRoute) {
+        return true;
+    }
 
-        router.navigate(['/authorized/dashboard']);
-        return false; // Impede a navegação para a rota atual
-    } else if (!token) {
-
+    // Se não tem token e está tentando acessar rota autorizada, redirecionar para login
+    if (!token) {
         router.navigate(['/unauthorized/login']);
-        return false; // Impede a navegação para a rota atual
-    } else return true;
+        return false;
+    }
+
+    // Se tem token, permitir acesso
+    return true;
 };

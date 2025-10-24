@@ -1,16 +1,65 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent, MessagesComponent, Message } from '../../../../../../shared';
+import { IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem } from '../../../../../../shared';
 
 @Component({
     selector: 'app-follow-up',
     standalone: true,
-    imports: [CommonModule, IconComponent, MessagesComponent],
+    imports: [CommonModule, IconComponent, MessagesComponent, DocumentsComponent],
     templateUrl: './follow-up.component.html',
     styleUrl: './follow-up.component.scss'
 })
 export class FollowUpComponent {
-    isVisualizationOpen = false;
+    // Configuração dos documentos
+    documentsConfig: DocumentsConfig = {
+        title: 'Documentos da Solicitação',
+        showAccordion: true,
+        allowMultiple: true,
+        documents: [
+            {
+                id: 'rg-cnh',
+                label: 'RG ou CNH - Documento de identidade',
+                required: true,
+                uploaded: true,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'cpf',
+                label: 'CPF - Cadastro de Pessoa Física',
+                required: true,
+                uploaded: true,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'comprovante-residencia',
+                label: 'Comprovante de Residência (últimos 3 meses)',
+                required: true,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'comprovante-renda',
+                label: 'Comprovante de Renda',
+                required: true,
+                uploaded: true,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'extrato-bancario',
+                label: 'Extrato Bancário (últimos 3 meses)',
+                required: true,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            },
+            {
+                id: 'contrato-social',
+                label: 'Contrato Social (se PJ)',
+                required: false,
+                uploaded: false,
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            }
+        ]
+    };
 
     messages: Message[] = [
         {
@@ -40,11 +89,6 @@ export class FollowUpComponent {
         }
     ];
 
-    onOpenVisualization(): void {
-        console.log('Abrir visualização de follow-up');
-        this.isVisualizationOpen = !this.isVisualizationOpen;
-    }
-
     onMessageSent(text: string): void {
         const newMessage: Message = {
             id: Date.now().toString(),
@@ -56,12 +100,49 @@ export class FollowUpComponent {
         this.messages = [...this.messages, newMessage];
     }
 
-    onClosed(): void {
-        this.isVisualizationOpen = false;
-    }
-
     onMinimized(isMinimized: boolean): void {
         console.log('Chat minimizado:', isMinimized);
+    }
+
+    // Métodos para lidar com eventos dos documentos
+    onDocumentsChange(event: any): void {
+        console.log('Documentos alterados:', event);
+        // Aqui você pode adicionar lógica para salvar ou processar as mudanças
+    }
+
+    onDocumentUploaded(event: any): void {
+        console.log('Documento carregado:', event);
+        // Atualizar o documento como carregado
+        const document = this.documentsConfig.documents.find(doc => doc.id === event.documentId);
+        if (document) {
+            document.uploaded = true;
+            document.file = event.file;
+        }
+    }
+
+    onDocumentRemoved(documentId: string): void {
+        console.log('Documento removido:', documentId);
+        // Atualizar o documento como não carregado
+        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.uploaded = false;
+            document.file = undefined;
+        }
+    }
+
+    onFormValid(isValid: boolean): void {
+        console.log('Formulário de documentos válido:', isValid);
+        // Aqui você pode adicionar lógica baseada na validade do formulário
+    }
+
+    // Método para calcular documentos carregados
+    get uploadedDocumentsCount(): number {
+        return this.documentsConfig.documents.filter(doc => doc.uploaded).length;
+    }
+
+    // Método para obter total de documentos
+    get totalDocumentsCount(): number {
+        return this.documentsConfig.documents.length;
     }
 }
 

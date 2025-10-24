@@ -281,12 +281,13 @@ describe('MessagesComponent', () => {
         });
     });
 
-    describe('close Method', () => {
-        it('should emit closed event', () => {
-            spyOn(component.closed, 'emit');
-            component.close();
-
-            expect(component.closed.emit).toHaveBeenCalled();
+    describe('Component Methods', () => {
+        it('should have all required methods defined', () => {
+            expect(component.sendMessage).toBeDefined();
+            expect(component.toggleMinimize).toBeDefined();
+            expect(component.openMentions).toBeDefined();
+            expect(component.openAttachment).toBeDefined();
+            expect(component.formatMessage).toBeDefined();
         });
     });
 
@@ -363,14 +364,6 @@ describe('MessagesComponent', () => {
 
             const sendBtn = compiled.querySelector('.messages__send-btn') as HTMLButtonElement;
             expect(sendBtn.disabled).toBe(false);
-        });
-
-        it('should call close when clicking close button', () => {
-            spyOn(component, 'close');
-            const closeBtn = compiled.querySelectorAll('.messages__action-btn')[1] as HTMLButtonElement;
-            closeBtn.click();
-
-            expect(component.close).toHaveBeenCalled();
         });
 
         it('should call toggleMinimize when clicking minimize button', () => {
