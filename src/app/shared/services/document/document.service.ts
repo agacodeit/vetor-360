@@ -15,7 +15,7 @@ export interface DocumentResponse {
     providedIn: 'root'
 })
 export class DocumentService {
-    private readonly apiUrl = '/api/v1/documents';
+    private readonly apiUrl = '/api/v1';
 
     constructor(private http: HttpClient) { }
 
@@ -26,7 +26,7 @@ export class DocumentService {
         const documentsPayload = this.getDocumentsPayload(personType);
 
         return this.http.post<DocumentResponse[]>(
-            `${this.apiUrl}/createDocument`,
+            `${this.apiUrl}/documents/createDocument`,
             documentsPayload
         );
     }
@@ -53,22 +53,28 @@ export class DocumentService {
     }
 
     /**
-     * Upload de arquivo para um documento específico
+     * Valida arquivo antes do upload
      */
-    uploadFile(file: File, documentId: string): Observable<any> {
+    validateFile(file: File, documentId: string): Observable<{ success: boolean, message: string }> {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('documentId', documentId);
 
-        return this.http.post(`${this.apiUrl}/upload`, formData);
+        return this.http.post<{ success: boolean, message: string }>(
+            `${this.apiUrl}/secure/openai/validateFile?documentId=${documentId}`,
+            formData
+        );
     }
 
     /**
-     * Remove um documento
+     * Upload de arquivo para um documento específico
      */
-    removeDocument(documentId: string): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${documentId}`);
+    uploadFile(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('arquivo', file);
+
+        return this.http.post('https://hml.acessebank.com.br/acessebankapi/api/v1/bucket/upload', formData);
     }
+
 
     /**
      * Lista todos os documentos de um usuário

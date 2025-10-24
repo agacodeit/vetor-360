@@ -10,6 +10,7 @@ export interface DocumentItem {
     file?: File;
     uploaded: boolean;
     acceptedFormats: string;
+    isValidating?: boolean;
 }
 
 export interface DocumentsConfig {
@@ -201,6 +202,34 @@ export class DocumentsComponent implements OnInit, OnChanges {
             this.documentRemoved.emit(documentId);
         }
     }
+
+    /**
+     * Limpa apenas o arquivo selecionado (sem emitir evento de remoção)
+     */
+    clearSelectedFile(documentId: string): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+
+        if (document) {
+            document.file = undefined;
+            document.uploaded = false;
+            document.isValidating = false;
+
+            this.documentsForm.patchValue({
+                [documentId]: false
+            });
+        }
+    }
+
+    /**
+     * Define o estado de validação de um documento
+     */
+    setDocumentValidating(documentId: string, isValidating: boolean): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.isValidating = isValidating;
+        }
+    }
+
 
     /**
      * Obtém o valor atual do formulário

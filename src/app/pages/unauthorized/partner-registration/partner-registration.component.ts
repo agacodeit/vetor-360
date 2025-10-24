@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
@@ -47,8 +47,11 @@ export interface PartnerRegistrationData {
     encapsulation: ViewEncapsulation.None
 })
 export class PartnerRegistrationComponent implements OnInit {
+    @ViewChild('documentsComponent') documentsComponent!: DocumentsComponent;
+
     currentStep = 0;
     isLoading = false;
+    isUploadingDocument = false;
 
     registrationForm: FormGroup;
     documentsConfig: DocumentsConfig = {
@@ -564,34 +567,72 @@ export class PartnerRegistrationComponent implements OnInit {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
-        // Implementar upload real para a API usando o DocumentService
+        // Implementar validação e upload real para a API usando o DocumentService
         if (event.file && event.documentId) {
-            this.documentService.uploadFile(event.file, event.documentId).subscribe({
-                next: (response) => {
-                    console.log('Upload realizado com sucesso:', response);
-                    this.toastService.success('Documento enviado com sucesso!');
-                },
-                error: (error) => {
-                    console.error('Erro no upload:', error);
-                    this.toastService.error('Erro ao enviar documento. Tente novamente.');
+            this.validateAndUploadFile(event.file, event.documentId);
+        }
+    }
+
+    private validateAndUploadFile(file: File, documentId: string): void {
+        this.isUploadingDocument = true;
+
+        // Define o documento como validando
+        if (this.documentsComponent) {
+            this.documentsComponent.setDocumentValidating(documentId, true);
+        }
+
+        // Primeiro valida o arquivo
+        this.documentService.validateFile(file, documentId).subscribe({
+            next: (validationResponse) => {
+                if (validationResponse.success) {
+                    // Se validação passou, faz o upload
+                    this.documentService.uploadFile(file).subscribe({
+                        next: (uploadResponse) => {
+                            console.log('Upload realizado com sucesso:', uploadResponse);
+                            this.toastService.success('Documento enviado com sucesso!');
+                            this.isUploadingDocument = false;
+
+                            // Remove o estado de validação
+                            if (this.documentsComponent) {
+                                this.documentsComponent.setDocumentValidating(documentId, false);
+                            }
+                        },
+                        error: (error) => {
+                            console.error('Erro no upload:', error);
+                            this.toastService.error('Erro ao enviar documento. Tente novamente.');
+                            this.isUploadingDocument = false;
+
+                            // Remove o estado de validação
+                            if (this.documentsComponent) {
+                                this.documentsComponent.setDocumentValidating(documentId, false);
+                            }
+                        }
+                    });
+                } else {
+                    // Se validação falhou, exibe a mensagem de erro e limpa o documento
+                    this.toastService.error(validationResponse.message);
+                    this.clearDocumentFile(documentId);
+                    this.isUploadingDocument = false;
                 }
-            });
+            },
+            error: (error) => {
+                console.error('Erro na validação:', error);
+                this.toastService.error('Erro ao validar documento. Tente novamente.');
+                this.clearDocumentFile(documentId);
+                this.isUploadingDocument = false;
+            }
+        });
+    }
+
+    private clearDocumentFile(documentId: string): void {
+        if (this.documentsComponent) {
+            this.documentsComponent.clearSelectedFile(documentId);
         }
     }
 
     onDocumentRemoved(documentId: string): void {
         console.log('Documento removido:', documentId);
-        // Implementar remoção real na API usando o DocumentService
-        this.documentService.removeDocument(documentId).subscribe({
-            next: (response) => {
-                console.log('Documento removido com sucesso:', response);
-                this.toastService.success('Documento removido com sucesso!');
-            },
-            error: (error) => {
-                console.error('Erro ao remover documento:', error);
-                this.toastService.error('Erro ao remover documento. Tente novamente.');
-            }
-        });
+        // Apenas log - não chama API de delete
     }
 
     onFormValid(isValid: boolean): void {

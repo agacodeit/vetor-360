@@ -146,7 +146,8 @@
                 <div class="step-content">
                     <h2 class="step-title">Anexe os documentos abaixo</h2>
                     <div class="documents-section">
-                        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
+                        <ds-documents #documentsComponent [config]="documentsConfig"
+                            (documentsChange)="onDocumentsChange($event)"
                             (documentUploaded)="onDocumentUploaded($event)"
                             (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
                         </ds-documents>
