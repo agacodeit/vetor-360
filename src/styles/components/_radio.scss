@@ -21,10 +21,6 @@
     &--sm {
         gap: $padding-xs;
 
-        .ds-radio__option {
-            padding: $padding-xs $padding-sm;
-        }
-
         .ds-radio__indicator {
             width: 16px;
             height: 16px;
@@ -43,9 +39,6 @@
     &--md {
         gap: $padding-sm;
 
-        .ds-radio__option {
-            padding: $padding-sm $padding-md;
-        }
 
         .ds-radio__indicator {
             width: 20px;
@@ -65,10 +58,6 @@
     &--lg {
         gap: $padding-md;
 
-        .ds-radio__option {
-            padding: $padding-md $padding-lg;
-        }
-
         .ds-radio__indicator {
             width: 24px;
             height: 24px;
@@ -85,32 +74,7 @@
     }
 
     // Variantes
-    &--card {
-        .ds-radio__option {
-            border: 2px solid var(--border-light);
-            border-radius: $border-radius-md;
-            background: var(--white);
-            transition: all 0.3s ease;
-            cursor: pointer;
 
-            &:hover {
-                border-color: var(--primary-medium);
-                background: var(--primary-light);
-            }
-
-            &.selected {
-                border-color: var(--primary-medium);
-                background: var(--primary-light);
-            }
-
-            &.disabled {
-                border-color: var(--border-light);
-                background: var(--background-light);
-                cursor: not-allowed;
-                opacity: 0.6;
-            }
-        }
-    }
 }
 
 .ds-radio__option {
@@ -126,7 +90,7 @@
         }
     }
 
-    &.selected {
+    &--selected {
         .ds-radio__indicator {
             border-color: var(--primary-medium);
             background: var(--primary-medium);
@@ -138,7 +102,7 @@
         }
     }
 
-    &.disabled {
+    &--disabled {
         cursor: not-allowed;
         opacity: 0.6;
 
@@ -165,7 +129,7 @@
 .ds-radio__indicator {
     width: 20px;
     height: 20px;
-    border: 2px solid var(--border-medium);
+    border: 2px solid var(--stroke);
     border-radius: 50%;
     background: var(--white);
     display: flex;

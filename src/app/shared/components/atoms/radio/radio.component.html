@@ -1,7 +1,7 @@
 <div [class]="radioClasses">
     @for (option of options; track option.value) {
-    <div [class]="optionClasses" [class.selected]="isOptionSelected(option)"
-        [class.disabled]="disabled || option.disabled" (click)="onOptionChange(option)">
+    <div [class]="optionClasses" [class.ds-radio__option--selected]="isOptionSelected(option)"
+        [class.ds-radio__option--disabled]="disabled || option.disabled" (click)="onOptionChange(option)">
 
         <div class="ds-radio__input-container">
             <input type="radio" [id]="uniqueId + '-' + option.value" [name]="name || uniqueId" [value]="option.value"

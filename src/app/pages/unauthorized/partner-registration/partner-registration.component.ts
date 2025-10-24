@@ -243,33 +243,54 @@ export class PartnerRegistrationComponent implements OnInit {
     }
 
     get canGoNext(): boolean {
-        switch (this.currentStep) {
-            case 0: // Tipo de pessoa
-                return this.isPersonTypeSelected;
-            case 1: // Dados básicos
-                const basicFields = ['name', 'cpfCnpj', 'email', 'cellphone'];
-                if (this.isPersonJuridica) {
-                    basicFields.push('comercialPhone', 'responsibleCompanyName');
-                }
-                return basicFields.every(field =>
-                    this.registrationForm.get(field)?.valid
-                );
-            case 2: // Endereço
-                const addressGroup = this.registrationForm.get('address') as FormGroup;
-                return addressGroup?.valid || false;
-            case 3: // Documentos
-                // TODO: Implementar validação de documentos
-                return true;
-            case 4: // Senha
-                return !!(this.registrationForm.get('password')?.valid &&
-                    this.registrationForm.get('confirmPassword')?.valid);
-            default:
-                return false;
-        }
+        // Sempre retorna true - validação será feita no método nextStep()
+        return true;
     }
 
     get canGoBack(): boolean {
         return this.currentStep > 0;
+    }
+
+    // Métodos para validação visual dos campos
+    isFieldInvalid(fieldName: string): boolean {
+        const control = this.registrationForm.get(fieldName);
+        return !!(control && control.invalid && control.touched);
+    }
+
+    isAddressFieldInvalid(fieldName: string): boolean {
+        const addressGroup = this.registrationForm.get('address') as FormGroup;
+        const control = addressGroup?.get(fieldName);
+        return !!(control && control.invalid && control.touched);
+    }
+
+    getFieldErrorMessage(fieldName: string): string {
+        const control = this.registrationForm.get(fieldName);
+        if (control && control.invalid && control.touched) {
+            if (control.errors?.['required']) {
+                return 'Este campo é obrigatório';
+            }
+            if (control.errors?.['email']) {
+                return 'E-mail inválido';
+            }
+            if (control.errors?.['minlength']) {
+                return `Mínimo de ${control.errors?.['minlength'].requiredLength} caracteres`;
+            }
+            if (control.errors?.['passwordMismatch']) {
+                return 'As senhas não coincidem';
+            }
+        }
+        return '';
+    }
+
+    getAddressFieldErrorMessage(fieldName: string): string {
+        const addressGroup = this.registrationForm.get('address') as FormGroup;
+        const control = addressGroup?.get(fieldName);
+        if (control && control.invalid && control.touched) {
+            if (control.errors?.['required']) {
+                return 'Este campo é obrigatório';
+            }
+        }
+        return '';
     }
 
     onStepClick(step: StepperStep): void {
@@ -284,10 +305,88 @@ export class PartnerRegistrationComponent implements OnInit {
     }
 
     nextStep(): void {
-        if (this.canGoNext && this.currentStep < this.steps.length - 1) {
-            this.currentStep++;
-            this.updateStepStatus();
+        if (this.currentStep < this.steps.length - 1) {
+            if (this.validateCurrentStep()) {
+                this.currentStep++;
+                this.updateStepStatus();
+            }
         }
+    }
+
+    private validateCurrentStep(): boolean {
+        let isValid = true;
+        let invalidFields: string[] = [];
+
+        switch (this.currentStep) {
+            case 0: // Tipo de pessoa
+                if (!this.isPersonTypeSelected) {
+                    this.toastService.error('Por favor, selecione o tipo de pessoa');
+                    isValid = false;
+                }
+                break;
+
+            case 1: // Dados básicos
+                const basicFields = ['name', 'cpfCnpj', 'email', 'cellphone'];
+                if (this.isPersonJuridica) {
+                    basicFields.push('comercialPhone', 'responsibleCompanyName');
+                }
+
+                basicFields.forEach(field => {
+                    const control = this.registrationForm.get(field);
+                    if (control && !control.valid) {
+                        invalidFields.push(field);
+                        control.markAsTouched();
+                    }
+                });
+
+                if (invalidFields.length > 0) {
+                    this.toastService.error('Por favor, preencha todos os campos obrigatórios');
+                    isValid = false;
+                }
+                break;
+
+            case 2: // Endereço
+                const addressGroup = this.registrationForm.get('address') as FormGroup;
+                if (addressGroup && !addressGroup.valid) {
+                    Object.keys(addressGroup.controls).forEach(key => {
+                        const control = addressGroup.get(key);
+                        if (control && !control.valid) {
+                            invalidFields.push(`address.${key}`);
+                            control.markAsTouched();
+                        }
+                    });
+
+                    this.toastService.error('Por favor, preencha todos os campos de endereço');
+                    isValid = false;
+                }
+                break;
+
+            case 3: // Documentos
+                // TODO: Implementar validação de documentos
+                break;
+
+            case 4: // Senha
+                const passwordControl = this.registrationForm.get('password');
+                const confirmPasswordControl = this.registrationForm.get('confirmPassword');
+
+                if (passwordControl && !passwordControl.valid) {
+                    invalidFields.push('password');
+                    passwordControl.markAsTouched();
+                }
+
+                if (confirmPasswordControl && !confirmPasswordControl.valid) {
+                    invalidFields.push('confirmPassword');
+                    confirmPasswordControl.markAsTouched();
+                }
+
+                if (invalidFields.length > 0) {
+                    this.toastService.error('Por favor, preencha os campos de senha corretamente');
+                    isValid = false;
+                }
+                break;
+        }
+
+        return isValid;
     }
 
     previousStep(): void {
@@ -366,7 +465,7 @@ export class PartnerRegistrationComponent implements OnInit {
     }
 
     onBackToLogin(): void {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/unauthorized/login']);
     }
 
     async onCepChange(event: any): Promise<void> {
