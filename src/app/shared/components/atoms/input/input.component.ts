@@ -93,29 +93,23 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   }
 
 
-  onInputChange(target: any): void {
-    if (!target) return;
+  onInputChange(newValue: any): void {
+    if (newValue === null || newValue === undefined) return;
 
-
-    let newValue = String(target.value || '');
-
+    let stringValue = String(newValue);
 
     if (this.type === 'number') {
-
-      this.value = newValue;
-      this.onChange(newValue);
-      this.ngModelChange.emit(newValue);
-      this.valueChanged.emit(newValue);
+      this.value = stringValue;
+      this.onChange(stringValue);
+      this.ngModelChange.emit(stringValue);
+      this.valueChanged.emit(stringValue);
       return;
     }
 
-
-    this.value = newValue;
-
-
-    this.onChange(newValue);
-    this.ngModelChange.emit(newValue);
-    this.valueChanged.emit(newValue);
+    this.value = stringValue;
+    this.onChange(stringValue);
+    this.ngModelChange.emit(stringValue);
+    this.valueChanged.emit(stringValue);
   }
 
 

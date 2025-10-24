@@ -62,7 +62,7 @@ export class Login implements OnInit {
   }
 
   signup() {
-    this.router.navigate(['/unauthorized/signup']);
+    this.router.navigate(['/unauthorized/partner-registration']);
   }
 
   forgotPassword() {

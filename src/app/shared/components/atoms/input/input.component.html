@@ -21,7 +21,7 @@
             [type]="effectiveType" [placeholder]="placeholder" [required]="required" [disabled]="disabled"
             [readonly]="readonly" [attr.maxlength]="maxlength" [attr.minlength]="minlength"
             [attr.step]="type === 'number' ? '0.01' : null" [attr.min]="type === 'number' ? '0' : null"
-            [autocomplete]="autocomplete" [value]="safeValue" (input)="onInputChange($event.target)"
+            [autocomplete]="autocomplete" [ngModel]="value" (ngModelChange)="onInputChange($event)"
             (focus)="onInputFocus()" (blur)="onInputBlur()" />
     </div>
 

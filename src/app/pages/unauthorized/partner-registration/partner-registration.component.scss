@@ -1,0 +1,148 @@
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/typography' as *;
+@use '../../../../styles/themes/default' as *;
+
+.partner-registration {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $padding-lg;
+
+    &__container {
+        background: var(--white);
+        border-radius: $border-radius-lg;
+        box-shadow: var(--shadow-lg);
+        width: 100%;
+        max-width: 600px;
+        padding: $padding-xl;
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: $padding-xl;
+    }
+
+    &__title {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-xl;
+        font-weight: $font-weight-bold;
+        color: var(--primary-dark);
+        margin: 0 0 $padding-xs 0;
+        line-height: 1.2;
+    }
+
+    &__subtitle {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-md;
+        font-weight: $font-weight-md;
+        color: var(--secondary);
+        margin: 0;
+    }
+
+    &__stepper {
+        margin-bottom: $padding-xl;
+    }
+
+    &__content {
+        .step-content {
+            .step-title {
+                font-family: 'Work Sans', sans-serif;
+                font-size: $font-lg;
+                font-weight: $font-weight-bold;
+                color: var(--primary-dark);
+                margin: 0 0 $padding-lg 0;
+                text-align: center;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: $padding-md;
+        margin-top: $padding-xl;
+        justify-content: flex-end;
+    }
+}
+
+// Person Type Selection - agora usando ds-radio component
+
+// Form Fields
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-lg;
+    margin-top: $padding-lg;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $padding-md;
+    align-items: end;
+
+    .field-cep {
+        grid-column: 1 / -1;
+    }
+
+    .field-city {
+        grid-column: 1;
+    }
+
+    .field-state {
+        grid-column: 2;
+    }
+}
+
+// Documents Section
+.documents-section {
+    margin-top: $padding-lg;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .partner-registration {
+        padding: $padding-md;
+
+        &__container {
+            padding: $padding-lg;
+        }
+
+        &__title {
+            font-size: $font-lg;
+        }
+
+        &__subtitle {
+            font-size: $font-sm;
+        }
+    }
+
+    .field-row {
+        grid-template-columns: 1fr;
+        gap: $padding-sm;
+
+        .field-cep,
+        .field-city,
+        .field-state {
+            grid-column: 1;
+        }
+    }
+
+    .person-type-options {
+        gap: $padding-sm;
+    }
+
+    .person-type-option {
+        padding: $padding-md;
+    }
+}
+
+@media (max-width: 480px) {
+    .partner-registration {
+        padding: $padding-sm;
+
+        &__container {
+            padding: $padding-md;
+        }
+    }
+}

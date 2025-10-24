@@ -5,6 +5,7 @@ import { Login } from './pages/unauthorized/login/login';
 import { Authorized } from './pages/authorized/authorized';
 import { authGuard } from './shared/guards';
 import { ForgotPasswordComponent } from './pages/unauthorized/forgot-password/forgot-password.component';
+import { PartnerRegistrationComponent } from './pages/unauthorized/partner-registration/partner-registration.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,10 @@ export const routes: Routes = [
             {
                 path: 'forgot-password',
                 component: ForgotPasswordComponent
+            },
+            {
+                path: 'partner-registration',
+                component: PartnerRegistrationComponent
             }
         ]
     },

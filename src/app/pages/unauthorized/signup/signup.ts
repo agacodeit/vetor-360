@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { ButtonComponent, CardComponent, InputComponent } from '../../../shared';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services';
@@ -16,7 +16,8 @@ import { MaskDirective } from 'mask-directive';
     ButtonComponent
   ],
   providers: [
-    MaskDirective
+    MaskDirective,
+    NgModel
   ],
   standalone: true,
   templateUrl: './signup.html',

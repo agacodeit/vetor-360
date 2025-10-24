@@ -1,0 +1,179 @@
+<div class="partner-registration">
+    <div class="partner-registration__container">
+        <div class="partner-registration__header">
+            <h1 class="partner-registration__title">
+                Crie seu cadastro AdvisorCapital
+            </h1>
+            <p class="partner-registration__subtitle">
+                Cadastro de Parceiro
+            </p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="partner-registration__stepper">
+            <ds-stepper [steps]="steps" [currentStep]="currentStep" [clickable]="true" [showConnector]="true"
+                variant="default" size="md" (stepClicked)="onStepClick($event)" (stepChanged)="onStepChanged($event)">
+            </ds-stepper>
+        </div>
+
+        <!-- Form Content -->
+        <div class="partner-registration__content">
+            <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+                <!-- Step 1: Tipo de Pessoa -->
+                @if (currentStep === 0) {
+                <div class="step-content">
+                    <h2 class="step-title">Escolha uma das opções abaixo:</h2>
+
+                    <ds-radio [options]="personTypeOptions" formControlName="personType" variant="card" size="lg"
+                        orientation="vertical">
+                    </ds-radio>
+                </div>
+                }
+
+                <!-- Step 2: Dados Básicos -->
+                @if (currentStep === 1) {
+                <div class="step-content">
+                    <h2 class="step-title">
+                        @if (isPersonFisica) {
+                        Dados Pessoais
+                        } @else {
+                        Dados da Empresa
+                        }
+                    </h2>
+
+                    <div class="form-fields">
+                        @if (isPersonFisica) {
+                        <!-- Pessoa Física -->
+                        <ds-input label="Nome" [fullWidth]="true" formControlName="name"
+                            placeholder="Digite seu nome completo" [required]="true">
+                        </ds-input>
+
+                        <ds-input label="CPF" [fullWidth]="true" formControlName="cpfCnpj" placeholder="000.000.000-00"
+                            mask="000.000.000-00" [required]="true">
+                        </ds-input>
+                        } @else {
+                        <!-- Pessoa Jurídica -->
+                        <ds-input label="Razão Social" [fullWidth]="true" formControlName="name"
+                            placeholder="Digite a razão social" [required]="true">
+                        </ds-input>
+
+                        <ds-input label="CNPJ" [fullWidth]="true" formControlName="cpfCnpj"
+                            placeholder="00.000.000/0000-00" mask="00.000.000/0000-00" [required]="true">
+                        </ds-input>
+
+                        <ds-input label="Nome responsável pela empresa" [fullWidth]="true"
+                            formControlName="responsibleCompanyName" placeholder="Digite o nome do responsável"
+                            [required]="true">
+                        </ds-input>
+                        }
+
+                        <ds-input label="E-mail" [fullWidth]="true" formControlName="email" type="email"
+                            placeholder="seu@email.com" [required]="true">
+                        </ds-input>
+
+                        <ds-input label="Celular" [fullWidth]="true" formControlName="cellphone"
+                            placeholder="(00) 00000-0000" mask="(00) 00000-0000" [required]="true">
+                        </ds-input>
+
+                        @if (isPersonJuridica) {
+                        <ds-input label="Telefone comercial" [fullWidth]="true" formControlName="comercialPhone"
+                            placeholder="(00) 0000-0000" mask="(00) 0000-0000">
+                        </ds-input>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- Step 3: Endereço -->
+                @if (currentStep === 2) {
+                <div class="step-content">
+                    <h2 class="step-title">Endereço</h2>
+
+                    <div class="form-fields" formGroupName="address">
+                        <div class="field-row">
+                            <ds-input label="CEP" [fullWidth]="true" formControlName="cep" placeholder="00000-000"
+                                mask="00000-000" [required]="true" class="field-cep" (blur)="onCepChange($event)">
+                            </ds-input>
+                        </div>
+
+                        <ds-input label="Logradouro" [fullWidth]="true" formControlName="street"
+                            placeholder="Rua, Avenida, etc." [required]="true">
+                        </ds-input>
+
+                        <ds-input label="Complemento" [fullWidth]="true" formControlName="complement"
+                            placeholder="Apartamento, sala, etc.">
+                        </ds-input>
+
+                        <ds-input label="Bairro" [fullWidth]="true" formControlName="neighbourhood"
+                            placeholder="Digite o bairro" [required]="true">
+                        </ds-input>
+
+                        <div class="field-row">
+                            <ds-input label="Cidade" [fullWidth]="true" formControlName="city"
+                                placeholder="Digite a cidade" [required]="true" class="field-city">
+                            </ds-input>
+
+                            <ds-input label="UF" [fullWidth]="true" formControlName="state" placeholder="UF"
+                                [maxlength]="2" [required]="true" class="field-state">
+                            </ds-input>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Step 4: Documentos -->
+                @if (currentStep === 3) {
+                <div class="step-content">
+                    <div class="documents-section">
+                        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
+                            (documentUploaded)="onDocumentUploaded($event)"
+                            (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
+                        </ds-documents>
+                    </div>
+                </div>
+                }
+
+                <!-- Step 5: Senha -->
+                @if (currentStep === 4) {
+                <div class="step-content">
+                    <h2 class="step-title">Agora é só informar a senha para o login</h2>
+
+                    <div class="form-fields">
+                        <ds-input label="Senha" [fullWidth]="true" formControlName="password" type="password"
+                            placeholder="Digite sua senha" [required]="true">
+                        </ds-input>
+
+                        <ds-input label="Confirme sua senha" [fullWidth]="true" formControlName="confirmPassword"
+                            type="password" placeholder="Confirme sua senha" [required]="true">
+                        </ds-input>
+                    </div>
+                </div>
+                }
+
+                <!-- Navigation Buttons -->
+                <div class="partner-registration__actions">
+                    @if (canGoBack) {
+                    <ds-button label="Voltar" type="button" variant="outline" size="lg" (click)="previousStep()" />
+                    }
+
+                    @if (currentStep === 0) {
+                    <ds-button label="Voltar ao Login" type="button" variant="ghost" size="lg"
+                        (click)="onBackToLogin()" />
+                    }
+
+                    @if (currentStep === 4) {
+                    <!-- Última etapa - Botão de cadastrar -->
+                    <ds-button label="Cadastrar" type="submit" variant="fill" size="lg" [isLoading]="isLoading"
+                        [disabled]="!canGoNext" />
+                    } @else {
+                    <!-- Etapas intermediárias - Botão próximo -->
+                    <ds-button label="Próximo" type="button" variant="fill" size="lg" [disabled]="!canGoNext"
+                        (click)="nextStep()" />
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
