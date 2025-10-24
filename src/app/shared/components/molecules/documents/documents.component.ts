@@ -90,6 +90,8 @@ export class DocumentsComponent implements OnInit {
                     expanded: true
                 }
             ];
+        } else {
+            this.accordionItems = [];
         }
     }
 

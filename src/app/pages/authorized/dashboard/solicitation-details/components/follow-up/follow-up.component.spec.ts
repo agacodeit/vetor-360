@@ -165,9 +165,11 @@ describe('FollowUpComponent', () => {
         it('should update counts when document status changes', () => {
             const initialUploadedCount = component.uploadedDocumentsCount;
 
-            // Simulate document upload
-            const document = component.documentsConfig.documents[0];
-            document.uploaded = true;
+            // Simulate document upload - find a document that is not uploaded yet
+            const document = component.documentsConfig.documents.find(doc => !doc.uploaded);
+            expect(document).toBeTruthy(); // Ensure we found a non-uploaded document
+
+            document!.uploaded = true;
 
             const newUploadedCount = component.uploadedDocumentsCount;
             expect(newUploadedCount).toBe(initialUploadedCount + 1);
