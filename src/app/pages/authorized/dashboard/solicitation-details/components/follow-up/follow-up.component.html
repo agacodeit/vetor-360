@@ -3,9 +3,6 @@
     <div class="follow-up__content d-flex flex-column gap-12">
         <h2 class="title-semibold">
             Follow-up
-            <button type="button" class="body follow-up__link" (click)="onOpenVisualization()">
-                {{ isVisualizationOpen ? 'Fechar visualização' : 'Abrir visualização' }}
-            </button>
         </h2>
         <div class="follow-up__stats body d-flex align-items-center gap-24">
             <p class="body">
@@ -14,17 +11,19 @@
             </p>
             <p class="body">
                 <ds-icon icon="fa-regular fa-folder" fontSize="16px" color="primary" />
-                6/7 documentos
+                {{ uploadedDocumentsCount }}/{{ totalDocumentsCount }} documentos
             </p>
         </div>
     </div>
 
-    <!-- Messages Component -->
-    @if (isVisualizationOpen) {
     <div class="follow-up__visualization d-grid columns-2 gap-24">
         <app-messages [messages]="messages" [showHeader]="false" (messageSent)="onMessageSent($event)"
-            (closed)="onClosed()" (minimized)="onMinimized($event)">
+            (minimized)="onMinimized($event)">
         </app-messages>
+
+        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
+            (documentUploaded)="onDocumentUploaded($event)" (documentRemoved)="onDocumentRemoved($event)"
+            (formValid)="onFormValid($event)">
+        </ds-documents>
     </div>
-    }
 </section>

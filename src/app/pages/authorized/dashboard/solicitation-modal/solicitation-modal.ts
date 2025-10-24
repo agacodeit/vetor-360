@@ -37,7 +37,7 @@ export class SolicitationModal implements OnInit {
 
   mainForm: FormGroup;
   isLoading = false;
-  currentStep = 0;
+  currentStep = 2;
 
 
   basicInfoData: any = {};
@@ -51,7 +51,7 @@ export class SolicitationModal implements OnInit {
   stepperSteps: StepperStep[] = [
     {
       id: 'basic-info',
-      title: 'Informações Básicas',
+      title: 'Operação',
       description: 'Dados da solicitação'
     },
     {
@@ -201,9 +201,7 @@ export class SolicitationModal implements OnInit {
         }
         break;
       case 2:
-        if (this.documentsStepComponent?.documentsForm) {
-          this.documentsStepComponent.documentsForm.markAllAsTouched();
-        }
+        // O componente ds-documents gerencia sua própria validação
         break;
     }
   }
@@ -215,8 +213,6 @@ export class SolicitationModal implements OnInit {
     if (this.guaranteesStepComponent?.guaranteesForm) {
       this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
     }
-    if (this.documentsStepComponent?.documentsForm) {
-      this.documentsStepComponent.documentsForm.markAllAsTouched();
-    }
+    // O componente ds-documents gerencia sua própria validação
   }
 }

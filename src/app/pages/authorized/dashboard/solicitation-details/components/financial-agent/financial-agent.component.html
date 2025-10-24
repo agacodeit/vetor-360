@@ -1,42 +1,34 @@
-<!-- FINANCIAL AGENT -->
+<!-- FINANCIAL AGENT TABLE -->
 <section class="financial-agent d-grid columns-1">
     <h2 class="title-semibold mb-12">
-        Agente financeiro
+        Agentes Financeiros
     </h2>
-    <div class="financial-agent__data d-grid columns-2 gap-24">
-        <div class="financial-agent__info d-flex flex-column gap-8">
-            <div class="financial-agent__block">
-                <p class="body">Banco Inter</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">FGI</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">Taxa</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">Prazo</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">Carência</p>
-            </div>
-        </div>
-        <div class="financial-agent__values d-flex flex-column gap-8">
-            <div class="financial-agent__block">
-                <p class="body">Matching 01/02/2021 17:56</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">R$ 500.000,00</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">1,3% a.m</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">36 meses</p>
-            </div>
-            <div class="financial-agent__block">
-                <p class="body">6 meses</p>
-            </div>
-        </div>
-    </div>
+
+    <ds-table [emptyMessage]="'Nenhum agente financeiro encontrado'">
+        <!-- Cabeçalho da tabela -->
+        <ds-table-row [isHeader]="true">
+            <ds-table-cell [isHeader]="true" width="40%">
+                Nome
+            </ds-table-cell>
+            <ds-table-cell [isHeader]="true" width="30%">
+                Data Matching
+            </ds-table-cell>
+            <ds-table-cell [isHeader]="true" width="30%">
+                Operação
+            </ds-table-cell>
+        </ds-table-row>
+
+        <!-- Linhas de dados -->
+        <ds-table-row *ngFor="let agent of financialAgents">
+            <ds-table-cell>
+                {{ agent.nome }}
+            </ds-table-cell>
+            <ds-table-cell>
+                {{ agent.dataMatching }}
+            </ds-table-cell>
+            <ds-table-cell>
+                {{ agent.operacao }}
+            </ds-table-cell>
+        </ds-table-row>
+    </ds-table>
 </section>

@@ -1,0 +1,225 @@
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AccordionComponent, AccordionItem, AccordionItemDirective, IconComponent } from '../../index';
+
+export interface DocumentItem {
+    id: string;
+    label: string;
+    required: boolean;
+    file?: File;
+    uploaded: boolean;
+    acceptedFormats: string;
+}
+
+export interface DocumentsConfig {
+    title?: string;
+    description?: string;
+    showAccordion?: boolean;
+    allowMultiple?: boolean;
+    documents: DocumentItem[];
+}
+
+@Component({
+    selector: 'ds-documents',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        AccordionComponent,
+        AccordionItemDirective,
+        IconComponent
+    ],
+    templateUrl: './documents.component.html',
+    styleUrls: ['./documents.component.scss'],
+    encapsulation: ViewEncapsulation.None
+})
+export class DocumentsComponent implements OnInit {
+    @Input() config: DocumentsConfig = {
+        title: 'Documentos Obrigatórios',
+        showAccordion: true,
+        allowMultiple: true,
+        documents: []
+    };
+
+    @Input() initialData: any = {};
+
+    @Output() documentsChange = new EventEmitter<{
+        checkboxes: any;
+        documents: DocumentItem[];
+    }>();
+
+    @Output() documentUploaded = new EventEmitter<{
+        documentId: string;
+        file: File;
+    }>();
+
+    @Output() documentRemoved = new EventEmitter<string>();
+
+    @Output() formValid = new EventEmitter<boolean>();
+
+    documentsForm: FormGroup;
+    accordionItems: AccordionItem[] = [];
+
+    constructor(private fb: FormBuilder) {
+        this.documentsForm = this.fb.group({});
+    }
+
+    ngOnInit(): void {
+        this.initializeForm();
+        this.setupAccordion();
+        this.loadInitialData();
+        this.setupFormSubscriptions();
+    }
+
+    private initializeForm(): void {
+        const formControls: { [key: string]: any } = {};
+        this.config.documents.forEach(doc => {
+            formControls[doc.id] = [false];
+        });
+        this.documentsForm = this.fb.group(formControls);
+    }
+
+    private setupAccordion(): void {
+        if (this.config.showAccordion) {
+            this.accordionItems = [
+                {
+                    id: 'documents-section',
+                    title: this.config.title || 'Documentos',
+                    expanded: true
+                }
+            ];
+        } else {
+            this.accordionItems = [];
+        }
+    }
+
+    private loadInitialData(): void {
+        if (this.initialData && Object.keys(this.initialData).length > 0) {
+            if (this.initialData.checkboxes) {
+                this.documentsForm.patchValue(this.initialData.checkboxes, { emitEvent: false });
+            }
+
+            if (this.initialData.documents) {
+                this.initialData.documents.forEach((savedDoc: DocumentItem) => {
+                    const doc = this.config.documents.find(d => d.id === savedDoc.id);
+                    if (doc) {
+                        doc.file = savedDoc.file;
+                        doc.uploaded = savedDoc.uploaded;
+                    }
+                });
+            }
+        }
+    }
+
+    private setupFormSubscriptions(): void {
+        this.documentsForm.valueChanges.subscribe(value => {
+            this.config.documents.forEach(doc => {
+                doc.uploaded = value[doc.id] || false;
+            });
+
+            this.documentsChange.emit({
+                checkboxes: value,
+                documents: this.config.documents
+            });
+
+            this.formValid.emit(this.documentsForm.valid);
+        });
+
+        // Emit initial validity
+        this.formValid.emit(this.documentsForm.valid);
+    }
+
+    onAccordionItemToggled(item: AccordionItem): void {
+        // Handle accordion toggle if needed
+    }
+
+    onCheckboxChange(documentId: string, value: boolean): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.uploaded = value;
+            this.documentsForm.patchValue({ [documentId]: value });
+        }
+    }
+
+    /**
+     * Manipula o upload de arquivo
+     */
+    onFileSelected(event: Event, documentId: string): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const document = this.config.documents.find(doc => doc.id === documentId);
+
+            if (document) {
+                document.file = file;
+                document.uploaded = true;
+
+                this.documentsForm.patchValue({
+                    [documentId]: true
+                });
+
+                this.documentUploaded.emit({
+                    documentId,
+                    file
+                });
+            }
+        }
+    }
+
+    /**
+     * Retorna o nome do arquivo ou texto padrão
+     */
+    getFileName(documentId: string): string {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+        return document?.file?.name || 'Selecionar';
+    }
+
+    /**
+     * Remove o arquivo do documento
+     */
+    removeDocument(documentId: string): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+
+        if (document) {
+            document.file = undefined;
+            document.uploaded = false;
+
+            this.documentsForm.patchValue({
+                [documentId]: false
+            });
+
+            this.documentRemoved.emit(documentId);
+        }
+    }
+
+    /**
+     * Obtém o valor atual do formulário
+     */
+    getFormValue(): any {
+        return {
+            checkboxes: this.documentsForm.value,
+            documents: this.config.documents
+        };
+    }
+
+    /**
+     * Define dados do formulário
+     */
+    setFormValue(data: any): void {
+        if (data.checkboxes) {
+            this.documentsForm.patchValue(data.checkboxes);
+        }
+
+        if (data.documents) {
+            data.documents.forEach((savedDoc: DocumentItem) => {
+                const doc = this.config.documents.find(d => d.id === savedDoc.id);
+                if (doc) {
+                    doc.file = savedDoc.file;
+                    doc.uploaded = savedDoc.uploaded;
+                }
+            });
+        }
+    }
+}

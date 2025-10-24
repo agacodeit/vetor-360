@@ -1,0 +1,65 @@
+<div class="ds-documents">
+    @if (config.showAccordion) {
+    <div class="ds-documents__accordion">
+        <ds-accordion [items]="accordionItems" variant="default" size="md"
+            [allowMultiple]="config.allowMultiple || true" iconPosition="right"
+            (itemToggled)="onAccordionItemToggled($event)">
+
+            <ng-template accordionItem="documents-section" class="accordion-content-inner">
+                @for (document of config.documents; track document.id) {
+                <div class="d-flex gap-8 justify-content-between align-items-center"
+                    [style.margin-top]="$index > 0 ? '12px' : '0'">
+                    <div class="ds-documents__checkbox">
+                        <input type="checkbox" [id]="'doc-' + document.id" [checked]="document.uploaded"
+                            (change)="onCheckboxChange(document.id, $event.target.checked)"
+                            class="ds-documents__checkbox-input" />
+                        <label [for]="'doc-' + document.id" class="ds-documents__checkbox-label">
+                            {{ document.label }}
+                        </label>
+                    </div>
+                    <div class="d-flex gap-8 align-items-center">
+                        <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded">
+                            <span>
+                                <i [class]="document.uploaded ? 'fa-solid fa-check' : 'fa-solid fa-upload'"></i>
+                                <span>{{ getFileName(document.id) }}</span>
+                            </span>
+                            <input type="file" [accept]="document.acceptedFormats"
+                                (change)="onFileSelected($event, document.id)" />
+                        </button>
+                        @if (document.uploaded) {
+                        <ds-icon icon="fa-solid fa-trash" fontSize="14px" color="primary-dark" cursorType="pointer"
+                            (click)="removeDocument(document.id)" />
+                        }
+                    </div>
+                </div>
+                }
+            </ng-template>
+        </ds-accordion>
+    </div>
+    } @else {
+    @for (document of config.documents; track document.id) {
+    <div class="d-flex gap-8 justify-content-between align-items-center" [style.margin-top]="$index > 0 ? '12px' : '0'">
+        <div class="ds-documents__checkbox">
+            <input type="checkbox" [id]="'doc-' + document.id" [checked]="document.uploaded"
+                (change)="onCheckboxChange(document.id, $event.target.checked)" class="ds-documents__checkbox-input" />
+            <label [for]="'doc-' + document.id" class="ds-documents__checkbox-label">
+                {{ document.label }}
+            </label>
+        </div>
+        <div class="d-flex gap-8 align-items-center">
+            <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded">
+                <span>
+                    <i [class]="document.uploaded ? 'fa-solid fa-check' : 'fa-solid fa-upload'"></i>
+                    <span>{{ getFileName(document.id) }}</span>
+                </span>
+                <input type="file" [accept]="document.acceptedFormats" (change)="onFileSelected($event, document.id)" />
+            </button>
+            @if (document.uploaded) {
+            <ds-icon icon="fa-solid fa-trash" fontSize="14px" color="primary-dark" cursorType="pointer"
+                (click)="removeDocument(document.id)" />
+            }
+        </div>
+    </div>
+    }
+    }
+</div>
