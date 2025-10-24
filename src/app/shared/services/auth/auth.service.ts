@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, lastValueFrom } from 'rxjs';
+import { ProfileService } from '../profile/profile.service';
+import { User } from '../../types/profile.types';
+import { environment } from '../../../../environments/environment';
 
 export interface LoginRequest {
     email: string;
@@ -9,12 +12,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     token: string;
-    user: {
-        id: string;
-        email: string;
-        name: string;
-        roles: string[];
-    };
+    user: User;
     expiresIn: number;
 }
 
@@ -39,31 +37,53 @@ export interface SignupResponse {
 })
 export class AuthService {
     private readonly API_BASE_URL = '/api/v1';
-    private readonly STORAGE_KEY = 'authToken';
+    private readonly STORAGE_KEY = 'bearerToken';
+    private readonly LAST_SYNC_KEY = 'lastUserSync';
+    private readonly SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutos
 
-    private currentUserSubject = new BehaviorSubject<any>(null);
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 
-    constructor(private http: HttpClient) {
-
+    constructor(
+        private http: HttpClient,
+        private profileService: ProfileService
+    ) {
         this.loadStoredToken();
     }
 
     /**
      * Realiza login do usuário
      */
-    login(credentials: LoginRequest): Observable<LoginResponse> {
-        const headers = this.getDefaultHeaders();
+    async login(credentials: LoginRequest) {
+        try {
+            // 1. Fazer login na API do AcesseBank
+            const loginResponse = await lastValueFrom(this.http.post<LoginResponse>(`${this.API_BASE_URL}/auth/login`, credentials, {
+                headers: this.getDefaultHeaders()
+            }));
 
-        return this.http.post<LoginResponse>(`${this.API_BASE_URL}/auth/login`, credentials, { headers })
-            .pipe(
-                tap(response => {
-                    if (response.token) {
-                        this.setToken(response.token);
-                        this.currentUserSubject.next(response.user);
-                    }
-                })
-            );
+            if (loginResponse?.token) {
+                // 2. Salvar token
+                this.setToken(loginResponse.token);
+
+                // 3. Carregar dados do usuário da API
+                const user = await this.loadUserFromAPI();
+
+                if (user) {
+                    // 4. Definir usuário no ProfileService
+                    this.profileService.setCurrentUser(user);
+                    this.currentUserSubject.next(user);
+                    this.saveLastSyncTime();
+
+                    console.log('Login realizado com sucesso:', user.name);
+                    return user;
+                }
+            }
+
+            return null;
+        } catch (error) {
+            console.error('Erro no login:', error);
+            return null;
+        }
     }
 
     /**
@@ -81,6 +101,9 @@ export class AuthService {
     logout(): void {
         this.removeToken();
         this.currentUserSubject.next(null);
+        this.profileService.clearCurrentUser();
+        localStorage.removeItem(this.LAST_SYNC_KEY);
+        console.log('Logout realizado');
     }
 
     /**
@@ -118,12 +141,13 @@ export class AuthService {
     private loadStoredToken(): void {
         const token = this.getToken();
         if (token && !this.isTokenExpired(token)) {
-
-            try {
-                const payload = this.decodeJWT(token);
-                this.currentUserSubject.next(payload);
-            } catch (error) {
-                this.removeToken();
+            // Carregar usuário do ProfileService (que já tem dados do localStorage)
+            const user = this.profileService.getCurrentUser();
+            if (user) {
+                this.currentUserSubject.next(user);
+            } else {
+                // Se não há dados locais, tentar carregar da API
+                this.loadUserFromAPI();
             }
         }
     }
@@ -188,20 +212,94 @@ export class AuthService {
     }
 
     /**
-     * Verifica se o usuário tem uma role específica
+     * Verifica se o usuário tem uma role específica (deprecated - use ProfileService)
      */
     hasRole(role: string): boolean {
         const user = this.getCurrentUser();
-        return user && user.roles && user.roles.includes(role);
+        // Para compatibilidade com testes antigos
+        return user && (user as any).roles && (user as any).roles.includes(role);
     }
 
     /**
-     * Verifica se o usuário tem alguma das roles especificadas
+     * Verifica se o usuário tem alguma das roles especificadas (deprecated - use ProfileService)
      */
     hasAnyRole(roles: string[]): boolean {
         const user = this.getCurrentUser();
-        if (!user || !user.roles) return false;
+        if (!user || !(user as any).roles) return false;
 
-        return roles.some(role => user.roles.includes(role));
+        return roles.some(role => (user as any).roles.includes(role));
+    }
+
+    /**
+     * Carrega dados do usuário da API
+     */
+    async loadUserFromAPI(): Promise<User | null> {
+        try {
+            const token = this.getToken();
+            if (!token) {
+                return null;
+            }
+
+            const response = await lastValueFrom(this.http.get<User>(`${this.API_BASE_URL}/secure/user`, {
+                headers: this.getAuthHeaders()
+            }));
+
+            if (response) {
+                this.profileService.setCurrentUser(response);
+                this.currentUserSubject.next(response);
+                this.saveLastSyncTime();
+                return response;
+            }
+
+            return null;
+        } catch (error) {
+            console.error('Erro ao carregar usuário da API:', error);
+            // Se a API falhar, manter dados do localStorage se existirem
+            return this.profileService.getCurrentUser();
+        }
+    }
+
+    /**
+     * Força sincronização com a API
+     */
+    async forceSyncWithAPI(): Promise<User | null> {
+        return await this.loadUserFromAPI();
+    }
+
+    /**
+     * Verifica se precisa sincronizar com a API
+     */
+    private checkAndSyncUser(): void {
+        const lastSync = localStorage.getItem(this.LAST_SYNC_KEY);
+        const now = Date.now();
+
+        if (!lastSync || (now - parseInt(lastSync)) > this.SYNC_INTERVAL) {
+            // Sync com API em background
+            this.loadUserFromAPI();
+        }
+    }
+
+    /**
+     * Salva tempo da última sincronização
+     */
+    private saveLastSyncTime(): void {
+        localStorage.setItem(this.LAST_SYNC_KEY, Date.now().toString());
+    }
+
+    /**
+     * Obtém usuário com sincronização automática
+     */
+    async getUserWithSync(): Promise<User | null> {
+        const user = this.profileService.getCurrentUser();
+
+        if (!user) {
+            // Sem dados de usuário, tentar carregar da API
+            return await this.loadUserFromAPI();
+        }
+
+        // Verificar se sync é necessário
+        this.checkAndSyncUser();
+
+        return user;
     }
 }

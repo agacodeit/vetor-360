@@ -41,6 +41,7 @@ export class FollowUpComponent {
     ];
 
     onOpenVisualization(): void {
+        console.log('Abrir visualização de follow-up');
         this.isVisualizationOpen = !this.isVisualizationOpen;
     }
 
