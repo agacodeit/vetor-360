@@ -144,7 +144,6 @@
                 <!-- Step 4: Documentos -->
                 @if (currentStep === 3) {
                 <div class="step-content">
-                    <h2 class="step-title">Anexe os documentos abaixo</h2>
                     <div class="documents-section">
                         <ds-documents #documentsComponent [config]="documentsConfig"
                             (documentsChange)="onDocumentsChange($event)"
@@ -158,8 +157,6 @@
                 <!-- Step 5: Senha -->
                 @if (currentStep === 4) {
                 <div class="step-content">
-                    <h2 class="step-title">Agora é só informar a senha para o login</h2>
-
                     <div class="form-fields">
                         <ds-input label="Senha" [fullWidth]="true" formControlName="password" type="password"
                             placeholder="Digite sua senha" [required]="true" [invalid]="isFieldInvalid('password')"
