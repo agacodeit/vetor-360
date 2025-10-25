@@ -61,7 +61,7 @@ export interface PartnerRegistrationResponse {
     providedIn: 'root'
 })
 export class PartnerRegistrationService {
-    private readonly apiUrl = environment.apiUrl || 'https://hml.acessebank.com.br/acessebankapi/api/v1';
+    private readonly apiUrl = '/api/v1';
 
     constructor(private http: HttpClient) { }
 
@@ -70,7 +70,7 @@ export class PartnerRegistrationService {
      */
     createPartner(partnerData: PartnerRegistrationRequest): Observable<PartnerRegistrationResponse> {
         return this.http.post<PartnerRegistrationResponse>(
-            `${this.apiUrl}/user/create`,
+            `${this.apiUrl}/secure/user/create`,
             partnerData
         );
     }

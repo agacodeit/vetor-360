@@ -23,9 +23,7 @@
                 <!-- Step 1: Tipo de Pessoa -->
                 @if (currentStep === 0) {
                 <div class="step-content">
-                    <h2 class="step-title">Escolha uma das opções abaixo:</h2>
-
-                    <ds-radio [options]="personTypeOptions" formControlName="personType" variant="card" size="lg"
+                    <ds-radio [options]="personTypeOptions" formControlName="personType" variant="card" size="md"
                         orientation="vertical">
                     </ds-radio>
                 </div>
@@ -34,14 +32,6 @@
                 <!-- Step 2: Dados Básicos -->
                 @if (currentStep === 1) {
                 <div class="step-content">
-                    <h2 class="step-title">
-                        @if (isPersonFisica) {
-                        Dados Pessoais
-                        } @else {
-                        Dados da Empresa
-                        }
-                    </h2>
-
                     <div class="form-fields">
                         @if (isPersonFisica) {
                         <!-- Pessoa Física -->
@@ -144,7 +134,7 @@
                 @if (currentStep === 3) {
                 <div class="step-content">
                     <div class="documents-section">
-                        <ds-documents #documentsComponent [config]="documentsConfig"
+                        <ds-documents #documentsComponent [config]="documentsConfig" [requireVerification]="false"
                             (documentsChange)="onDocumentsChange($event)"
                             (documentUploaded)="onDocumentUploaded($event)"
                             (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
@@ -184,7 +174,8 @@
 
                     @if (currentStep === 4) {
                     <!-- Última etapa - Botão de cadastrar -->
-                    <ds-button label="Cadastrar" type="submit" variant="fill" size="lg" [isLoading]="isLoading" />
+                    <ds-button label="Cadastrar" type="submit" variant="fill" size="lg" [disabled]="isLoading"
+                        [isLoading]="isLoading" />
                     } @else {
                     <!-- Etapas intermediárias - Botão próximo -->
                     <ds-button label="Próximo" type="button" variant="fill" size="lg" (click)="nextStep()" />

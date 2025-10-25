@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 import { MaskDirective } from "mask-directive";
@@ -63,7 +63,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     return !!this.formControlName;
   }
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
 
   }
 
@@ -84,6 +84,8 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     } else {
       this.value = String(value);
     }
+    // Força a atualização da view
+    this.cdr?.detectChanges();
   }
 
   registerOnChange(fn: (value: any) => void): void {
@@ -122,12 +124,8 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     if (this.isFormControl) {
       const newValue = event.target.value || '';
       this.value = newValue;
+      this.onChange(newValue);
       this.valueChanged.emit(newValue);
-
-      setTimeout(() => {
-        this.onChange(newValue);
-        this.ngModelChange.emit(newValue);
-      }, 0);
     }
   }
 

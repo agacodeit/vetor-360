@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 import { MaskDirective, MaskDirectiveService } from "mask-directive";
 import { lastValueFrom } from 'rxjs';
+import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 
 
 export interface PartnerRegistrationData {
@@ -377,21 +377,6 @@ export class PartnerRegistrationComponent implements OnInit {
         return '';
     }
 
-    onStepClick(step: StepperStep): void {
-        const stepIndex = this.steps.findIndex(s => s.id === step.id);
-        if (stepIndex !== -1 && stepIndex <= this.currentStep) {
-            // Se está indo para a etapa de documentos (índice 3), carregar documentos
-            if (stepIndex === 3) {
-                const personType = this.registrationForm.get('personType')?.value;
-                if (personType) {
-                    this.loadDocumentsFromApi(personType);
-                }
-            }
-
-            this.currentStep = stepIndex;
-        }
-    }
-
     onStepChanged(stepIndex: number): void {
         this.currentStep = stepIndex;
     }
@@ -545,14 +530,9 @@ export class PartnerRegistrationComponent implements OnInit {
             const registrationData: PartnerRegistrationRequest =
                 this.partnerRegistrationService.formatDataForApi(formData);
 
-            const response = await lastValueFrom(this.partnerRegistrationService.createPartner(registrationData));
-
-            if (response?.success) {
-                this.toastService.success('Cadastro realizado com sucesso!');
-                this.router.navigate(['/unauthorized/login']);
-            } else {
-                this.toastService.error(response?.message || 'Erro ao realizar cadastro');
-            }
+            await lastValueFrom(this.partnerRegistrationService.createPartner(registrationData));
+            this.toastService.success('Cadastro realizado com sucesso!');
+            this.router.navigate(['/unauthorized/login']);
 
         } catch (error: any) {
             console.error('Erro no cadastro:', error);
@@ -607,67 +587,8 @@ export class PartnerRegistrationComponent implements OnInit {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
-        // Implementar validação e upload real para a API usando o DocumentService
-        if (event.file && event.documentId) {
-            this.validateAndUploadFile(event.file, event.documentId);
-        }
-    }
-
-    private validateAndUploadFile(file: File, documentId: string): void {
-        this.isUploadingDocument = true;
-
-        // Define o documento como validando
-        if (this.documentsComponent) {
-            this.documentsComponent.setDocumentValidating(documentId, true);
-        }
-
-        // Primeiro valida o arquivo
-        this.documentService.validateFile(file, documentId).subscribe({
-            next: (validationResponse) => {
-                if (validationResponse.success) {
-                    // Se validação passou, faz o upload
-                    this.documentService.uploadFile(file).subscribe({
-                        next: (uploadResponse) => {
-                            console.log('Upload realizado com sucesso:', uploadResponse);
-                            this.toastService.success('Documento enviado com sucesso!');
-                            this.isUploadingDocument = false;
-
-                            // Remove o estado de validação
-                            if (this.documentsComponent) {
-                                this.documentsComponent.setDocumentValidating(documentId, false);
-                            }
-                        },
-                        error: (error) => {
-                            console.error('Erro no upload:', error);
-                            this.toastService.error('Erro ao enviar documento. Tente novamente.');
-                            this.isUploadingDocument = false;
-
-                            // Remove o estado de validação
-                            if (this.documentsComponent) {
-                                this.documentsComponent.setDocumentValidating(documentId, false);
-                            }
-                        }
-                    });
-                } else {
-                    // Se validação falhou, exibe a mensagem de erro e limpa o documento
-                    this.toastService.error(validationResponse.message);
-                    this.clearDocumentFile(documentId);
-                    this.isUploadingDocument = false;
-                }
-            },
-            error: (error) => {
-                console.error('Erro na validação:', error);
-                this.toastService.error('Erro ao validar documento. Tente novamente.');
-                this.clearDocumentFile(documentId);
-                this.isUploadingDocument = false;
-            }
-        });
-    }
-
-    private clearDocumentFile(documentId: string): void {
-        if (this.documentsComponent) {
-            this.documentsComponent.clearSelectedFile(documentId);
-        }
+        // A validação e upload agora são feitos diretamente no ds-documents
+        // Este método é apenas para logging/controle se necessário
     }
 
     onDocumentRemoved(documentId: string): void {

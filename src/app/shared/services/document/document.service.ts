@@ -72,7 +72,7 @@ export class DocumentService {
         const formData = new FormData();
         formData.append('arquivo', file);
 
-        return this.http.post('https://hml.acessebank.com.br/acessebankapi/api/v1/bucket/upload', formData);
+        return this.http.post(this.apiUrl + '/bucket/upload', formData);
     }
 
 
