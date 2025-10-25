@@ -43,7 +43,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() fullWidth: boolean = false;
   @Input() width: string = 'fit-content';
   @Input() libMask: string = '';
-  @Input() formControlName: string = '';
   @Input() ngModel: any;
 
   @Output() ngModelChange = new EventEmitter<any>();
@@ -57,6 +56,8 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   private onChange = (value: any) => { };
   private onTouched = () => { };
 
+
+  @Input() formControlName: string = '';
 
   get isFormControl(): boolean {
     return !!this.formControlName;
@@ -81,7 +82,6 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     if (value === null || value === undefined) {
       this.value = '';
     } else {
-
       this.value = String(value);
     }
   }
@@ -120,7 +120,7 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   onInputEvent(event: any): void {
     if (this.isFormControl) {
-      const newValue = event.target.value;
+      const newValue = event.target.value || '';
       this.value = newValue;
       this.onChange(newValue);
       this.valueChanged.emit(newValue);
@@ -135,6 +135,15 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   onInputBlur(): void {
     this.isFocused = false;
     this.onTouched();
+  }
+
+  // Método para ser chamado quando a diretiva libMask detecta mudanças
+  onMaskValueChange(newValue: string): void {
+    if (this.isFormControl) {
+      this.value = newValue;
+      this.onChange(newValue);
+      this.valueChanged.emit(newValue);
+    }
   }
 
 

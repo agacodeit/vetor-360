@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
 import { MaskDirective } from "mask-directive";
+import { lastValueFrom } from 'rxjs';
 
 
 export interface PartnerRegistrationData {
@@ -302,9 +303,6 @@ export class PartnerRegistrationComponent implements OnInit {
     // Métodos para validação visual dos campos
     isFieldInvalid(fieldName: string): boolean {
         const control = this.registrationForm.get(fieldName);
-        if (fieldName === 'cpfCnpj') {
-            console.log(control?.errors);
-        }
         return !!(control && control.invalid && control.touched);
     }
 
@@ -329,6 +327,30 @@ export class PartnerRegistrationComponent implements OnInit {
             if (control.errors?.['passwordMismatch']) {
                 return 'As senhas não coincidem';
             }
+            if (control.errors?.['maskPatternInvalid']) {
+                const maskError = control.errors?.['maskPatternInvalid'];
+                const expectedPattern = maskError?.expectedPatterns?.[0];
+
+                if (fieldName === 'cpfCnpj') {
+                    const personType = this.registrationForm.get('personType')?.value;
+                    if (personType === 'F') {
+                        return 'CPF deve ter o formato 000.000.000-00';
+                    } else if (personType === 'J') {
+                        return 'CNPJ deve ter o formato 00.000.000/0000-00';
+                    }
+                }
+                if (fieldName === 'cellphone') {
+                    return 'Celular deve ter o formato (00) 00000-0000';
+                }
+                if (fieldName === 'comercialPhone') {
+                    return 'Telefone deve ter o formato (00) 0000-0000';
+                }
+                if (fieldName === 'address.cep') {
+                    return 'CEP deve ter o formato 00000-000';
+                }
+
+                return `Formato inválido. Esperado: ${expectedPattern || 'formato correto'}`;
+            }
         }
         return '';
     }
@@ -339,6 +361,17 @@ export class PartnerRegistrationComponent implements OnInit {
         if (control && control.invalid && control.touched) {
             if (control.errors?.['required']) {
                 return 'Este campo é obrigatório';
+            }
+            if (control.errors?.['maskPatternInvalid']) {
+                const maskError = control.errors?.['maskPatternInvalid'];
+                const expectedPattern = maskError?.expectedPatterns?.[0];
+
+                if (fieldName === 'cep') {
+                    return 'CEP deve ter o formato 00000-000';
+                }
+
+                // Mensagem genérica para outros campos de endereço
+                return `Formato inválido. Esperado: ${expectedPattern || 'formato correto'}`;
             }
         }
         return '';
@@ -473,15 +506,12 @@ export class PartnerRegistrationComponent implements OnInit {
     onPersonTypeChange(): void {
         const personType = this.registrationForm.get('personType')?.value;
 
-        // Limpar campos específicos quando mudar o tipo
         if (personType === 'F') {
             this.registrationForm.patchValue({
                 comercialPhone: '',
                 responsibleCompanyName: ''
             });
         }
-
-        // Não carregar documentos aqui - será carregado quando avançar para o passo 2
     }
 
     async onSubmit(): Promise<void> {
@@ -495,28 +525,15 @@ export class PartnerRegistrationComponent implements OnInit {
         try {
             const formData = this.registrationForm.value;
 
-            // Validar CPF/CNPJ
-            const cpfCnpj = formData.cpfCnpj.replace(/\D/g, '');
-            const isValidDocument = formData.personType === 'F'
-                ? this.partnerRegistrationService.validateCpf(cpfCnpj)
-                : this.partnerRegistrationService.validateCnpj(cpfCnpj);
-
-            if (!isValidDocument) {
-                this.toastService.error(`CPF/CNPJ inválido`);
-                this.isLoading = false;
-                return;
-            }
-
             // Formatar dados para API
             const registrationData: PartnerRegistrationRequest =
                 this.partnerRegistrationService.formatDataForApi(formData);
 
-            // Chamar API
-            const response = await this.partnerRegistrationService.createPartner(registrationData).toPromise();
+            const response = await lastValueFrom(this.partnerRegistrationService.createPartner(registrationData));
 
             if (response?.success) {
                 this.toastService.success('Cadastro realizado com sucesso!');
-                this.router.navigate(['/login']);
+                this.router.navigate(['/unauthorized/login']);
             } else {
                 this.toastService.error(response?.message || 'Erro ao realizar cadastro');
             }

@@ -43,13 +43,13 @@
                     </h2>
 
                     <div class="form-fields">
+                        {{registrationForm.get('cpfCnpj')?.errors | json}}
                         @if (isPersonFisica) {
                         <!-- Pessoa Física -->
                         <ds-input label="Nome" [fullWidth]="true" formControlName="name"
                             placeholder="Digite seu nome completo" [required]="true" [invalid]="isFieldInvalid('name')"
                             [errorMessage]="getFieldErrorMessage('name')">
                         </ds-input>
-
                         <ds-input label="CPF" [fullWidth]="true" formControlName="cpfCnpj" placeholder="000.000.000-00"
                             libMask="000.000.000-00" [required]="true" [invalid]="isFieldInvalid('cpfCnpj')"
                             [errorMessage]="getFieldErrorMessage('cpfCnpj')">
