@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild, ViewEncapsulat
 import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
-import { MaskDirective } from "mask-directive";
+import { MaskDirective, MaskDirectiveService } from "mask-directive";
 import { lastValueFrom } from 'rxjs';
 
 
@@ -511,7 +511,23 @@ export class PartnerRegistrationComponent implements OnInit {
                 comercialPhone: '',
                 responsibleCompanyName: ''
             });
+
+            this.registrationForm.get('cpfCnpj')?.
+                setValidators([
+                    Validators.required,
+                    MaskDirectiveService.maskPatternValidator('000.000.000-00')]
+                );
+            this.registrationForm.get('cpfCnpj')?.updateValueAndValidity();
+        } else {
+            this.registrationForm.get('cpfCnpj')?.
+                setValidators([
+                    Validators.required,
+                    MaskDirectiveService.maskPatternValidator('00.000.000/0000-00')]
+                );
+            this.registrationForm.get('cpfCnpj')?.updateValueAndValidity();
         }
+
+
     }
 
     async onSubmit(): Promise<void> {

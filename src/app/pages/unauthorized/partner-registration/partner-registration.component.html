@@ -43,7 +43,6 @@
                     </h2>
 
                     <div class="form-fields">
-                        {{registrationForm.get('cpfCnpj')?.errors | json}}
                         @if (isPersonFisica) {
                         <!-- Pessoa Física -->
                         <ds-input label="Nome" [fullWidth]="true" formControlName="name"
