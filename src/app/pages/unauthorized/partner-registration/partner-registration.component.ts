@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { MaskDirective } from "mask-directive";
 
 
 export interface PartnerRegistrationData {
@@ -40,15 +41,18 @@ export interface PartnerRegistrationData {
         ButtonComponent,
         DocumentsComponent,
         InputComponent,
-        RadioComponent
+        RadioComponent,
+        MaskDirective,
+        FormsModule
     ],
+    providers: [NgModel],
     templateUrl: './partner-registration.component.html',
     styleUrls: ['./partner-registration.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class PartnerRegistrationComponent implements OnInit {
     @ViewChild('documentsComponent') documentsComponent!: DocumentsComponent;
-
+    cpfCnpj: string = '';
     currentStep = 0;
     isLoading = false;
     isUploadingDocument = false;
@@ -298,6 +302,9 @@ export class PartnerRegistrationComponent implements OnInit {
     // Métodos para validação visual dos campos
     isFieldInvalid(fieldName: string): boolean {
         const control = this.registrationForm.get(fieldName);
+        if (fieldName === 'cpfCnpj') {
+            console.log(control?.errors);
+        }
         return !!(control && control.invalid && control.touched);
     }
 

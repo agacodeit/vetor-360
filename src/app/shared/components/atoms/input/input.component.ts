@@ -43,11 +43,12 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() fullWidth: boolean = false;
   @Input() width: string = 'fit-content';
   @Input() libMask: string = '';
-
+  @Input() formControlName: string = '';
   @Input() ngModel: any;
-  @Output() ngModelChange = new EventEmitter<any>();
 
+  @Output() ngModelChange = new EventEmitter<any>();
   @Output() valueChanged = new EventEmitter<string>();
+
 
   value: string = '';
   isFocused: boolean = false;
@@ -55,6 +56,11 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   private onChange = (value: any) => { };
   private onTouched = () => { };
+
+
+  get isFormControl(): boolean {
+    return !!this.formControlName;
+  }
 
   constructor() {
 
@@ -110,6 +116,15 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     this.onChange(stringValue);
     this.ngModelChange.emit(stringValue);
     this.valueChanged.emit(stringValue);
+  }
+
+  onInputEvent(event: any): void {
+    if (this.isFormControl) {
+      const newValue = event.target.value;
+      this.value = newValue;
+      this.onChange(newValue);
+      this.valueChanged.emit(newValue);
+    }
   }
 
 
