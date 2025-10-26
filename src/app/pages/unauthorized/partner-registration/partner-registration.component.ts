@@ -393,6 +393,7 @@ export class PartnerRegistrationComponent implements OnInit {
                     this.toastService.error('Por favor, preencha os campos de senha corretamente');
                     isValid = false;
                 }
+
                 break;
         }
 
@@ -441,10 +442,8 @@ export class PartnerRegistrationComponent implements OnInit {
     }
 
     async onSubmit(): Promise<void> {
-        if (!this.registrationForm.valid) {
-            this.toastService.error('Por favor, preencha todos os campos obrigatórios');
-            return;
-        }
+        const isFormValid = this.validateCurrentStep();
+        if (!isFormValid) return;
 
         this.isLoading = true;
 
