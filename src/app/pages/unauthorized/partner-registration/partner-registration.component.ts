@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaskDirective, MaskDirectiveService } from "mask-directive";
 import { lastValueFrom } from 'rxjs';
-import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, InputComponent, PartnerRegistrationRequest, PartnerRegistrationService, RadioComponent, RadioOption, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsConfig, PartnerRegistrationRequest, PartnerRegistrationService, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { PersonTypeStepComponent } from './steps/person-type-step/person-type-step.component';
+import { BasicInfoStepComponent } from './steps/basic-info-step/basic-info-step.component';
+import { AddressStepComponent } from './steps/address-step/address-step.component';
+import { DocumentsStepComponent } from './steps/documents-step/documents-step.component';
+import { PasswordStepComponent } from './steps/password-step/password-step.component';
 
 
 export interface PartnerRegistrationData {
@@ -40,10 +45,11 @@ export interface PartnerRegistrationData {
         ReactiveFormsModule,
         StepperComponent,
         ButtonComponent,
-        DocumentsComponent,
-        InputComponent,
-        RadioComponent,
-        MaskDirective,
+        PersonTypeStepComponent,
+        BasicInfoStepComponent,
+        AddressStepComponent,
+        DocumentsStepComponent,
+        PasswordStepComponent,
         FormsModule
     ],
     providers: [NgModel],
@@ -52,7 +58,7 @@ export interface PartnerRegistrationData {
     encapsulation: ViewEncapsulation.None
 })
 export class PartnerRegistrationComponent implements OnInit {
-    @ViewChild('documentsComponent') documentsComponent!: DocumentsComponent;
+    @ViewChild('documentsStepComponent') documentsStepComponent!: DocumentsStepComponent;
     cpfCnpj: string = '';
     currentStep = 0;
     isLoading = false;
@@ -65,11 +71,6 @@ export class PartnerRegistrationComponent implements OnInit {
         allowMultiple: true,
         documents: []
     };
-
-    personTypeOptions: RadioOption[] = [
-        { value: 'F', label: 'Pessoa física' },
-        { value: 'J', label: 'Pessoa jurídica' }
-    ];
 
     steps: StepperStep[] = [
         {
@@ -300,82 +301,6 @@ export class PartnerRegistrationComponent implements OnInit {
         return this.currentStep > 0;
     }
 
-    // Métodos para validação visual dos campos
-    isFieldInvalid(fieldName: string): boolean {
-        const control = this.registrationForm.get(fieldName);
-        return !!(control && control.invalid && control.touched);
-    }
-
-    isAddressFieldInvalid(fieldName: string): boolean {
-        const addressGroup = this.registrationForm.get('address') as FormGroup;
-        const control = addressGroup?.get(fieldName);
-        return !!(control && control.invalid && control.touched);
-    }
-
-    getFieldErrorMessage(fieldName: string): string {
-        const control = this.registrationForm.get(fieldName);
-        if (control && control.invalid && control.touched) {
-            if (control.errors?.['required']) {
-                return 'Este campo é obrigatório';
-            }
-            if (control.errors?.['email']) {
-                return 'E-mail inválido';
-            }
-            if (control.errors?.['minlength']) {
-                return `Mínimo de ${control.errors?.['minlength'].requiredLength} caracteres`;
-            }
-            if (control.errors?.['passwordMismatch']) {
-                return 'As senhas não coincidem';
-            }
-            if (control.errors?.['maskPatternInvalid']) {
-                const maskError = control.errors?.['maskPatternInvalid'];
-                const expectedPattern = maskError?.expectedPatterns?.[0];
-
-                if (fieldName === 'cpfCnpj') {
-                    const personType = this.registrationForm.get('personType')?.value;
-                    if (personType === 'F') {
-                        return 'CPF deve ter o formato 000.000.000-00';
-                    } else if (personType === 'J') {
-                        return 'CNPJ deve ter o formato 00.000.000/0000-00';
-                    }
-                }
-                if (fieldName === 'cellphone') {
-                    return 'Celular deve ter o formato (00) 00000-0000';
-                }
-                if (fieldName === 'comercialPhone') {
-                    return 'Telefone deve ter o formato (00) 0000-0000';
-                }
-                if (fieldName === 'address.cep') {
-                    return 'CEP deve ter o formato 00000-000';
-                }
-
-                return `Formato inválido. Esperado: ${expectedPattern || 'formato correto'}`;
-            }
-        }
-        return '';
-    }
-
-    getAddressFieldErrorMessage(fieldName: string): string {
-        const addressGroup = this.registrationForm.get('address') as FormGroup;
-        const control = addressGroup?.get(fieldName);
-        if (control && control.invalid && control.touched) {
-            if (control.errors?.['required']) {
-                return 'Este campo é obrigatório';
-            }
-            if (control.errors?.['maskPatternInvalid']) {
-                const maskError = control.errors?.['maskPatternInvalid'];
-                const expectedPattern = maskError?.expectedPatterns?.[0];
-
-                if (fieldName === 'cep') {
-                    return 'CEP deve ter o formato 00000-000';
-                }
-
-                // Mensagem genérica para outros campos de endereço
-                return `Formato inválido. Esperado: ${expectedPattern || 'formato correto'}`;
-            }
-        }
-        return '';
-    }
 
     onStepChanged(stepIndex: number): void {
         this.currentStep = stepIndex;
@@ -447,7 +372,7 @@ export class PartnerRegistrationComponent implements OnInit {
                 break;
 
             case 3: // Documentos
-                // TODO: Implementar validação de documentos
+                // Validação será feita pelo componente DocumentsStepComponent
                 break;
 
             case 4: // Senha

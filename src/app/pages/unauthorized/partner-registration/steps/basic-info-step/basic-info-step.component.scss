@@ -1,0 +1,9 @@
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../styles/themes/default' as *;
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-md;
+}

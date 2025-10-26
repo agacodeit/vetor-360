@@ -1,0 +1,37 @@
+<div class="step-content">
+    <div class="form-fields">
+        <div class="field-row">
+            <ds-input label="CEP" [fullWidth]="true" [formControl]="$any(addressForm.get('cep'))"
+                placeholder="00000-000" libMask="00000-000" [required]="true" class="field-cep"
+                (input)="onCepChange($event)" [invalid]="isAddressFieldInvalid('cep')"
+                [errorMessage]="getAddressFieldErrorMessage('cep')">
+            </ds-input>
+        </div>
+
+        <ds-input label="Logradouro" [fullWidth]="true" [formControl]="$any(addressForm.get('street'))"
+            placeholder="Rua, Avenida, etc." [required]="true" [invalid]="isAddressFieldInvalid('street')"
+            [errorMessage]="getAddressFieldErrorMessage('street')">
+        </ds-input>
+
+        <ds-input label="Complemento" [fullWidth]="true" [formControl]="$any(addressForm.get('complement'))"
+            placeholder="Apartamento, sala, etc.">
+        </ds-input>
+
+        <ds-input label="Bairro" [fullWidth]="true" [formControl]="$any(addressForm.get('neighbourhood'))"
+            placeholder="Digite o bairro" [required]="true" [invalid]="isAddressFieldInvalid('neighbourhood')"
+            [errorMessage]="getAddressFieldErrorMessage('neighbourhood')">
+        </ds-input>
+
+        <div class="field-row">
+            <ds-input label="Cidade" [fullWidth]="true" [formControl]="$any(addressForm.get('city'))"
+                placeholder="Digite a cidade" [required]="true" class="field-city"
+                [invalid]="isAddressFieldInvalid('city')" [errorMessage]="getAddressFieldErrorMessage('city')">
+            </ds-input>
+
+            <ds-input label="UF" [fullWidth]="true" [formControl]="$any(addressForm.get('state'))" placeholder="UF"
+                [maxlength]="2" [required]="true" class="field-state" [invalid]="isAddressFieldInvalid('state')"
+                [errorMessage]="getAddressFieldErrorMessage('state')">
+            </ds-input>
+        </div>
+    </div>
+</div>

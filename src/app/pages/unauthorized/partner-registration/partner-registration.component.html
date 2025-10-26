@@ -23,143 +23,36 @@
 
                 <!-- Step 1: Tipo de Pessoa -->
                 @if (currentStep === 0) {
-                <div class="step-content">
-                    <ds-radio [options]="personTypeOptions" formControlName="personType" variant="card" size="md"
-                        orientation="vertical">
-                    </ds-radio>
-                </div>
+                <app-person-type-step [personTypeControl]="registrationForm.get('personType')!"
+                    (personTypeChange)="onPersonTypeChange()">
+                </app-person-type-step>
                 }
 
                 <!-- Step 2: Dados Básicos -->
                 @if (currentStep === 1) {
-                <div class="step-content">
-                    <div class="form-fields">
-                        @if (isPersonFisica) {
-                        <!-- Pessoa Física -->
-                        <ds-input label="Nome" [fullWidth]="true" formControlName="name"
-                            placeholder="Digite seu nome completo" [required]="true" [invalid]="isFieldInvalid('name')"
-                            [errorMessage]="getFieldErrorMessage('name')">
-                        </ds-input>
-                        <ds-input label="CPF" [fullWidth]="true" formControlName="cpfCnpj" placeholder="000.000.000-00"
-                            libMask="000.000.000-00" [required]="true" [invalid]="isFieldInvalid('cpfCnpj')"
-                            [errorMessage]="getFieldErrorMessage('cpfCnpj')">
-                        </ds-input>
-                        } @else {
-                        <!-- Pessoa Jurídica -->
-                        <ds-input label="Razão Social" [fullWidth]="true" formControlName="name"
-                            placeholder="Digite a razão social" [required]="true" [invalid]="isFieldInvalid('name')"
-                            [errorMessage]="getFieldErrorMessage('name')">
-                        </ds-input>
-
-                        <ds-input label="CNPJ" [fullWidth]="true" formControlName="cpfCnpj"
-                            placeholder="00.000.000/0000-00" libMask="00.000.000/0000-00" [required]="true"
-                            [invalid]="isFieldInvalid('cpfCnpj')" [errorMessage]="getFieldErrorMessage('cpfCnpj')">
-                        </ds-input>
-
-                        <ds-input label="Nome responsável pela empresa" [fullWidth]="true"
-                            formControlName="responsibleCompanyName" placeholder="Digite o nome do responsável"
-                            [required]="true" [invalid]="isFieldInvalid('responsibleCompanyName')"
-                            [errorMessage]="getFieldErrorMessage('responsibleCompanyName')">
-                        </ds-input>
-                        }
-
-                        <ds-input label="E-mail" [fullWidth]="true" formControlName="email" type="email"
-                            placeholder="seu@email.com" [required]="true" [invalid]="isFieldInvalid('email')"
-                            [errorMessage]="getFieldErrorMessage('email')">
-                        </ds-input>
-
-                        <ds-input label="Celular" [fullWidth]="true" formControlName="cellphone"
-                            placeholder="(00) 00000-0000" libMask="(00) 00000-0000" [required]="true"
-                            [invalid]="isFieldInvalid('cellphone')" [errorMessage]="getFieldErrorMessage('cellphone')">
-                        </ds-input>
-
-                        @if (isPersonJuridica) {
-                        <ds-input label="Telefone comercial" [fullWidth]="true" formControlName="comercialPhone"
-                            placeholder="(00) 0000-0000" libMask="(00) 0000-0000"
-                            [invalid]="isFieldInvalid('comercialPhone')"
-                            [errorMessage]="getFieldErrorMessage('comercialPhone')">
-                        </ds-input>
-                        }
-                    </div>
-                </div>
+                <app-basic-info-step [basicInfoForm]="registrationForm" [isPersonFisica]="isPersonFisica"
+                    [isPersonJuridica]="isPersonJuridica">
+                </app-basic-info-step>
                 }
 
                 <!-- Step 3: Endereço -->
                 @if (currentStep === 2) {
-                <div class="step-content">
-                    <h2 class="step-title">Endereço</h2>
-
-                    <div class="form-fields" formGroupName="address">
-                        <div class="field-row">
-                            <ds-input label="CEP" [fullWidth]="true" formControlName="cep" placeholder="00000-000"
-                                libMask="00000-000" [required]="true" class="field-cep" (input)="onCepChange($event)"
-                                [invalid]="isAddressFieldInvalid('cep')"
-                                [errorMessage]="getAddressFieldErrorMessage('cep')">
-                            </ds-input>
-                        </div>
-
-                        <ds-input label="Logradouro" [fullWidth]="true" formControlName="street"
-                            placeholder="Rua, Avenida, etc." [required]="true"
-                            [invalid]="isAddressFieldInvalid('street')"
-                            [errorMessage]="getAddressFieldErrorMessage('street')">
-                        </ds-input>
-
-                        <ds-input label="Complemento" [fullWidth]="true" formControlName="complement"
-                            placeholder="Apartamento, sala, etc.">
-                        </ds-input>
-
-                        <ds-input label="Bairro" [fullWidth]="true" formControlName="neighbourhood"
-                            placeholder="Digite o bairro" [required]="true"
-                            [invalid]="isAddressFieldInvalid('neighbourhood')"
-                            [errorMessage]="getAddressFieldErrorMessage('neighbourhood')">
-                        </ds-input>
-
-                        <div class="field-row">
-                            <ds-input label="Cidade" [fullWidth]="true" formControlName="city"
-                                placeholder="Digite a cidade" [required]="true" class="field-city"
-                                [invalid]="isAddressFieldInvalid('city')"
-                                [errorMessage]="getAddressFieldErrorMessage('city')">
-                            </ds-input>
-
-                            <ds-input label="UF" [fullWidth]="true" formControlName="state" placeholder="UF"
-                                [maxlength]="2" [required]="true" class="field-state"
-                                [invalid]="isAddressFieldInvalid('state')"
-                                [errorMessage]="getAddressFieldErrorMessage('state')">
-                            </ds-input>
-                        </div>
-                    </div>
-                </div>
+                <app-address-step [addressForm]="registrationForm.get('address')!" (cepChange)="onCepChange($event)">
+                </app-address-step>
                 }
 
                 <!-- Step 4: Documentos -->
                 @if (currentStep === 3) {
-                <div class="step-content">
-                    <div class="documents-section">
-                        <ds-documents #documentsComponent [config]="documentsConfig" [requireVerification]="false"
-                            (documentsChange)="onDocumentsChange($event)"
-                            (documentUploaded)="onDocumentUploaded($event)"
-                            (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
-                        </ds-documents>
-                    </div>
-                </div>
+                <app-documents-step #documentsStepComponent [documentsConfig]="documentsConfig"
+                    (documentsChange)="onDocumentsChange($event)" (documentUploaded)="onDocumentUploaded($event)"
+                    (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
+                </app-documents-step>
                 }
 
                 <!-- Step 5: Senha -->
                 @if (currentStep === 4) {
-                <div class="step-content">
-                    <div class="form-fields">
-                        <ds-input label="Senha" [fullWidth]="true" formControlName="password" type="password"
-                            placeholder="Digite sua senha" [required]="true" [invalid]="isFieldInvalid('password')"
-                            [errorMessage]="getFieldErrorMessage('password')">
-                        </ds-input>
-
-                        <ds-input label="Confirme sua senha" [fullWidth]="true" formControlName="confirmPassword"
-                            type="password" placeholder="Confirme sua senha" [required]="true"
-                            [invalid]="isFieldInvalid('confirmPassword')"
-                            [errorMessage]="getFieldErrorMessage('confirmPassword')">
-                        </ds-input>
-                    </div>
-                </div>
+                <app-password-step [passwordForm]="registrationForm">
+                </app-password-step>
                 }
 
                 <!-- Navigation Buttons -->
