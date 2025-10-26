@@ -19,9 +19,10 @@
                             [errorMessage]="email?.invalid && email?.touched ? 'E-mail é obrigatório e deve ser válido' : ''">
                         </ds-input>
 
-                        <ds-input label="Senha" placeholder="******" type="password" [fullWidth]="true"
-                            icon="fa-light fa-eye" iconPosition="right" formControlName="password"
-                            [invalid]="!!(password?.invalid && password?.touched)"
+                        <ds-input iconSize="16px" (iconAction)="togglePasswordVisibility()" label="Senha"
+                            placeholder="******" type="{{showPassword ? 'text' : 'password'}}" [fullWidth]="true"
+                            icon="fa-solid {{showPassword ? 'fa-eye-slash' : 'fa-eye'}}" iconPosition="right"
+                            formControlName="password" [invalid]="!!(password?.invalid && password?.touched)"
                             [errorMessage]="password?.invalid && password?.touched ? 'Senha é obrigatória e deve ter pelo menos 6 caracteres' : ''">
                         </ds-input>
 

@@ -12,7 +12,8 @@
     <div class="input-container" [class.has-icon]="icon">
 
         @if (icon) {
-        <ds-icon [icon]="icon" fontSize="24px" color="placeholder" [class]="'icon-' + iconPosition">
+        <ds-icon [icon]="icon" [fontSize]="iconSize" color="primary" [class]="'icon-' + iconPosition"
+            (click)="emitIconAction()">
         </ds-icon>
         }
 

@@ -44,14 +44,16 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() width: string = 'fit-content';
   @Input() libMask: string = '';
   @Input() ngModel: any;
+  @Input() iconSize: string = '24px';
 
   @Output() ngModelChange = new EventEmitter<any>();
   @Output() valueChanged = new EventEmitter<string>();
-
+  @Output() iconAction = new EventEmitter<void>();
 
   value: string = '';
   isFocused: boolean = false;
   uniqueId: string = '';
+  showPassword: boolean = false;
 
   private onChange = (value: any) => { };
   private onTouched = () => { };
@@ -177,13 +179,18 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   /**
    * Retorna o tipo efetivo do input.
    * Se tiver máscara de moeda, força type="text" para evitar erro de parse
+   * Se for password e showPassword for true, retorna "text"
    */
   get effectiveType(): string {
-
     const currencyMasks = ['BRL', 'USD', 'EUR', 'GBP'];
     if (this.libMask && currencyMasks.includes(this.libMask.toUpperCase())) {
       return 'text';
     }
+
+    if (this.type === 'password' && this.showPassword) {
+      return 'text';
+    }
+
     return this.type;
   }
 
@@ -201,5 +208,9 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   get safeMinlength(): number | null {
     return this.minlength;
+  }
+
+  emitIconAction(): void {
+    this.iconAction.emit();
   }
 }
