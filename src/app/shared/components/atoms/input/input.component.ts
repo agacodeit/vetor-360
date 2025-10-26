@@ -126,8 +126,11 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     if (this.isFormControl) {
       const newValue = event.target.value || '';
       this.value = newValue;
-      this.onChange(newValue);
-      this.valueChanged.emit(newValue);
+      setTimeout(() => {
+        this.onChange(newValue);
+        this.valueChanged.emit(newValue);
+
+      }, 0);
     }
   }
 
