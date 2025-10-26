@@ -59,13 +59,13 @@ describe('InputComponent', () => {
   });
 
   it('should handle value changes', () => {
-    const mockEvent = { value: 'test value' };
+    const testValue = 'test value';
     spyOn(component.valueChanged, 'emit');
 
-    component.onInputChange(mockEvent);
+    component.onInputChange(testValue);
 
-    expect(component.value).toBe('test value');
-    expect(component.valueChanged.emit).toHaveBeenCalledWith('test value');
+    expect(component.value).toBe(testValue);
+    expect(component.valueChanged.emit).toHaveBeenCalledWith(testValue);
   });
 
   it('should handle focus and blur events', () => {

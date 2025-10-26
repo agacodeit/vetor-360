@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../../../../../shared';
 

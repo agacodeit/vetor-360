@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { KanbanCard } from '../../../shared/components';
 import { ModalService } from '../../../shared/services/modal/modal.service';
@@ -12,7 +13,7 @@ describe('Dashboard', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Dashboard],
+      imports: [Dashboard, HttpClientTestingModule],
       providers: [ModalService]
     })
       .compileComponents();
