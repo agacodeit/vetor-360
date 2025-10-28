@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Directive, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { IconComponent, InputComponent } from '../../../../../../shared';
 import { BasicInfoStepComponent } from './basic-info-step.component';
@@ -23,11 +23,11 @@ describe('BasicInfoStepComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [BasicInfoStepComponent]
+            imports: [BasicInfoStepComponent, FormsModule]
         })
             .overrideComponent(InputComponent, {
                 set: {
-                    imports: [CommonModule, IconComponent, ReactiveFormsModule, MockMaskDirective]
+                    imports: [CommonModule, IconComponent, ReactiveFormsModule, FormsModule, MockMaskDirective]
                 }
             })
             .compileComponents();

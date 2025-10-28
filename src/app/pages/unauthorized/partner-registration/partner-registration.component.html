@@ -1,0 +1,83 @@
+<div class="partner-registration">
+    <div class="partner-registration__container">
+        <header class="partner-registration__header">
+            <div class="partner-registration__logo">
+                <img height="150px" width="auto" src="assets/logo/vetor-logo-1067x600.jpg" alt="Vetor 360 Logo"
+                    loading="eager" decoding="async">
+            </div>
+            <p class="partner-registration__subtitle">
+                Crie seu cadastro Vetor Capital
+            </p>
+        </header>
+
+        <!-- Stepper -->
+        <div class="partner-registration__stepper">
+            <ds-stepper [steps]="steps" [currentStep]="currentStep" [showConnector]="true" variant="default" size="md"
+                (stepChanged)="onStepChanged($event)">
+            </ds-stepper>
+        </div>
+
+        <!-- Form Content -->
+        <div class="partner-registration__content">
+            <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+                <!-- Step 1: Tipo de Pessoa -->
+                @if (currentStep === 0) {
+                <app-person-type-step [personTypeControl]="registrationForm.get('personType')!"
+                    (personTypeChange)="onPersonTypeChange()">
+                </app-person-type-step>
+                }
+
+                <!-- Step 2: Dados Básicos -->
+                @if (currentStep === 1) {
+                <app-basic-info-step [basicInfoForm]="registrationForm" [isPersonFisica]="isPersonFisica"
+                    [isPersonJuridica]="isPersonJuridica">
+                </app-basic-info-step>
+                }
+
+                <!-- Step 3: Endereço -->
+                @if (currentStep === 2) {
+                <app-address-step [addressForm]="registrationForm.get('address')!" (cepChange)="onCepChange($event)">
+                </app-address-step>
+                }
+
+                <!-- Step 4: Documentos -->
+                @if (currentStep === 3) {
+                <app-documents-step #documentsStepComponent [documentsConfig]="documentsConfig"
+                    (documentsChange)="onDocumentsChange($event)" (documentUploaded)="onDocumentUploaded($event)"
+                    (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
+                </app-documents-step>
+                }
+
+                <!-- Step 5: Senha -->
+                @if (currentStep === 4) {
+                <app-password-step [passwordForm]="registrationForm">
+                </app-password-step>
+                }
+
+                <!-- Navigation Buttons -->
+                <div class="partner-registration__actions">
+                    @if (canGoBack) {
+                    <ds-button label="Cancelar" type="button" variant="ghost" size="lg" (click)="onBackToLogin()" />
+                    <ds-button label="Voltar" type="button" variant="outline" size="lg" (click)="previousStep()" />
+                    }
+
+                    @if (currentStep === 0) {
+                    <ds-button label="Voltar ao Login" type="button" variant="ghost" size="lg"
+                        (click)="onBackToLogin()" />
+                    }
+
+                    @if (currentStep === 4) {
+                    <!-- Última etapa - Botão de cadastrar -->
+                    <ds-button label="Cadastrar" type="submit" variant="fill" size="lg" [disabled]="isLoading"
+                        [isLoading]="isLoading" />
+                    } @else {
+                    <!-- Etapas intermediárias - Botão próximo -->
+                    <ds-button label="Próximo" type="button" variant="fill" size="lg" (click)="nextStep()" />
+                    }
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

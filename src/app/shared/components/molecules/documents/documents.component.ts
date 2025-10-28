@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output, SimpleChanges, ViewEncapsulation, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, IconComponent } from '../../index';
+import { DocumentService, ToastService } from '../../../services';
 
 export interface DocumentItem {
     id: string;
@@ -10,6 +11,7 @@ export interface DocumentItem {
     file?: File;
     uploaded: boolean;
     acceptedFormats: string;
+    isValidating?: boolean;
 }
 
 export interface DocumentsConfig {
@@ -35,7 +37,8 @@ export interface DocumentsConfig {
     styleUrls: ['./documents.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DocumentsComponent implements OnInit {
+export class DocumentsComponent implements OnInit, OnChanges {
+    @Input() requireVerification: boolean = false;
     @Input() config: DocumentsConfig = {
         title: 'Documentos Obrigatórios',
         showAccordion: true,
@@ -62,7 +65,11 @@ export class DocumentsComponent implements OnInit {
     documentsForm: FormGroup;
     accordionItems: AccordionItem[] = [];
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+        private fb: FormBuilder,
+        @Inject(DocumentService) private documentService: DocumentService,
+        @Inject(ToastService) private toastService: ToastService
+    ) {
         this.documentsForm = this.fb.group({});
     }
 
@@ -71,6 +78,14 @@ export class DocumentsComponent implements OnInit {
         this.setupAccordion();
         this.loadInitialData();
         this.setupFormSubscriptions();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['config'] && changes['config'].currentValue) {
+            this.initializeForm();
+            this.setupAccordion();
+            this.loadInitialData();
+        }
     }
 
     private initializeForm(): void {
@@ -153,18 +168,94 @@ export class DocumentsComponent implements OnInit {
             const document = this.config.documents.find(doc => doc.id === documentId);
 
             if (document) {
-                document.file = file;
-                document.uploaded = true;
+                // Define o documento como validando
+                document.isValidating = true;
 
-                this.documentsForm.patchValue({
-                    [documentId]: true
-                });
-
-                this.documentUploaded.emit({
-                    documentId,
-                    file
-                });
+                // Verifica se deve fazer validação
+                if (this.requireVerification) {
+                    this.validateAndUploadFile(file, documentId);
+                } else {
+                    // Se não requer verificação, faz upload direto
+                    this.uploadFileDirectly(file, documentId);
+                }
             }
+        }
+    }
+
+    /**
+     * Valida e faz upload do arquivo
+     */
+    private validateAndUploadFile(file: File, documentId: string): void {
+        // Primeiro valida o arquivo
+        this.documentService.validateFile(file, documentId).subscribe({
+            next: (validationResponse) => {
+                if (validationResponse.success) {
+                    // Se validação passou, faz o upload
+                    this.uploadFileDirectly(file, documentId);
+                } else {
+                    // Se validação falhou, exibe a mensagem de erro e limpa o documento
+                    this.toastService.error(validationResponse.message);
+                    this.clearDocumentFile(documentId);
+                }
+            },
+            error: (error) => {
+                console.error('Erro na validação:', error);
+                this.toastService.error('Erro ao validar documento. Tente novamente.');
+                this.clearDocumentFile(documentId);
+            }
+        });
+    }
+
+    /**
+     * Faz upload direto do arquivo
+     */
+    private uploadFileDirectly(file: File, documentId: string): void {
+        this.documentService.uploadFile(file).subscribe({
+            next: (uploadResponse) => {
+                console.log('Upload realizado com sucesso:', uploadResponse);
+                this.toastService.success('Documento carregado com sucesso!');
+
+                // Atualiza o documento
+                const document = this.config.documents.find(doc => doc.id === documentId);
+                if (document) {
+                    document.file = file;
+                    document.uploaded = true;
+                    document.isValidating = false;
+
+                    this.documentsForm.patchValue({
+                        [documentId]: true
+                    });
+
+                    this.documentUploaded.emit({
+                        documentId,
+                        file
+                    });
+                }
+            },
+            error: (error) => {
+                console.error('Erro no upload:', error);
+                this.toastService.error('Erro ao enviar documento. Tente novamente.');
+                this.clearDocumentFile(documentId);
+            }
+        });
+    }
+
+    /**
+     * Limpa o arquivo do documento
+     */
+    private clearDocumentFile(documentId: string): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.file = undefined;
+            document.uploaded = false;
+            document.isValidating = false;
+
+            this.documentsForm.patchValue({
+                [documentId]: false
+            });
+
+            // Emite evento para limpar o input file
+            this.documentRemoved.emit(documentId);
         }
     }
 
@@ -193,6 +284,34 @@ export class DocumentsComponent implements OnInit {
             this.documentRemoved.emit(documentId);
         }
     }
+
+    /**
+     * Limpa apenas o arquivo selecionado (sem emitir evento de remoção)
+     */
+    clearSelectedFile(documentId: string): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+
+        if (document) {
+            document.file = undefined;
+            document.uploaded = false;
+            document.isValidating = false;
+
+            this.documentsForm.patchValue({
+                [documentId]: false
+            });
+        }
+    }
+
+    /**
+     * Define o estado de validação de um documento
+     */
+    setDocumentValidating(documentId: string, isValidating: boolean): void {
+        const document = this.config.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.isValidating = isValidating;
+        }
+    }
+
 
     /**
      * Obtém o valor atual do formulário

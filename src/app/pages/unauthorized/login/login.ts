@@ -30,6 +30,7 @@ export class Login implements OnInit {
   loginForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   ngOnInit() {
     this.initializeForm();
@@ -62,7 +63,7 @@ export class Login implements OnInit {
   }
 
   signup() {
-    this.router.navigate(['/unauthorized/signup']);
+    this.router.navigate(['/unauthorized/partner-registration']);
   }
 
   forgotPassword() {
@@ -82,5 +83,11 @@ export class Login implements OnInit {
 
   get password() {
     return this.loginForm.get('password');
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+
+    // Funcionalidade implementada no componente ds-input
   }
 }

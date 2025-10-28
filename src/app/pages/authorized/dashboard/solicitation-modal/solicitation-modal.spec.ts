@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ToastService } from '../../../../shared/services/toast/toast.service';
 import { SolicitationModal } from './solicitation-modal';
@@ -13,7 +14,7 @@ describe('SolicitationModal', () => {
     const toastServiceSpy = jasmine.createSpyObj('ToastService', ['error', 'success', 'warning', 'info']);
 
     await TestBed.configureTestingModule({
-      imports: [SolicitationModal],
+      imports: [SolicitationModal, HttpClientTestingModule],
       providers: [
         { provide: ToastService, useValue: toastServiceSpy }
       ]

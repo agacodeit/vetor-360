@@ -1,0 +1,44 @@
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../styles/themes/default' as *;
+
+
+// Form Fields
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-md;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $padding-md;
+    align-items: end;
+
+    .field-cep {
+        grid-column: 1 / -1;
+    }
+
+    .field-city {
+        grid-column: 1;
+    }
+
+    .field-state {
+        grid-column: 2;
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .field-row {
+        grid-template-columns: 1fr;
+        gap: $padding-sm;
+
+        .field-cep,
+        .field-city,
+        .field-state {
+            grid-column: 1;
+        }
+    }
+}

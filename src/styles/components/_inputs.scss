@@ -98,9 +98,10 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 1;
-            pointer-events: none;
+            z-index: 2;
+            pointer-events: auto;
             transition: color 0.3s;
+            cursor: pointer;
 
             &.icon-left {
                 left: 8px;
