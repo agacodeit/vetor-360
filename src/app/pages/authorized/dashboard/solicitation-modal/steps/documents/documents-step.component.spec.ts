@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { DocumentsStepComponent } from './documents-step.component';
 import { DocumentsComponent, DocumentItem } from '../../../../../../shared';
@@ -10,7 +11,7 @@ describe('DocumentsStepComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DocumentsStepComponent, DocumentsComponent]
+            imports: [DocumentsStepComponent, DocumentsComponent, HttpClientTestingModule]
         })
             .compileComponents();
 

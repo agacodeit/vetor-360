@@ -18,14 +18,22 @@
                         </label>
                     </div>
                     <div class="d-flex gap-8 align-items-center">
-                        <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded">
+
+                        @if (document.isValidating) {
+                        <span>
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                        </span>
+                        } @else {
+                        <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded"
+                            [class.validating]="document.isValidating">
                             <span>
                                 <i [class]="document.uploaded ? 'fa-solid fa-check' : 'fa-solid fa-upload'"></i>
                                 <span>{{ getFileName(document.id) }}</span>
                             </span>
                             <input type="file" [accept]="document.acceptedFormats"
-                                (change)="onFileSelected($event, document.id)" />
+                                (change)="onFileSelected($event, document.id)" [disabled]="document.isValidating" />
                         </button>
+                        }
                         @if (document.uploaded) {
                         <ds-icon icon="fa-solid fa-trash" fontSize="14px" color="primary-dark" cursorType="pointer"
                             (click)="removeDocument(document.id)" />
@@ -47,12 +55,21 @@
             </label>
         </div>
         <div class="d-flex gap-8 align-items-center">
-            <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded">
+            <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded"
+                [class.validating]="document.isValidating">
+                @if (document.isValidating) {
+                <span class="ds-documents__spinner">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Validando...</span>
+                </span>
+                } @else {
                 <span>
                     <i [class]="document.uploaded ? 'fa-solid fa-check' : 'fa-solid fa-upload'"></i>
                     <span>{{ getFileName(document.id) }}</span>
                 </span>
-                <input type="file" [accept]="document.acceptedFormats" (change)="onFileSelected($event, document.id)" />
+                <input type="file" [accept]="document.acceptedFormats" (change)="onFileSelected($event, document.id)"
+                    [disabled]="document.isValidating" />
+                }
             </button>
             @if (document.uploaded) {
             <ds-icon icon="fa-solid fa-trash" fontSize="14px" color="primary-dark" cursorType="pointer"

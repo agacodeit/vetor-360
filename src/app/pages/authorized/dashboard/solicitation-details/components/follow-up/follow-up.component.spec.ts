@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { FollowUpComponent } from './follow-up.component';
 import { DocumentsComponent, DocumentsConfig, DocumentItem } from '../../../../../../shared';
@@ -10,7 +11,7 @@ describe('FollowUpComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FollowUpComponent]
+            imports: [FollowUpComponent, HttpClientTestingModule]
         })
             .compileComponents();
 

@@ -1,0 +1,50 @@
+<div class="step-content">
+    <div class=" d-grid columns-2 gap-24">
+        @if (isPersonFisica) {
+        <!-- Pessoa Física -->
+        <ds-input label="Nome" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('name'))"
+            placeholder="Digite seu nome completo" [required]="true" [invalid]="isFieldInvalid('name')"
+            [errorMessage]="getFieldErrorMessage('name')">
+        </ds-input>
+        <ds-input label="CPF" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('cpfCnpj'))"
+            placeholder="000.000.000-00" libMask="000.000.000-00" [required]="true"
+            [invalid]="isFieldInvalid('cpfCnpj')" [errorMessage]="getFieldErrorMessage('cpfCnpj')">
+        </ds-input>
+        } @else {
+        <!-- Pessoa Jurídica -->
+        <ds-input label="Razão Social" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('name'))"
+            placeholder="Digite a razão social" [required]="true" [invalid]="isFieldInvalid('name')"
+            [errorMessage]="getFieldErrorMessage('name')">
+        </ds-input>
+
+        <ds-input label="CNPJ" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('cpfCnpj'))"
+            placeholder="00.000.000/0000-00" libMask="00.000.000/0000-00" [required]="true"
+            [invalid]="isFieldInvalid('cpfCnpj')" [errorMessage]="getFieldErrorMessage('cpfCnpj')">
+        </ds-input>
+
+        <ds-input label="Nome responsável pela empresa" [fullWidth]="true"
+            [formControl]="$any(basicInfoForm.get('responsibleCompanyName'))" placeholder="Digite o nome do responsável"
+            [required]="true" [invalid]="isFieldInvalid('responsibleCompanyName')"
+            [errorMessage]="getFieldErrorMessage('responsibleCompanyName')">
+        </ds-input>
+        }
+
+        <ds-input label="E-mail" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('email'))" type="email"
+            placeholder="seu@email.com" [required]="true" [invalid]="isFieldInvalid('email')"
+            [errorMessage]="getFieldErrorMessage('email')">
+        </ds-input>
+
+        <ds-input label="Celular" [fullWidth]="true" [formControl]="$any(basicInfoForm.get('cellphone'))"
+            placeholder="(00) 00000-0000" libMask="(00) 00000-0000" [required]="true"
+            [invalid]="isFieldInvalid('cellphone')" [errorMessage]="getFieldErrorMessage('cellphone')">
+        </ds-input>
+
+        @if (isPersonJuridica) {
+        <ds-input label="Telefone comercial" [fullWidth]="true"
+            [formControl]="$any(basicInfoForm.get('comercialPhone'))" placeholder="(00) 0000-0000"
+            libMask="(00) 0000-0000" [invalid]="isFieldInvalid('comercialPhone')"
+            [errorMessage]="getFieldErrorMessage('comercialPhone')">
+        </ds-input>
+        }
+    </div>
+</div>
