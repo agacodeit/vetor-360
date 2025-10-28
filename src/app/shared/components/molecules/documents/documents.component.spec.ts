@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 import { DocumentsComponent, DocumentsConfig, DocumentItem } from './documents.component';
 import { AccordionComponent } from '../../atoms/accordion/accordion.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { DocumentService, ToastService } from '../../../services';
 
 describe('DocumentsComponent', () => {
     let component: DocumentsComponent;
@@ -32,13 +35,25 @@ describe('DocumentsComponent', () => {
     };
 
     beforeEach(async () => {
+        const mockDocumentService = jasmine.createSpyObj('DocumentService', ['uploadFile', 'validateFile']);
+        const mockToastService = jasmine.createSpyObj('ToastService', ['success', 'error']);
+
+        // Mock successful upload response
+        mockDocumentService.uploadFile.and.returnValue(of({ success: true, message: 'Upload successful' }));
+        mockDocumentService.validateFile.and.returnValue(of({ success: true, message: 'Validation successful' }));
+
         await TestBed.configureTestingModule({
             imports: [
                 DocumentsComponent,
                 FormsModule,
                 ReactiveFormsModule,
+                HttpClientTestingModule,
                 AccordionComponent,
                 IconComponent
+            ],
+            providers: [
+                { provide: DocumentService, useValue: mockDocumentService },
+                { provide: ToastService, useValue: mockToastService }
             ]
         })
             .compileComponents();

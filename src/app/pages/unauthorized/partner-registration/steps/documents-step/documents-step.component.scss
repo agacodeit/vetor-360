@@ -1,0 +1,24 @@
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../styles/themes/default' as *;
+
+// Documents Section
+.documents-section {
+    margin-top: $padding-lg;
+
+    .upload-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: $padding-lg;
+        background-color: var(--primary-light);
+        border-radius: $border-radius-md;
+        margin-bottom: $padding-md;
+
+        p {
+            margin: 0;
+            color: var(--primary-dark);
+            font-weight: $font-weight-md;
+        }
+    }
+}

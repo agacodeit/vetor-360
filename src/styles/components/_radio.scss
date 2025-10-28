@@ -1,0 +1,179 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+@use '../themes/default' as *;
+
+// ========================================
+// COMPONENTE DS-RADIO
+// ========================================
+
+.ds-radio {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-sm;
+
+    // Orientação horizontal
+    &--horizontal {
+        flex-direction: row;
+        gap: $padding-lg;
+    }
+
+    // Tamanhos
+    &--sm {
+        gap: $padding-xs;
+
+        .ds-radio__indicator {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ds-radio__indicator-inner {
+            width: 8px;
+            height: 8px;
+        }
+
+        .ds-radio__label {
+            font-size: $font-xs;
+        }
+    }
+
+    &--md {
+        gap: $padding-sm;
+
+
+        .ds-radio__indicator {
+            width: 20px;
+            height: 20px;
+        }
+
+        .ds-radio__indicator-inner {
+            width: 10px;
+            height: 10px;
+        }
+
+        .ds-radio__label {
+            font-size: $font-sm;
+        }
+    }
+
+    &--lg {
+        gap: $padding-md;
+
+        .ds-radio__indicator {
+            width: 24px;
+            height: 24px;
+        }
+
+        .ds-radio__indicator-inner {
+            width: 12px;
+            height: 12px;
+        }
+
+        .ds-radio__label {
+            font-size: $font-md;
+        }
+    }
+
+    // Variantes
+
+}
+
+.ds-radio__option {
+    display: flex;
+    align-items: center;
+    gap: $padding-sm;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(.disabled) {
+        .ds-radio__indicator {
+            border-color: var(--primary-medium);
+        }
+    }
+
+    &--selected {
+        .ds-radio__indicator {
+            border-color: var(--primary-medium);
+            background: var(--primary-medium);
+
+            .ds-radio__indicator-inner {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    }
+
+    &--disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+
+        .ds-radio__label {
+            color: var(--secondary-light);
+        }
+    }
+}
+
+.ds-radio__input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.ds-radio__input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.ds-radio__indicator {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--stroke);
+    border-radius: 50%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ds-radio__indicator-inner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--white);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+}
+
+.ds-radio__label {
+    font-family: 'Work Sans', sans-serif;
+    font-size: $font-sm;
+    font-weight: $font-weight-md;
+    color: var(--secondary);
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.4;
+    margin: 0;
+}
+
+// Estados de foco para acessibilidade
+.ds-radio__input:focus+.ds-radio__indicator {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .ds-radio--horizontal {
+        flex-direction: column;
+        gap: $padding-sm;
+    }
+
+    .ds-radio__option {
+        padding: $padding-sm;
+    }
+}

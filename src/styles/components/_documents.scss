@@ -110,6 +110,36 @@
             cursor: not-allowed;
         }
     }
+
+    // Estado de validação
+    &.validating {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+        cursor: not-allowed;
+
+        input[type="file"] {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    }
+}
+
+// Spinner de validação
+.ds-documents__spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: $padding-xsm;
+    pointer-events: none;
+
+    i {
+        font-size: $font-sm;
+        color: var(--primary-medium);
+    }
+
+    span {
+        font-weight: $font-weight-md;
+        color: var(--primary-dark);
+    }
 }
 
 // Responsive design

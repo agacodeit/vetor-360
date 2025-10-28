@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { SolicitationDetails } from './solicitation-details';
 import { ModalService } from '../../../../shared/services/modal/modal.service';
@@ -15,7 +16,7 @@ describe('SolicitationDetails', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitationDetails],
+      imports: [SolicitationDetails, HttpClientTestingModule],
       providers: [ModalService, ProfileService]
     })
       .compileComponents();

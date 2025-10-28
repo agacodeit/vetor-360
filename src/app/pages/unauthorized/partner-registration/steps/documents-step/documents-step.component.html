@@ -1,0 +1,8 @@
+<div class="step-content">
+    <div class="documents-section">
+        <ds-documents #documentsComponent [config]="documentsConfig" [requireVerification]="false"
+            (documentsChange)="onDocumentsChange($event)" (documentUploaded)="onDocumentUploaded($event)"
+            (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
+        </ds-documents>
+    </div>
+</div>

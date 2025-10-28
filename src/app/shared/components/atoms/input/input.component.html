@@ -12,7 +12,8 @@
     <div class="input-container" [class.has-icon]="icon">
 
         @if (icon) {
-        <ds-icon [icon]="icon" fontSize="24px" color="placeholder" [class]="'icon-' + iconPosition">
+        <ds-icon [icon]="icon" [fontSize]="iconSize" color="primary" [class]="'icon-' + iconPosition"
+            (click)="emitIconAction()">
         </ds-icon>
         }
 
@@ -21,8 +22,8 @@
             [type]="effectiveType" [placeholder]="placeholder" [required]="required" [disabled]="disabled"
             [readonly]="readonly" [attr.maxlength]="maxlength" [attr.minlength]="minlength"
             [attr.step]="type === 'number' ? '0.01' : null" [attr.min]="type === 'number' ? '0' : null"
-            [autocomplete]="autocomplete" [value]="safeValue" (input)="onInputChange($event.target)"
-            (focus)="onInputFocus()" (blur)="onInputBlur()" />
+            [autocomplete]="autocomplete" [ngModel]="value" (ngModelChange)="onInputChange($event)"
+            (input)="onInputEvent($event)" (focus)="onInputFocus()" (blur)="onInputBlur()" />
     </div>
 
 

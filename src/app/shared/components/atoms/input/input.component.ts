@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../icon/icon.component';
 import { MaskDirective } from "mask-directive";
@@ -43,20 +43,29 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() fullWidth: boolean = false;
   @Input() width: string = 'fit-content';
   @Input() libMask: string = '';
-
   @Input() ngModel: any;
-  @Output() ngModelChange = new EventEmitter<any>();
+  @Input() iconSize: string = '24px';
 
+  @Output() ngModelChange = new EventEmitter<any>();
   @Output() valueChanged = new EventEmitter<string>();
+  @Output() iconAction = new EventEmitter<void>();
 
   value: string = '';
   isFocused: boolean = false;
   uniqueId: string = '';
+  showPassword: boolean = false;
 
   private onChange = (value: any) => { };
   private onTouched = () => { };
 
-  constructor() {
+
+  @Input() formControlName: string = '';
+
+  get isFormControl(): boolean {
+    return !!this.formControlName;
+  }
+
+  constructor(private cdr: ChangeDetectorRef) {
 
   }
 
@@ -75,9 +84,10 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
     if (value === null || value === undefined) {
       this.value = '';
     } else {
-
       this.value = String(value);
     }
+    // Força a atualização da view
+    this.cdr?.detectChanges();
   }
 
   registerOnChange(fn: (value: any) => void): void {
@@ -93,29 +103,35 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   }
 
 
-  onInputChange(target: any): void {
-    if (!target) return;
+  onInputChange(newValue: any): void {
+    if (newValue === null || newValue === undefined) return;
 
-
-    let newValue = String(target.value || '');
-
+    let stringValue = String(newValue);
 
     if (this.type === 'number') {
-
-      this.value = newValue;
-      this.onChange(newValue);
-      this.ngModelChange.emit(newValue);
-      this.valueChanged.emit(newValue);
+      this.value = stringValue;
+      this.onChange(stringValue);
+      this.ngModelChange.emit(stringValue);
+      this.valueChanged.emit(stringValue);
       return;
     }
 
+    this.value = stringValue;
+    this.onChange(stringValue);
+    this.ngModelChange.emit(stringValue);
+    this.valueChanged.emit(stringValue);
+  }
 
-    this.value = newValue;
+  onInputEvent(event: any): void {
+    if (this.isFormControl) {
+      const newValue = event.target.value || '';
+      this.value = newValue;
+      setTimeout(() => {
+        this.onChange(newValue);
+        this.valueChanged.emit(newValue);
 
-
-    this.onChange(newValue);
-    this.ngModelChange.emit(newValue);
-    this.valueChanged.emit(newValue);
+      }, 0);
+    }
   }
 
 
@@ -126,6 +142,15 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   onInputBlur(): void {
     this.isFocused = false;
     this.onTouched();
+  }
+
+  // Método para ser chamado quando a diretiva libMask detecta mudanças
+  onMaskValueChange(newValue: string): void {
+    if (this.isFormControl) {
+      this.value = newValue;
+      this.onChange(newValue);
+      this.valueChanged.emit(newValue);
+    }
   }
 
 
@@ -157,13 +182,18 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
   /**
    * Retorna o tipo efetivo do input.
    * Se tiver máscara de moeda, força type="text" para evitar erro de parse
+   * Se for password e showPassword for true, retorna "text"
    */
   get effectiveType(): string {
-
     const currencyMasks = ['BRL', 'USD', 'EUR', 'GBP'];
     if (this.libMask && currencyMasks.includes(this.libMask.toUpperCase())) {
       return 'text';
     }
+
+    if (this.type === 'password' && this.showPassword) {
+      return 'text';
+    }
+
     return this.type;
   }
 
@@ -181,5 +211,9 @@ export class InputComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   get safeMinlength(): number | null {
     return this.minlength;
+  }
+
+  emitIconAction(): void {
+    this.iconAction.emit();
   }
 }
