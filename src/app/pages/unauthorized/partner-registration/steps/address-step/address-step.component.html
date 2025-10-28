@@ -13,14 +13,16 @@
             [errorMessage]="getAddressFieldErrorMessage('street')">
         </ds-input>
 
-        <ds-input label="Complemento" [fullWidth]="true" [formControl]="$any(addressForm.get('complement'))"
-            placeholder="Apartamento, sala, etc.">
-        </ds-input>
+        <div class="d-grid columns-2 gap-24">
+            <ds-input label="Complemento" [fullWidth]="true" [formControl]="$any(addressForm.get('complement'))"
+                placeholder="Apartamento, sala, etc.">
+            </ds-input>
 
-        <ds-input label="Bairro" [fullWidth]="true" [formControl]="$any(addressForm.get('neighbourhood'))"
-            placeholder="Digite o bairro" [required]="true" [invalid]="isAddressFieldInvalid('neighbourhood')"
-            [errorMessage]="getAddressFieldErrorMessage('neighbourhood')">
-        </ds-input>
+            <ds-input label="Bairro" [fullWidth]="true" [formControl]="$any(addressForm.get('neighbourhood'))"
+                placeholder="Digite o bairro" [required]="true" [invalid]="isAddressFieldInvalid('neighbourhood')"
+                [errorMessage]="getAddressFieldErrorMessage('neighbourhood')">
+            </ds-input>
+        </div>
 
         <div class="field-row">
             <ds-input label="Cidade" [fullWidth]="true" [formControl]="$any(addressForm.get('city'))"

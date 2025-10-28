@@ -58,6 +58,7 @@
                 <!-- Navigation Buttons -->
                 <div class="partner-registration__actions">
                     @if (canGoBack) {
+                    <ds-button label="Cancelar" type="button" variant="ghost" size="lg" (click)="onBackToLogin()" />
                     <ds-button label="Voltar" type="button" variant="outline" size="lg" (click)="previousStep()" />
                     }
 

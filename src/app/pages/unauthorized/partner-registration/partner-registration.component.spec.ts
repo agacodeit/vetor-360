@@ -192,6 +192,34 @@ describe('PartnerRegistrationComponent', () => {
             component.onBackToLogin();
             expect(mockRouter.navigate).toHaveBeenCalledWith(['/unauthorized/login']);
         });
+
+        it('should call onBackToLogin when cancel button is clicked', () => {
+            spyOn(component, 'onBackToLogin');
+            component.currentStep = 1; // Ensure canGoBack is true
+            fixture.detectChanges();
+
+            const cancelButton = fixture.debugElement.nativeElement.querySelector('ds-button[label="Cancelar"]');
+            expect(cancelButton).toBeTruthy();
+
+            cancelButton.click();
+            expect(component.onBackToLogin).toHaveBeenCalled();
+        });
+
+        it('should show cancel button when canGoBack is true', () => {
+            component.currentStep = 1; // Set to a step > 0 to make canGoBack true
+            fixture.detectChanges();
+
+            const cancelButton = fixture.debugElement.nativeElement.querySelector('ds-button[label="Cancelar"]');
+            expect(cancelButton).toBeTruthy();
+        });
+
+        it('should not show cancel button when canGoBack is false', () => {
+            component.currentStep = 0; // Set to step 0 to make canGoBack false
+            fixture.detectChanges();
+
+            const cancelButton = fixture.debugElement.nativeElement.querySelector('ds-button[label="Cancelar"]');
+            expect(cancelButton).toBeFalsy();
+        });
     });
 
     describe('Form Submission', () => {
