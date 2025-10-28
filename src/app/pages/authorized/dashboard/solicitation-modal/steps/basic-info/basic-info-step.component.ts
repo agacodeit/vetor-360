@@ -101,6 +101,10 @@ export class BasicInfoStepComponent implements OnInit {
     private loadOptions(): void {
         this.isLoadingOptions = true;
 
+        // Desabilitar campos durante carregamento
+        this.basicInfoForm.get('operationType')?.disable();
+        this.basicInfoForm.get('businessActivity')?.disable();
+
         // Carregar tipos de operação e atividade em paralelo
         Promise.all([
             this.opportunityOptionsService.getOperationTypes().toPromise(),
@@ -117,10 +121,18 @@ export class BasicInfoStepComponent implements OnInit {
             })) || [];
 
             this.isLoadingOptions = false;
+
+            // Reabilitar campos após carregamento
+            this.basicInfoForm.get('operationType')?.enable();
+            this.basicInfoForm.get('businessActivity')?.enable();
         }).catch(error => {
             console.error('Erro ao carregar opções:', error);
             this.toastService.error('Erro ao carregar opções. Tente novamente.', 'Erro');
             this.isLoadingOptions = false;
+
+            // Reabilitar campos mesmo em caso de erro
+            this.basicInfoForm.get('operationType')?.enable();
+            this.basicInfoForm.get('businessActivity')?.enable();
         });
     }
 
@@ -146,11 +158,20 @@ export class BasicInfoStepComponent implements OnInit {
             }).subscribe({
                 next: (response: IdentifyOperationResponse) => {
                     this.isLoadingAnalysis = false;
-                    this.iaAnalysis = response.iaanalisys;
-                    this.showRestOfForm = true;
 
-                    // Preencher campos automaticamente se retornados pela API
-                    this.fillFieldsFromResponse(response.opportunityVetor360DTO);
+                    // Verificar se a resposta é válida
+                    if (response && response.iaanalisys) {
+                        this.iaAnalysis = response.iaanalisys;
+                        this.showRestOfForm = true;
+
+                        // Preencher campos automaticamente se retornados pela API
+                        if (response.opportunityVetor360DTO) {
+                            this.fillFieldsFromResponse(response.opportunityVetor360DTO);
+                        }
+                    } else {
+                        console.warn('Resposta da API não contém dados válidos:', response);
+                        this.toastService.error('Resposta inválida da API. Tente novamente.', 'Erro');
+                    }
                 },
                 error: (error) => {
                     this.isLoadingAnalysis = false;
@@ -167,10 +188,16 @@ export class BasicInfoStepComponent implements OnInit {
     }
 
     private fillFieldsFromResponse(data: any): void {
+        // Verificar se data existe e não é null/undefined
+        if (!data) {
+            console.warn('Dados da resposta são nulos ou indefinidos');
+            return;
+        }
+
         if (data.operation) {
             this.basicInfoForm.patchValue({ operationType: data.operation });
         }
-        if (data.value) {
+        if (data.value !== undefined && data.value !== null) {
             this.basicInfoForm.patchValue({ amount: data.value.toString() });
         }
         if (data.valueType) {
@@ -179,15 +206,7 @@ export class BasicInfoStepComponent implements OnInit {
         if (data.activityTypeEnum) {
             this.basicInfoForm.patchValue({ businessActivity: data.activityTypeEnum });
         }
-        if (data.country) {
-            this.basicInfoForm.patchValue({ country: data.country });
-        }
-        /* if (data.state) {
-            this.basicInfoForm.patchValue({ state: data.state });
-        }
-        if (data.city) {
-            this.basicInfoForm.patchValue({ city: data.city });
-        } */
+        // Não sobrescrever campos de localização que são fixos
         if (data.term) {
             this.basicInfoForm.patchValue({ term: data.term });
         }

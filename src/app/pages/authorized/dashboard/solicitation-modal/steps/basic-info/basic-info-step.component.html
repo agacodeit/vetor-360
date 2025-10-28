@@ -43,7 +43,7 @@
                         formControlName="operationType" [required]="true"
                         [invalid]="!!(operationType?.invalid && operationType?.touched)"
                         [errorMessage]="operationType?.invalid && operationType?.touched ? 'Tipo de operação é obrigatório' : ''"
-                        [options]="operationTypeOptions" [fullWidth]="true" [disabled]="isLoadingOptions">
+                        [options]="operationTypeOptions" [fullWidth]="true">
                     </ds-select>
                 </div>
 
@@ -89,7 +89,7 @@
                         formControlName="businessActivity" [required]="true"
                         [invalid]="!!(businessActivity?.invalid && businessActivity?.touched)"
                         [errorMessage]="businessActivity?.invalid && businessActivity?.touched ? 'Ramo de atividade é obrigatório' : ''"
-                        [options]="businessActivityOptions" [fullWidth]="true" [disabled]="isLoadingOptions">
+                        [options]="businessActivityOptions" [fullWidth]="true">
                     </ds-select>
                 </div>
 

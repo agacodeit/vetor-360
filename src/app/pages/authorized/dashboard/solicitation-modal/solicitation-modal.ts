@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared';
@@ -7,7 +7,6 @@ import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.compo
 import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
 import { ToastService } from '../../../../shared/services/toast/toast.service';
 import { OpportunityService, OpportunityCreateRequest } from '../../../../shared/services/opportunity/opportunity.service';
-import { ModalService } from '../../../../shared/services/modal/modal.service';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -17,7 +16,7 @@ import { ModalService } from '../../../../shared/services/modal/modal.service';
     ButtonComponent,
     StepperComponent,
     BasicInfoStepComponent,
-    GuaranteesStepComponent,
+    GuaranteesStepComponent
   ],
   standalone: true,
   templateUrl: './solicitation-modal.html',
@@ -26,10 +25,10 @@ import { ModalService } from '../../../../shared/services/modal/modal.service';
 export class SolicitationModal implements OnInit {
   private toastService = inject(ToastService);
   private opportunityService = inject(OpportunityService);
-  private modalService = inject(ModalService);
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
+  @Output() onOpenDocuments = new EventEmitter<any>();
 
 
   @ViewChild(BasicInfoStepComponent) basicInfoStepComponent!: BasicInfoStepComponent;
@@ -40,13 +39,15 @@ export class SolicitationModal implements OnInit {
   isLoading = false;
   currentStep = 0;
 
-
   basicInfoData: any = {};
   guaranteesData: any = {};
+  solicitationData: any = null;
 
+  constructor(private fb: FormBuilder) {
+    this.mainForm = this.fb.group({});
+  }
 
   stepValidStates = [false, false]; // Apenas 2 etapas agora
-
 
   stepperSteps: StepperStep[] = [
     {
@@ -60,11 +61,6 @@ export class SolicitationModal implements OnInit {
       description: 'Garantias oferecidas'
     }
   ];
-
-  constructor(private fb: FormBuilder) {
-
-    this.mainForm = this.fb.group({});
-  }
 
   ngOnInit(): void {
 
@@ -155,7 +151,7 @@ export class SolicitationModal implements OnInit {
           this.onSubmit.emit(response);
 
           // Verificar se precisa abrir modal de documentos
-          //this.checkAndOpenDocumentsModal(response);
+          this.openDocumentsModal(response);
 
           this.handleClose();
         },
@@ -221,22 +217,24 @@ export class SolicitationModal implements OnInit {
   }
 
   /**
-   * Verifica se precisa abrir modal de documentos após criação da oportunidade
+   * Emite evento para abrir o modal de documentos após criação da oportunidade
    */
-  private checkAndOpenDocumentsModal(response: any): void {
-    // Por enquanto, sempre abre o modal de documentos como exemplo
-    // Em uma implementação real, isso seria baseado na resposta da API ou configuração do usuário
-    setTimeout(() => {
-      this.modalService.open({
-        id: 'documents-modal',
-        title: 'Documentos Necessários',
-        subtitle: 'Para completar sua solicitação, envie os documentos necessários.',
-        size: 'lg',
-        data: {
-          opportunityId: response.id,
-          customerName: this.basicInfoData.customerName
-        }
-      });
-    }, 500); // Pequeno delay para garantir que o modal principal foi fechado
+  private openDocumentsModal(response: any): void {
+    const solicitationData = {
+      id: response.id,
+      customerName: this.basicInfoData.customerName,
+      operation: this.basicInfoData.operationType,
+      value: parseFloat(this.basicInfoData.amount.replace(/[^\d,]/g, '').replace(',', '.')),
+      valueType: this.basicInfoData.currency,
+      activityTypeEnum: this.basicInfoData.businessActivity,
+      term: this.basicInfoData.term.toString(),
+      country: this.basicInfoData.country,
+      city: this.basicInfoData.city,
+      state: this.basicInfoData.state,
+      guarantee: this.guaranteesData.guarantees
+    };
+
+    // Emitir evento para o dashboard abrir o modal de documentos
+    this.onOpenDocuments.emit(solicitationData);
   }
 }

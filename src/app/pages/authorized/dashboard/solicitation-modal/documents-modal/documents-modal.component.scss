@@ -1,0 +1,210 @@
+@use '../../../../../../styles/abstracts/variables' as *;
+@use '../../../../../../styles/abstracts/typography' as *;
+@use '../../../../../../styles/themes/default' as *;
+
+.documents-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+
+    &__container {
+        position: relative;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        background-color: var(--background);
+        border-radius: $border-radius-lg;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-height: 90vh;
+    }
+
+    &__header {
+        padding: $padding-lg;
+        border-bottom: 1px solid var(--border);
+        background-color: var(--background);
+
+        h2 {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-lg;
+            font-weight: $font-weight-bold;
+            color: var(--text-primary);
+            margin: 0 0 $padding-xs 0;
+        }
+
+        p {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-sm;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+    }
+
+    &__summary {
+        padding: $padding-lg;
+        background-color: var(--primary-50);
+        border-bottom: 1px solid var(--border);
+
+        h3 {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-md;
+            font-weight: $font-weight-md;
+            color: var(--primary);
+            margin: 0 0 $padding-md 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: $padding-sm;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: $padding-xs;
+
+            &--full {
+                grid-column: 1 / -1;
+            }
+
+            label {
+                font-family: 'Work Sans', sans-serif;
+                font-size: $font-xs;
+                font-weight: $font-weight-md;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            span {
+                font-family: 'Work Sans', sans-serif;
+                font-size: $font-sm;
+                font-weight: $font-weight-md;
+                color: var(--text-primary);
+            }
+        }
+    }
+
+    &__documents {
+        flex: 1;
+        padding: $padding-lg;
+        overflow-y: auto;
+
+        h3 {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-md;
+            font-weight: $font-weight-md;
+            color: var(--text-primary);
+            margin: 0 0 $padding-md 0;
+        }
+
+        .documents-placeholder {
+            padding: $padding-lg;
+            background-color: var(--background-secondary);
+            border: 2px dashed var(--border);
+            border-radius: $border-radius-md;
+            text-align: center;
+
+            p {
+                font-family: 'Work Sans', sans-serif;
+                font-size: $font-sm;
+                color: var(--text-secondary);
+                margin: 0 0 $padding-xs 0;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &__actions {
+        padding: $padding-lg;
+        border-top: 1px solid var(--border);
+        background-color: var(--background);
+        display: flex;
+        gap: $padding-sm;
+
+        .btn {
+            flex: 1;
+            padding: $padding-sm $padding-md;
+            border-radius: $border-radius-sm;
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-sm;
+            font-weight: $font-weight-md;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            &.btn-outline {
+                background-color: transparent;
+                border-color: var(--border);
+                color: var(--text-secondary);
+
+                &:hover:not(:disabled) {
+                    background-color: var(--background-secondary);
+                    border-color: var(--text-secondary);
+                }
+            }
+
+            &.btn-primary {
+                background-color: var(--primary);
+                color: white;
+                border-color: var(--primary);
+
+                &:hover:not(:disabled) {
+                    background-color: var(--primary-dark);
+                    border-color: var(--primary-dark);
+                }
+            }
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .documents-modal {
+        &__container {
+            width: 95%;
+            max-height: 95vh;
+        }
+
+        &__summary {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        &__actions {
+            flex-direction: column;
+        }
+    }
+}
