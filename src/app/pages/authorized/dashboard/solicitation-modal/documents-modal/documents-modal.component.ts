@@ -1,35 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, ViewEncapsulation, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToastService, ModalService } from '../../../../../shared';
-
-export interface SolicitationData {
-    id: string;
-    customerName: string;
-    operation: string;
-    value: number;
-    valueType: string;
-    activityTypeEnum: string;
-    term: string;
-    country: string;
-    city: string;
-    state: string;
-    guarantee: string;
-}
+import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem } from '../../../../../shared';
 
 @Component({
     selector: 'app-documents-modal',
     standalone: true,
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        DocumentsComponent,
+        ButtonComponent
     ],
     templateUrl: './documents-modal.component.html',
     styleUrls: ['./documents-modal.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DocumentsModalComponent implements OnInit {
-    @Input() solicitationData: SolicitationData | null = null;
+export class DocumentsModalComponent implements OnInit, OnChanges {
+    @Input() solicitationData: any = null;
     @Output() onClose = new EventEmitter<void>();
     @Output() onSubmit = new EventEmitter<any>();
 
@@ -39,14 +27,111 @@ export class DocumentsModalComponent implements OnInit {
     documentsForm: FormGroup;
     isLoading = false;
     documentsData: any = {};
-    isDocumentsValid = true; // Por enquanto sempre válido para teste
+    isDocumentsValid = true;
+    documentsConfig: DocumentsConfig = {
+        title: 'Documentos da Solicitação',
+        showAccordion: true,
+        allowMultiple: true,
+        documents: []
+    };
+
+    // Mapeamento de tipos de documentos para labels legíveis
+    private documentTypeLabels: { [key: string]: string } = {
+        'CURVA_ABC_CLIENTES': 'Curva ABC de Clientes',
+        'PRAZO_MEDIO_RECEBIVEIS': 'Prazo Médio de Recebíveis',
+        'INFORMACAO_TRAVA_RECEBIVEIS': 'Informação de Trava de Recebíveis',
+        'TRAVA_PERFEITA': 'Trava Perfeita',
+        'COMISSARIA': 'Comissária',
+        'SEM_TRAVA': 'Sem Trava',
+        'GARANTIA_IMOVEIS': 'Garantia de Imóveis',
+        'MATRICULA_IMOVEL': 'Matrícula do Imóvel',
+        'AVALIACAO_IMOVEL': 'Avaliação do Imóvel',
+        'RG_CNH': 'RG ou CNH - Documento de identidade'
+    };
 
     constructor(private fb: FormBuilder) {
         this.documentsForm = this.fb.group({});
     }
 
     ngOnInit(): void {
-        // Inicialização do componente
+        this.loadDocumentsFromSolicitation();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['solicitationData'] && changes['solicitationData'].currentValue) {
+            this.loadDocumentsFromSolicitation();
+        }
+    }
+
+    /**
+     * Carrega os documentos da solicitação e converte para o formato esperado pelo componente
+     */
+    private loadDocumentsFromSolicitation(): void {
+        if (!this.solicitationData || !this.solicitationData.documents || !Array.isArray(this.solicitationData.documents)) {
+            this.documentsConfig.documents = [];
+            return;
+        }
+
+        // Converte os documentos da API para o formato DocumentItem
+        this.documentsConfig.documents = this.solicitationData.documents.map((doc: any) => {
+            const documentItem: DocumentItem = {
+                id: doc.id,
+                label: this.getDocumentLabel(doc.documentType),
+                required: doc.required || false,
+                uploaded: doc.documentStatusEnum !== 'PENDING', // Se não está PENDING, já foi enviado
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            };
+
+            return documentItem;
+        });
+
+        // Re-inicializa o formulário com os novos documentos
+        this.initializeForm();
+    }
+
+    /**
+     * Obtém o label legível para um tipo de documento
+     */
+    private getDocumentLabel(documentType: string): string {
+        return this.documentTypeLabels[documentType] || documentType;
+    }
+
+    /**
+     * Inicializa o formulário com os documentos atuais
+     */
+    private initializeForm(): void {
+        const formControls: { [key: string]: any } = {};
+        this.documentsConfig.documents.forEach(doc => {
+            formControls[doc.id] = [doc.uploaded || false];
+        });
+        this.documentsForm = this.fb.group(formControls);
+    }
+
+
+
+    onDocumentUploaded(event: any): void {
+        console.log('Documento carregado:', event);
+        // Atualizar o documento como carregado
+        const document = this.documentsConfig.documents.find(doc => doc.id === event.documentId);
+        if (document) {
+            document.uploaded = true;
+            document.file = event.file;
+        }
+    }
+
+    onDocumentRemoved(documentId: string): void {
+        console.log('Documento removido:', documentId);
+        // Atualizar o documento como não carregado
+        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+        if (document) {
+            document.uploaded = false;
+            document.file = undefined;
+        }
+    }
+
+    onFormValid(isValid: boolean): void {
+        console.log('Formulário de documentos válido:', isValid);
+        // Aqui você pode adicionar lógica baseada na validade do formulário
     }
 
     handleClose(): void {
@@ -79,34 +164,5 @@ export class DocumentsModalComponent implements OnInit {
 
     onDocumentsValidChange(isValid: boolean): void {
         this.isDocumentsValid = isValid;
-    }
-
-    getOperationDisplayName(operation: string): string {
-        const operationMap: { [key: string]: string } = {
-            'WORKING_CAPITAL_LONG_TERM': 'Capital de Giro de Longo Prazo',
-            'STRUCTURED_REAL_ESTATE_CREDIT': 'Crédito Estruturado Imobiliário',
-            'STRUCTURED_AGRIBUSINESS_CREDIT': 'Crédito Estruturado do Agronegócio',
-            'INTERNATIONAL_FINANCING': 'Financiamento Internacional',
-            'TRADE_FINANCE': 'Trade Finance',
-            'M_AND_A': 'M&A'
-        };
-        return operationMap[operation] || operation;
-    }
-
-    getActivityDisplayName(activity: string): string {
-        const activityMap: { [key: string]: string } = {
-            'INDUSTRY': 'Indústria',
-            'COMMERCE': 'Comércio',
-            'SERVICES': 'Serviços'
-        };
-        return activityMap[activity] || activity;
-    }
-
-    formatCurrency(value: number, currency: string): string {
-        const formatter = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: currency === 'BRL' ? 'BRL' : 'USD'
-        });
-        return formatter.format(value);
     }
 }

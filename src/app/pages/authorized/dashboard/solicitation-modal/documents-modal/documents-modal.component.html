@@ -1,73 +1,18 @@
 <div class="documents-modal">
-    <div class="documents-modal__overlay" (click)="handleClose()"></div>
+    <header class="documents-modal__header">
+        <h1>Solicitação: {{solicitationData?.id}}</h1>
+        <p>XPTO</p>
+    </header>
 
-    <div class="documents-modal__container">
-        <main class="documents-modal__content">
+    <div class="documents-modal__content">
+        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
+            (documentUploaded)="onDocumentUploaded($event)" (documentRemoved)="onDocumentRemoved($event)"
+            (formValid)="onFormValid($event)">
+        </ds-documents>
+    </div>
 
-            <div class="documents-modal__header">
-                <h2>Documentos Necessários</h2>
-                <p>Para completar sua solicitação, envie os documentos necessários.</p>
-            </div>
-
-            @if (solicitationData) {
-            <div class="documents-modal__summary">
-                <h3>Resumo da Solicitação</h3>
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <label>Cliente:</label>
-                        <span>{{ solicitationData.customerName }}</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Operação:</label>
-                        <span>{{ getOperationDisplayName(solicitationData.operation) }}</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Valor:</label>
-                        <span>{{ formatCurrency(solicitationData.value, solicitationData.valueType) }}</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Ramo de Atividade:</label>
-                        <span>{{ getActivityDisplayName(solicitationData.activityTypeEnum) }}</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Prazo:</label>
-                        <span>{{ solicitationData.term }} meses</span>
-                    </div>
-                    <div class="summary-item">
-                        <label>Localização:</label>
-                        <span>{{ solicitationData.city }}, {{ solicitationData.state }}, {{ solicitationData.country
-                            }}</span>
-                    </div>
-                    <div class="summary-item summary-item--full">
-                        <label>Garantias:</label>
-                        <span>{{ solicitationData.guarantee }}</span>
-                    </div>
-                </div>
-            </div>
-            }
-
-            <div class="documents-modal__documents">
-                <h3>Documentos</h3>
-                <div class="documents-placeholder">
-                    <p>Componente de upload de documentos será integrado aqui.</p>
-                    <p>Por enquanto, considere os documentos como válidos para teste.</p>
-                </div>
-            </div>
-
-            <div class="documents-modal__actions">
-                <button type="button" class="btn btn-outline" (click)="handleClose()" [disabled]="isLoading">
-                    Cancelar
-                </button>
-
-                <button type="button" class="btn btn-primary" (click)="handleSubmit()" [disabled]="isLoading">
-                    @if (isLoading) {
-                    Enviando...
-                    } @else {
-                    Enviar Documentos
-                    }
-                </button>
-            </div>
-
-        </main>
+    <div class="documents-modal__actions">
+        <ds-button label="Cancelar" variant="outline" (onClickEmitter)="handleClose()" />
+        <ds-button label="Upload Documents" variant="fill" (onClickEmitter)="handleSubmit()" [disabled]="isLoading" />
     </div>
 </div>

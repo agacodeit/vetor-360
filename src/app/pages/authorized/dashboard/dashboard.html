@@ -75,8 +75,7 @@
 
 @if(isCreateModalOpen) {
 <ds-modal modalId="create-solicitation" (modalClosed)="onCreateModalClosed($event)">
-    <app-solicitation-modal (onClose)="onCreateModalClosed($event)" (onSubmit)="onCreateModalClosed($event)"
-        (onOpenDocuments)="openDocumentsModal($event)">
+    <app-solicitation-modal (onClose)="onCreateModalClosed($event)" (onSubmit)="onCreateModalClosed($event)">
     </app-solicitation-modal>
 </ds-modal>
 }

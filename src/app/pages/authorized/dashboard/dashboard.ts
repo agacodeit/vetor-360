@@ -297,7 +297,7 @@ export class Dashboard implements OnInit {
 
   openCreateSolicitationModal() {
     this.isCreateModalOpen = true;
-    this.modalService.open({
+    const closeSubject = this.modalService.open({
       id: "create-solicitation",
       title: "Nova Solicitação",
       subtitle: "Informe os dados do produto e do cliente",
@@ -307,6 +307,22 @@ export class Dashboard implements OnInit {
       closeOnBackdropClick: true,
       closeOnEscapeKey: true,
     });
+
+    closeSubject.subscribe((result: any) => {
+      console.log("Modal fechado:", result);
+
+      // Se o modal foi fechado com dados da solicitação criada, abrir o modal de documentos
+      if (result && result.id) {
+        // Aguardar um pequeno delay para garantir que o modal anterior fechou completamente
+        setTimeout(() => {
+          this.openDocumentsModal(result);
+        }, 300);
+      }
+    });
+  }
+
+  onModalClosed(result: any) {
+    console.log("Modal fechado:", result);
   }
 
   onCreateModalClosed(event: any) {

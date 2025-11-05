@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, ViewChild, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent } from '../../../../shared';
+import { ButtonComponent, ModalService } from '../../../../shared';
 import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
 import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
 import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
@@ -25,6 +25,7 @@ import { OpportunityService, OpportunityCreateRequest } from '../../../../shared
 export class SolicitationModal implements OnInit {
   private toastService = inject(ToastService);
   private opportunityService = inject(OpportunityService);
+  private modalService = inject(ModalService);
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
@@ -150,10 +151,24 @@ export class SolicitationModal implements OnInit {
           this.toastService.success('Oportunidade criada com sucesso!', 'Sucesso');
           this.onSubmit.emit(response);
 
-          // Verificar se precisa abrir modal de documentos
-          this.openDocumentsModal(response);
+          // Montar dados completos da solicitação para passar ao fechar o modal
+          const solicitationData = {
+            ...response,
+            customerName: this.basicInfoData.customerName,
+            operation: this.basicInfoData.operationType,
+            value: parseFloat(this.basicInfoData.amount.replace(/[^\d,]/g, '').replace(',', '.')),
+            valueType: this.basicInfoData.currency,
+            activityTypeEnum: this.basicInfoData.businessActivity,
+            term: this.basicInfoData.term.toString(),
+            country: this.basicInfoData.country,
+            city: this.basicInfoData.city,
+            state: this.basicInfoData.state,
+            guarantee: this.guaranteesData.guarantees
+          };
 
-          this.handleClose();
+          // Fechar o modal passando os dados da solicitação criada
+          // O dashboard abrirá o modal de documentos automaticamente quando receber esses dados
+          this.modalService.close('create-solicitation', solicitationData);
         },
         error: (error) => {
           this.isLoading = false;
@@ -216,25 +231,4 @@ export class SolicitationModal implements OnInit {
     }
   }
 
-  /**
-   * Emite evento para abrir o modal de documentos após criação da oportunidade
-   */
-  private openDocumentsModal(response: any): void {
-    const solicitationData = {
-      id: response.id,
-      customerName: this.basicInfoData.customerName,
-      operation: this.basicInfoData.operationType,
-      value: parseFloat(this.basicInfoData.amount.replace(/[^\d,]/g, '').replace(',', '.')),
-      valueType: this.basicInfoData.currency,
-      activityTypeEnum: this.basicInfoData.businessActivity,
-      term: this.basicInfoData.term.toString(),
-      country: this.basicInfoData.country,
-      city: this.basicInfoData.city,
-      state: this.basicInfoData.state,
-      guarantee: this.guaranteesData.guarantees
-    };
-
-    // Emitir evento para o dashboard abrir o modal de documentos
-    this.onOpenDocuments.emit(solicitationData);
-  }
 }
