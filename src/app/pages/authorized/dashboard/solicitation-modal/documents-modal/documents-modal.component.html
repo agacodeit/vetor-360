@@ -1,13 +1,25 @@
 <div class="documents-modal">
-    <header class="documents-modal__header">
-        <h1>Solicitação: {{solicitationData?.id}}</h1>
-        <p>XPTO</p>
-    </header>
+    <div class="documents-modal__success-box">
+        <div class="success-box__header">
+            <h2 class="success-box__title">Solicitação {{ getCustomerName() }} - {{ getOperationLabel() }}</h2>
+        </div>
+        <div class="success-box__content">
+            <div class="success-box__message">
+                <ds-icon icon="fa-solid fa-circle-check" color="#27AE60" fontSize="18px" />
+                <span>Solicitação criada com sucesso!</span>
+            </div>
+            <p class="success-box__status">Status atual - {{ getStatusLabel() }}</p>
+        </div>
+    </div>
+
+    <p class="documents-modal__instruction">
+        Envie os documentos necessários para análise da solicitação
+    </p>
 
     <div class="documents-modal__content">
         <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
-            (documentUploaded)="onDocumentUploaded($event)" (documentRemoved)="onDocumentRemoved($event)"
-            (formValid)="onFormValid($event)">
+            [requireVerification]="true" (documentUploaded)="onDocumentUploaded($event)"
+            (documentRemoved)="onDocumentRemoved($event)" (formValid)="onFormValid($event)">
         </ds-documents>
     </div>
 

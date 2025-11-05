@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, ViewEncapsulation, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem } from '../../../../../shared';
+import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem, IconComponent } from '../../../../../shared';
+import { SolicitationStatusUtil } from '../../../../../shared/utils/solicitation-status';
 
 @Component({
     selector: 'app-documents-modal',
@@ -10,7 +11,8 @@ import { ToastService, ModalService, DocumentsComponent, ButtonComponent, Docume
         CommonModule,
         ReactiveFormsModule,
         DocumentsComponent,
-        ButtonComponent
+        ButtonComponent,
+        IconComponent
     ],
     templateUrl: './documents-modal.component.html',
     styleUrls: ['./documents-modal.component.scss'],
@@ -47,6 +49,14 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
         'MATRICULA_IMOVEL': 'Matrícula do Imóvel',
         'AVALIACAO_IMOVEL': 'Avaliação do Imóvel',
         'RG_CNH': 'RG ou CNH - Documento de identidade'
+    };
+
+    // Mapeamento de tipos de operação para labels legíveis
+    private operationTypeLabels: { [key: string]: string } = {
+        'WORKING_CAPITAL_LONG_TERM': 'FGI',
+        'WORKING_CAPITAL_SHORT_TERM': 'Capital de Giro',
+        'INVOICE_DISCOUNTING': 'Desconto de Duplicatas',
+        'ANTICIPATION_RECEIVABLES': 'Antecipação de Recebíveis'
     };
 
     constructor(private fb: FormBuilder) {
@@ -164,5 +174,34 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
 
     onDocumentsValidChange(isValid: boolean): void {
         this.isDocumentsValid = isValid;
+    }
+
+    /**
+     * Obtém o label do tipo de operação
+     */
+    getOperationLabel(): string {
+        if (!this.solicitationData?.operation) {
+            return '';
+        }
+        return this.operationTypeLabels[this.solicitationData.operation] || this.solicitationData.operation;
+    }
+
+    /**
+     * Obtém o nome do cliente
+     */
+    getCustomerName(): string {
+        return this.solicitationData?.customerName || 'XPTO';
+    }
+
+    /**
+     * Obtém o label do status atual
+     */
+    getStatusLabel(): string {
+        if (!this.solicitationData?.status) {
+            return 'Pendente de documentos';
+        }
+        // Converte o status para o formato esperado (ex: PENDING_DOCUMENTS -> pending-documents)
+        const statusKey = this.solicitationData.status.toLowerCase().replace(/_/g, '-');
+        return SolicitationStatusUtil.getLabel(statusKey) || 'Pendente de documentos';
     }
 }

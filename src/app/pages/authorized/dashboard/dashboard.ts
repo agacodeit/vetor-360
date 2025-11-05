@@ -309,14 +309,8 @@ export class Dashboard implements OnInit {
     });
 
     closeSubject.subscribe((result: any) => {
-      console.log("Modal fechado:", result);
-
-      // Se o modal foi fechado com dados da solicitação criada, abrir o modal de documentos
       if (result && result.id) {
-        // Aguardar um pequeno delay para garantir que o modal anterior fechou completamente
-        setTimeout(() => {
-          this.openDocumentsModal(result);
-        }, 300);
+        this.onCreateModalClosed(result);
       }
     });
   }
@@ -325,8 +319,13 @@ export class Dashboard implements OnInit {
     console.log("Modal fechado:", result);
   }
 
-  onCreateModalClosed(event: any) {
+  onCreateModalClosed(result: any) {
     this.isCreateModalOpen = false;
+    setTimeout(() => {
+      if (result && result.id) {
+        this.openDocumentsModal(result);
+      }
+    }, 300);
   }
 
   onDetailsModalClosed(event: any) {

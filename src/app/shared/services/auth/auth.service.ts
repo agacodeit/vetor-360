@@ -36,7 +36,7 @@ export interface SignupResponse {
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly API_BASE_URL = '/api/v1';
+    private readonly apiUrl = environment.apiUrl;
     private readonly STORAGE_KEY = 'bearerToken';
     private readonly LAST_SYNC_KEY = 'lastUserSync';
     private readonly SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutos
@@ -57,7 +57,7 @@ export class AuthService {
     async login(credentials: LoginRequest) {
         try {
             // 1. Fazer login na API do AcesseBank
-            const loginResponse = await lastValueFrom(this.http.post<LoginResponse>(`${this.API_BASE_URL}/auth/login`, credentials, {
+            const loginResponse = await lastValueFrom(this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials, {
                 headers: this.getDefaultHeaders()
             }));
 
@@ -92,7 +92,7 @@ export class AuthService {
     signup(userData: SignupRequest): Observable<SignupResponse> {
         const headers = this.getDefaultHeaders();
 
-        return this.http.post<SignupResponse>(`${this.API_BASE_URL}/user/create`, userData, { headers });
+        return this.http.post<SignupResponse>(`${this.apiUrl}/user/create`, userData, { headers });
     }
 
     /**
@@ -240,7 +240,7 @@ export class AuthService {
                 return null;
             }
 
-            const response = await lastValueFrom(this.http.get<User>(`${this.API_BASE_URL}/secure/user`, {
+            const response = await lastValueFrom(this.http.get<User>(`${this.apiUrl}/secure/user`, {
                 headers: this.getAuthHeaders()
             }));
 

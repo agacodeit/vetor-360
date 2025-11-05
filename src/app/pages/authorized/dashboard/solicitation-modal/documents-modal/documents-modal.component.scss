@@ -8,14 +8,74 @@
     padding: $padding-sm;
     height: 100%;
 
+    &__success-box {
+        background: #E8F8F0;
+        border: 1px solid #27AE60;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+        width: 100%;
+
+        .success-box__header {
+            margin-bottom: 16px;
+        }
+
+        .success-box__title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .success-box__content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .success-box__message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #000;
+            line-height: 1.5;
+
+            span {
+                font-weight: 400;
+            }
+        }
+
+        .success-box__status {
+            font-size: 14px;
+            color: #000;
+            margin: 0;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+    }
+
+    &__instruction {
+        font-size: 14px;
+        color: #000;
+        margin: 0 0 24px 0;
+        line-height: 1.5;
+        font-weight: 400;
+    }
+
     &__content {
         margin-bottom: 24px;
+        flex: 1;
+        overflow-y: auto;
     }
 
     &__actions {
         display: flex;
         gap: $padding-sm;
         justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 16px;
     }
 }
 

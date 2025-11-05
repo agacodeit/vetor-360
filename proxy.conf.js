@@ -2,7 +2,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = {
   '/api': {
-    target: 'https://hml.acessebank.com.br/acessebankapi',
+    //target: 'https://hml.acessebank.com.br/acessebankapi',
+    target: 'http://localhost:8090/acessebankapi',
     secure: true,
     changeOrigin: true,
     logLevel: 'debug',
