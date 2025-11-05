@@ -67,6 +67,10 @@
             "development": {
               "buildTarget": "vetor-360:build:development",
               "proxyConfig": "proxy.conf.js"
+            },
+            "local": {
+              "buildTarget": "vetor-360:build:development",
+              "proxyConfig": "proxy.conf.local.js"
             }
           },
           "defaultConfiguration": "development"
