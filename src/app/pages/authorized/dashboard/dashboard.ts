@@ -5,6 +5,7 @@ import { ModalComponent, ModalService, SelectOption, InputComponent, SelectCompo
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 import { SolicitationDetails } from "./solicitation-details/solicitation-details";
+import { DocumentsModalComponent } from "./solicitation-modal/documents-modal/documents-modal.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ import { SolicitationDetails } from "./solicitation-details/solicitation-details
     ButtonComponent,
     SolicitationModal,
     SolicitationDetails,
+    DocumentsModalComponent,
     InputComponent,
     SelectComponent
   ],
@@ -34,6 +36,8 @@ export class Dashboard implements OnInit {
   private modalService = inject(ModalService);
   isCreateModalOpen: boolean = false;
   isDetailsModalOpen: boolean = false;
+  isDocumentsModalOpen: boolean = false;
+  documentsSolicitationData: any = null;
 
   kanbanColumns: KanbanColumn[] = [];
   private allKanbanColumns: KanbanColumn[] = [];
@@ -50,6 +54,14 @@ export class Dashboard implements OnInit {
 
       const detailsModalInstance = this.modalService.modals().find(m => m.id === 'solicitation-details');
       this.isDetailsModalOpen = detailsModalInstance ? detailsModalInstance.isOpen : false;
+
+      const documentsModalInstance = this.modalService.modals().find(m => m.id === 'documents-modal');
+      this.isDocumentsModalOpen = documentsModalInstance ? documentsModalInstance.isOpen : false;
+
+      // Se o modal de documentos foi fechado, limpar os dados
+      if (!this.isDocumentsModalOpen) {
+        this.documentsSolicitationData = null;
+      }
     });
   }
 
@@ -285,7 +297,7 @@ export class Dashboard implements OnInit {
 
   openCreateSolicitationModal() {
     this.isCreateModalOpen = true;
-    this.modalService.open({
+    const closeSubject = this.modalService.open({
       id: "create-solicitation",
       title: "Nova Solicitação",
       subtitle: "Informe os dados do produto e do cliente",
@@ -295,10 +307,23 @@ export class Dashboard implements OnInit {
       closeOnBackdropClick: true,
       closeOnEscapeKey: true,
     });
+
+    closeSubject.subscribe((result: any) => {
+      this.onCreateModalClosed(result);
+    });
   }
 
-  onCreateModalClosed(event: any) {
+  onModalClosed(result: any) {
+    console.log("Modal fechado:", result);
+  }
+
+  onCreateModalClosed(result: any) {
     this.isCreateModalOpen = false;
+    setTimeout(() => {
+      if (result && result.id) {
+        this.openDocumentsModal(result);
+      }
+    }, 300);
   }
 
   onDetailsModalClosed(event: any) {
@@ -336,17 +361,25 @@ export class Dashboard implements OnInit {
   }
 
   onCardClick(card: KanbanCard) {
-    this.isDetailsModalOpen = true;
-    this.modalService.open({
-      id: "solicitation-details",
-      title: "Visão geral",
-      size: "fullscreen",
-      showHeader: true,
-      showCloseButton: true,
-      closeOnBackdropClick: true,
-      closeOnEscapeKey: true,
-      data: card
-    });
+    if (card.status === "PENDING_DOCUMENTS") {
+      this.openDocumentsModal(card);
+    } else {
+
+      this.isDetailsModalOpen = true;
+
+      this.modalService.open({
+        id: "solicitation-details",
+        title: "Visão geral",
+        size: "fullscreen",
+        showHeader: true,
+        showCloseButton: true,
+        closeOnBackdropClick: true,
+        closeOnEscapeKey: true,
+        data: card
+      });
+    }
+
+
   }
 
   // Build status options from columns
@@ -357,5 +390,34 @@ export class Dashboard implements OnInit {
   // Apply filters to columns/cards
   applyFilters() {
     this.kanbanColumns = this.allKanbanColumns;
+  }
+
+  // Métodos para controlar o modal de documentos
+  onDocumentsModalClosed(event: any): void {
+    this.modalService.close('documents-modal');
+    this.documentsSolicitationData = null;
+  }
+
+  onDocumentsSubmit(data: any): void {
+    console.log('Documentos enviados:', data);
+    this.modalService.close('documents-modal');
+    this.documentsSolicitationData = null;
+
+    // Aqui você pode adicionar lógica adicional após o envio dos documentos
+    // Por exemplo, atualizar o status da solicitação no kanban
+  }
+
+  // Método público para abrir o modal de documentos (chamado pelo modal de solicitação)
+  openDocumentsModal(solicitationData: any): void {
+    this.documentsSolicitationData = solicitationData;
+    this.modalService.open({
+      id: 'documents-modal',
+      title: 'Documentos Necessários',
+      subtitle: 'Para completar sua solicitação, envie os documentos necessários.',
+      size: 'lg',
+      data: {
+        solicitationData: solicitationData
+      }
+    });
   }
 }

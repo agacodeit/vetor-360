@@ -29,11 +29,6 @@
                 }
 
 
-                @if (currentStep === 2) {
-                <app-documents-step [formData]="documentsData" (formDataChange)="onDocumentsDataChange($event)"
-                    (formValid)="onDocumentsValidChange($event)">
-                </app-documents-step>
-                }
 
             </div>
 
@@ -53,14 +48,14 @@
                 }
 
 
-                @if (currentStep < 2) { <ds-button label="Próximo" type="button" variant="fill"
+                @if (currentStep < 1) { <ds-button label="Próximo" type="button" variant="fill"
                     (onClickEmitter)="goToNextStep()" [fullWidth]="true" [disabled]="isLoading">
                     </ds-button>
                     }
 
-                    @if (currentStep === 2) {
-                    <ds-button label="Criar Solicitação" type="button" variant="fill" icon="fa-solid fa-plus"
-                        iconPosition="left" (onClickEmitter)="handleSubmit()" [fullWidth]="true" [isLoading]="isLoading"
+                    @if (currentStep === 1) {
+                    <ds-button label="Criar" type="button" variant="fill" icon="fa-solid fa-plus" iconPosition="left"
+                        (onClickEmitter)="handleSubmit()" [fullWidth]="true" [isLoading]="isLoading"
                         [disabled]="isLoading">
                     </ds-button>
                     }
