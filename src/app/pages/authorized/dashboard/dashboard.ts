@@ -309,9 +309,7 @@ export class Dashboard implements OnInit {
     });
 
     closeSubject.subscribe((result: any) => {
-      if (result && result.id) {
-        this.onCreateModalClosed(result);
-      }
+      this.onCreateModalClosed(result);
     });
   }
 
@@ -363,17 +361,25 @@ export class Dashboard implements OnInit {
   }
 
   onCardClick(card: KanbanCard) {
-    this.isDetailsModalOpen = true;
-    this.modalService.open({
-      id: "solicitation-details",
-      title: "Visão geral",
-      size: "fullscreen",
-      showHeader: true,
-      showCloseButton: true,
-      closeOnBackdropClick: true,
-      closeOnEscapeKey: true,
-      data: card
-    });
+    if (card.status === "PENDING_DOCUMENTS") {
+      this.openDocumentsModal(card);
+    } else {
+
+      this.isDetailsModalOpen = true;
+
+      this.modalService.open({
+        id: "solicitation-details",
+        title: "Visão geral",
+        size: "fullscreen",
+        showHeader: true,
+        showCloseButton: true,
+        closeOnBackdropClick: true,
+        closeOnEscapeKey: true,
+        data: card
+      });
+    }
+
+
   }
 
   // Build status options from columns

@@ -12,6 +12,19 @@ export interface DocumentResponse {
     description: string;
 }
 
+export interface LinkMultipleFilesRequest {
+    fileCode: string;
+    opportunityId: string;
+    opportunityDocumentId: string;
+}
+
+export interface UploadFileResponse {
+    fileCode?: string;
+    id?: string;
+    url?: string;
+    [key: string]: any;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -69,13 +82,22 @@ export class DocumentService {
     /**
      * Upload de arquivo para um documento específico
      */
-    uploadFile(file: File): Observable<any> {
+    uploadFile(file: File): Observable<UploadFileResponse> {
         const formData = new FormData();
         formData.append('arquivo', file);
 
-        return this.http.post(this.apiUrl + '/bucket/upload', formData);
+        return this.http.post<UploadFileResponse>(this.apiUrl + '/bucket/upload', formData);
     }
 
+    /**
+     * Linka múltiplos arquivos a uma oportunidade
+     */
+    linkMultipleFiles(files: LinkMultipleFilesRequest[]): Observable<any> {
+        return this.http.post(
+            `${this.apiUrl}/secure/opportunity/linkMultipleFiles`,
+            files
+        );
+    }
 
     /**
      * Lista todos os documentos de um usuário

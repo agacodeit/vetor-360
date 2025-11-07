@@ -56,6 +56,8 @@ export class DocumentsComponent implements OnInit, OnChanges {
     @Output() documentUploaded = new EventEmitter<{
         documentId: string;
         file: File;
+        fileCode?: string | null;
+        uploadResponse?: any;
     }>();
 
     @Output() documentRemoved = new EventEmitter<string>();
@@ -228,7 +230,9 @@ export class DocumentsComponent implements OnInit, OnChanges {
 
                     this.documentUploaded.emit({
                         documentId,
-                        file
+                        file,
+                        fileCode: uploadResponse?.fileCode || uploadResponse?.id || null,
+                        uploadResponse: uploadResponse
                     });
                 }
             },

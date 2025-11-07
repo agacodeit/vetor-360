@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, ViewEncapsulation, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem, IconComponent } from '../../../../../shared';
+import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem, IconComponent, DocumentService, LinkMultipleFilesRequest } from '../../../../../shared';
 import { SolicitationStatusUtil } from '../../../../../shared/utils/solicitation-status';
+import { forkJoin, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-documents-modal',
@@ -25,11 +27,14 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
 
     private toastService = inject(ToastService);
     private modalService = inject(ModalService);
+    private documentService = inject(DocumentService);
 
     documentsForm: FormGroup;
     isLoading = false;
     documentsData: any = {};
     isDocumentsValid = true;
+    // Armazena os fileCodes de cada documento
+    private documentFileCodes: Map<string, string> = new Map();
     documentsConfig: DocumentsConfig = {
         title: 'Documentos da Solicitação',
         showAccordion: true,
@@ -89,7 +94,7 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
                 label: this.getDocumentLabel(doc.documentType),
                 required: doc.required || false,
                 uploaded: doc.documentStatusEnum !== 'PENDING', // Se não está PENDING, já foi enviado
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+                acceptedFormats: '.pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx'
             };
 
             return documentItem;
@@ -121,6 +126,28 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
+        console.log('FileCode recebido:', event.fileCode);
+        console.log('UploadResponse completo:', event.uploadResponse);
+
+        // Captura o fileCode do evento (pode vir direto ou dentro de uploadResponse)
+        let fileCode = event.fileCode;
+
+        // Se não veio direto, tenta pegar da resposta do upload
+        if (!fileCode && event.uploadResponse) {
+            fileCode = event.uploadResponse.fileCode ||
+                event.uploadResponse.id ||
+                event.uploadResponse.code ||
+                event.uploadResponse.fileId;
+        }
+
+        // Armazena o fileCode se encontrado
+        if (fileCode) {
+            console.log(`Armazenando fileCode ${fileCode} para documento ${event.documentId}`);
+            this.documentFileCodes.set(event.documentId, fileCode);
+        } else {
+            console.warn(`FileCode não encontrado para documento ${event.documentId}`, event);
+        }
+
         // Atualizar o documento como carregado
         const document = this.documentsConfig.documents.find(doc => doc.id === event.documentId);
         if (document) {
@@ -131,6 +158,10 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
 
     onDocumentRemoved(documentId: string): void {
         console.log('Documento removido:', documentId);
+
+        // Remove o fileCode do mapa
+        this.documentFileCodes.delete(documentId);
+
         // Atualizar o documento como não carregado
         const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
         if (document) {
@@ -149,11 +180,62 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
     }
 
     handleSubmit(): void {
-        if (this.isDocumentsValid) {
-            this.isLoading = true;
+        if (!this.isDocumentsValid) {
+            this.toastService.error('Por favor, envie pelo menos um documento.', 'Documentos obrigatórios');
+            return;
+        }
 
-            // Simular envio (substituir por chamada real da API)
-            setTimeout(() => {
+        // Verifica documentos que têm arquivo selecionado
+        const documentsWithFile = this.documentsConfig.documents.filter(doc =>
+            doc.uploaded && doc.file
+        );
+
+        if (documentsWithFile.length === 0) {
+            this.toastService.error('Por favor, selecione pelo menos um documento para enviar.', 'Documentos obrigatórios');
+            return;
+        }
+
+        // Log para debug
+        console.log('Documentos com arquivo:', documentsWithFile.length);
+        console.log('FileCodes armazenados:', Array.from(this.documentFileCodes.entries()));
+
+        // Verifica quais documentos têm fileCode
+        const documentsWithoutFileCode = documentsWithFile.filter(doc =>
+            !this.documentFileCodes.has(doc.id)
+        );
+
+        if (documentsWithoutFileCode.length > 0) {
+            console.warn('Documentos sem fileCode:', documentsWithoutFileCode.map(d => ({ id: d.id, label: d.label })));
+            this.toastService.error(
+                `Alguns documentos ainda não foram processados. Aguarde o upload concluir antes de enviar.`,
+                'Aguarde o upload'
+            );
+            return;
+        }
+
+        // Todos os documentos têm fileCode, pode fazer o link
+        this.linkDocuments();
+    }
+
+    /**
+     * Faz o link dos documentos usando os fileCodes já capturados
+     */
+    private linkDocuments(): void {
+        this.isLoading = true;
+
+        const linkRequest = this.buildLinkRequest();
+
+        console.log('Requisição para linkMultipleFiles:', JSON.stringify(linkRequest, null, 2));
+
+        if (linkRequest.length === 0) {
+            this.isLoading = false;
+            this.toastService.error('Nenhum documento válido para enviar. Verifique se os arquivos foram carregados corretamente.', 'Erro');
+            return;
+        }
+
+        this.documentService.linkMultipleFiles(linkRequest).subscribe({
+            next: (response) => {
+                console.log('Resposta do linkMultipleFiles:', response);
                 this.isLoading = false;
                 this.toastService.success('Documentos enviados com sucesso!', 'Sucesso');
                 this.onSubmit.emit({
@@ -162,10 +244,71 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
                     documents: this.documentsData
                 });
                 this.handleClose();
-            }, 2000);
-        } else {
-            this.toastService.error('Por favor, envie pelo menos um documento.', 'Documentos obrigatórios');
+            },
+            error: (error) => {
+                console.error('Erro ao linkar documentos:', error);
+                console.error('Erro completo:', JSON.stringify(error, null, 2));
+                this.isLoading = false;
+                this.toastService.error(
+                    error.error?.message || 'Erro ao enviar documentos. Tente novamente.',
+                    'Erro'
+                );
+            }
+        });
+    }
+
+    /**
+     * Constrói o array de requisição para linkMultipleFiles
+     */
+    private buildLinkRequest(): LinkMultipleFilesRequest[] {
+        const opportunityId = this.solicitationData?.id;
+
+        if (!opportunityId) {
+            console.error('Opportunity ID não encontrado no solicitationData:', this.solicitationData);
+            return [];
         }
+
+        console.log('Building link request para opportunityId:', opportunityId);
+        console.log('Documentos config:', this.documentsConfig.documents);
+        console.log('FileCodes armazenados:', Array.from(this.documentFileCodes.entries()));
+
+        // Filtra apenas documentos que têm arquivo e fileCode
+        const documentsWithFileCode = this.documentsConfig.documents.filter(doc => {
+            const hasFile = doc.uploaded && doc.file;
+            const hasFileCode = this.documentFileCodes.has(doc.id);
+
+            console.log(`Documento ${doc.id} (${doc.label}):`, {
+                hasFile,
+                hasFileCode,
+                fileCode: this.documentFileCodes.get(doc.id)
+            });
+
+            return hasFile && hasFileCode;
+        });
+
+        console.log('Documentos com fileCode encontrados:', documentsWithFileCode.length);
+
+        // Constrói o array de requisição
+        const request = documentsWithFileCode.map(doc => {
+            const fileCode = this.documentFileCodes.get(doc.id);
+
+            if (!fileCode) {
+                console.warn(`FileCode não encontrado para o documento ${doc.id}`, doc);
+                return null;
+            }
+
+            const linkItem: LinkMultipleFilesRequest = {
+                fileCode: fileCode,
+                opportunityId: opportunityId,
+                opportunityDocumentId: doc.id
+            };
+
+            console.log(`Item adicionado ao link request:`, linkItem);
+            return linkItem;
+        }).filter((item): item is LinkMultipleFilesRequest => item !== null);
+
+        console.log('Link request final:', request);
+        return request;
     }
 
     onDocumentsChange(data: any): void {
