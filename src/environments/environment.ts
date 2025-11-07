@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: '/api/v1',
     appName: 'Vetor 360',
     version: '1.0.0'
 };

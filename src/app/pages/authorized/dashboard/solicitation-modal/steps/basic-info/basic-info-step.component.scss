@@ -43,6 +43,32 @@
         width: 100%;
     }
 
+    &__analysis {
+        background-color: hsla(47, 100%, 50%, 0.2);
+        padding: $padding-s;
+        width: fit-content;
+        border-radius: $border-radius-md;
+        border: 1px solid #FFC800;
+    }
+
+    .analysis-content {
+        h4 {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-md;
+            font-weight: $font-weight-md;
+            color: var(--primary);
+            margin: 0 0 $padding-sm 0;
+        }
+
+        p {
+            font-family: 'Work Sans', sans-serif;
+            font-size: $font-sm;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.5;
+        }
+    }
+
     &__row {
         display: grid;
         grid-template-columns: 1fr 1fr;

@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Output, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent } from '../../../../shared';
+import { ButtonComponent, ModalService } from '../../../../shared';
 import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
-import { DocumentsStepComponent } from './steps/documents/documents-step.component';
 import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
 import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
 import { ToastService } from '../../../../shared/services/toast/toast.service';
+import { OpportunityService, OpportunityCreateRequest } from '../../../../shared/services/opportunity/opportunity.service';
 
 @Component({
   selector: 'app-solicitation-modal',
@@ -16,8 +16,7 @@ import { ToastService } from '../../../../shared/services/toast/toast.service';
     ButtonComponent,
     StepperComponent,
     BasicInfoStepComponent,
-    GuaranteesStepComponent,
-    DocumentsStepComponent
+    GuaranteesStepComponent
   ],
   standalone: true,
   templateUrl: './solicitation-modal.html',
@@ -25,51 +24,44 @@ import { ToastService } from '../../../../shared/services/toast/toast.service';
 })
 export class SolicitationModal implements OnInit {
   private toastService = inject(ToastService);
+  private opportunityService = inject(OpportunityService);
+  private modalService = inject(ModalService);
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
+  @Output() onOpenDocuments = new EventEmitter<any>();
 
 
   @ViewChild(BasicInfoStepComponent) basicInfoStepComponent!: BasicInfoStepComponent;
   @ViewChild(GuaranteesStepComponent) guaranteesStepComponent!: GuaranteesStepComponent;
-  @ViewChild(DocumentsStepComponent) documentsStepComponent!: DocumentsStepComponent;
 
 
   mainForm: FormGroup;
   isLoading = false;
-  currentStep = 2;
-
+  currentStep = 0;
 
   basicInfoData: any = {};
   guaranteesData: any = {};
-  documentsData: any = {};
+  solicitationData: any = null;
 
+  constructor(private fb: FormBuilder) {
+    this.mainForm = this.fb.group({});
+  }
 
-  stepValidStates = [false, false, true]; // Step 3 (documentos) sempre válido por enquanto
-
+  stepValidStates = [false, false]; // Apenas 2 etapas agora
 
   stepperSteps: StepperStep[] = [
     {
       id: 'basic-info',
       title: 'Operação',
-      description: 'Dados da solicitação'
+      description: 'Dados da operação'
     },
     {
       id: 'guarantees',
-      title: 'Garantias',
+      title: 'Garantia',
       description: 'Garantias oferecidas'
-    },
-    {
-      id: 'documents',
-      title: 'Documentos',
-      description: 'Anexos necessários'
     }
   ];
-
-  constructor(private fb: FormBuilder) {
-
-    this.mainForm = this.fb.group({});
-  }
 
   ngOnInit(): void {
 
@@ -97,14 +89,6 @@ export class SolicitationModal implements OnInit {
     this.stepValidStates[1] = isValid;
   }
 
-  onDocumentsDataChange(data: any): void {
-    this.documentsData = data;
-  }
-
-  onDocumentsValidChange(isValid: boolean): void {
-    this.stepValidStates[2] = isValid;
-  }
-
 
   canGoNext(): boolean {
     return this.stepValidStates[this.currentStep];
@@ -117,7 +101,7 @@ export class SolicitationModal implements OnInit {
 
 
   canFinish(): boolean {
-    return this.currentStep === 2 && this.stepValidStates.every(valid => valid);
+    return this.currentStep === 1 && this.stepValidStates.every(valid => valid);
   }
 
 
@@ -125,7 +109,7 @@ export class SolicitationModal implements OnInit {
 
     this.markCurrentStepAsTouched();
 
-    if (this.canGoNext() && this.currentStep < 2) {
+    if (this.canGoNext() && this.currentStep < 1) {
       this.currentStep++;
     } else if (!this.canGoNext()) {
       this.toastService.error('Por favor, preencha todos os campos obrigatórios antes de continuar.');
@@ -148,24 +132,59 @@ export class SolicitationModal implements OnInit {
     if (this.canFinish()) {
       this.isLoading = true;
 
-
-      const formData = {
-        ...this.basicInfoData,
-        ...this.guaranteesData,
-        ...this.documentsData
+      const requestData: OpportunityCreateRequest = {
+        operation: this.basicInfoData.operationType,
+        value: parseFloat(this.basicInfoData.amount.replace(/[^\d,]/g, '').replace(',', '.')),
+        valueType: this.basicInfoData.currency,
+        activityTypeEnum: this.basicInfoData.businessActivity,
+        term: this.basicInfoData.term.toString(),
+        country: this.basicInfoData.country,
+        city: this.basicInfoData.city,
+        state: this.basicInfoData.state,
+        customerName: this.basicInfoData.customerName,
+        guarantee: this.guaranteesData.guarantees
       };
 
+      this.opportunityService.createOpportunity(requestData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.toastService.success('Oportunidade criada com sucesso!', 'Sucesso');
+          this.onSubmit.emit(response);
 
-      setTimeout(() => {
-        this.isLoading = false;
-        this.onSubmit.emit(formData);
-      }, 2000);
+          // Montar dados completos da solicitação para passar ao fechar o modal
+          const solicitationData = {
+            ...response,
+            customerName: this.basicInfoData.customerName,
+            operation: this.basicInfoData.operationType,
+            value: parseFloat(this.basicInfoData.amount.replace(/[^\d,]/g, '').replace(',', '.')),
+            valueType: this.basicInfoData.currency,
+            activityTypeEnum: this.basicInfoData.businessActivity,
+            term: this.basicInfoData.term.toString(),
+            country: this.basicInfoData.country,
+            city: this.basicInfoData.city,
+            state: this.basicInfoData.state,
+            guarantee: this.guaranteesData.guarantees
+          };
+
+          // Fechar o modal passando os dados da solicitação criada
+          // O dashboard abrirá o modal de documentos automaticamente quando receber esses dados
+          this.modalService.close('create-solicitation', solicitationData);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Erro ao criar oportunidade:', error);
+          this.toastService.error(
+            error.error?.message || 'Erro ao criar oportunidade. Tente novamente.',
+            'Erro'
+          );
+        }
+      });
     } else {
 
       const firstInvalidStepIndex = this.stepValidStates.findIndex(valid => !valid);
       if (firstInvalidStepIndex !== -1 && firstInvalidStepIndex !== this.currentStep) {
 
-        const stepNames = ['Informações Básicas', 'Garantias', 'Documentos'];
+        const stepNames = ['Operação', 'Garantia'];
         this.toastService.error(
           `Por favor, preencha todos os campos obrigatórios na etapa "${stepNames[firstInvalidStepIndex]}".`,
           'Formulário incompleto'
@@ -200,9 +219,6 @@ export class SolicitationModal implements OnInit {
           this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
         }
         break;
-      case 2:
-        // O componente ds-documents gerencia sua própria validação
-        break;
     }
   }
 
@@ -213,6 +229,6 @@ export class SolicitationModal implements OnInit {
     if (this.guaranteesStepComponent?.guaranteesForm) {
       this.guaranteesStepComponent.guaranteesForm.markAllAsTouched();
     }
-    // O componente ds-documents gerencia sua própria validação
   }
+
 }

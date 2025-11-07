@@ -61,7 +61,7 @@ export interface PartnerRegistrationResponse {
     providedIn: 'root'
 })
 export class PartnerRegistrationService {
-    private readonly apiUrl = '/api/v1';
+    private readonly apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) { }
 

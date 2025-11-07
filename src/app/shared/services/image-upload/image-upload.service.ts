@@ -28,7 +28,7 @@ export interface ImageData {
   providedIn: 'root'
 })
 export class ImageUploadService {
-  private apiUrl = 'environment.apiUrl';
+  private readonly apiUrl = environment.apiUrl;
   private uploadProgress = new BehaviorSubject<ImageUploadProgress | null>(null);
 
   constructor(private http: HttpClient) { }
