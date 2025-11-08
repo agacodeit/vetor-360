@@ -59,31 +59,25 @@
     }
 }
 
-.container {
-    display: flex;
+.welcome-msg {
+    padding: 24px 0;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 
-    .welcome-msg {
-        padding: 0 28vw;
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        align-items: center;
+    i {
+        font-size: $size-xxxxxxxxxl;
+    }
 
-        i {
-            font-size: $size-xxxxxxxxxl;
-        }
+    p,
+    h2 {
+        text-align: center;
+    }
 
-        p,
-        h2 {
-            text-align: center;
-        }
-
-        .bold {
-            font-weight: $font-weight-bold;
-        }
+    .bold {
+        font-weight: $font-weight-bold;
     }
 }
 
