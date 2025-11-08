@@ -3,15 +3,28 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, IconComponent } from '../../index';
 import { DocumentService, ToastService } from '../../../services';
+import { DocumentFile } from '../../../types/profile.types';
 
 export interface DocumentItem {
     id: string;
+    documentType: string;
+    opportunityId?: string;
     label: string;
     required: boolean;
     file?: File;
     uploaded: boolean;
     acceptedFormats: string;
     isValidating?: boolean;
+    initialDocument?: boolean;
+    files?: DocumentFile[] | null;
+    dateHourIncluded?: string;
+    dateHourUpdated?: string;
+    userIncludedId?: string;
+    documentStatusEnum?: string;
+    responsibleUserId?: string;
+    comments?: any[];
+    playerIdWhoRequestedDocument?: string;
+    fileCode?: string | null;
 }
 
 export interface DocumentsConfig {

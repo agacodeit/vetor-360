@@ -18,23 +18,9 @@ export interface FinancialAgent {
 export class FinancialAgentComponent {
     @Input() cardData: KanbanCard | null = null;
 
-    // Dados de exemplo para a tabela de Agentes Financeiros
-    financialAgents: FinancialAgent[] = [
-        {
-            nome: 'Banco Inter',
-            dataMatching: '01/02/2021 17:56',
-            operacao: 'R$ 500.000,00'
-        },
-        {
-            nome: 'Banco do Brasil',
-            dataMatching: '02/02/2021 14:30',
-            operacao: 'R$ 750.000,00'
-        },
-        {
-            nome: 'Itaú',
-            dataMatching: '03/02/2021 09:15',
-            operacao: 'R$ 300.000,00'
-        }
-    ];
+    get financialAgents(): FinancialAgent[] {
+        // Ainda não há agentes financeiros retornados pelo serviço
+        return [];
+    }
 }
 

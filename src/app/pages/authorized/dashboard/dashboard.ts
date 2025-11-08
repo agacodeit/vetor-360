@@ -383,7 +383,8 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   onCardClick(card: KanbanCard) {
-    if (card.status === 'PENDING_DOCUMENTS') {
+
+    if (card.status !== 'PENDING_DOCUMENTS') {
       const opportunityData = card.data?.opportunity || card;
       this.openDocumentsModal(opportunityData);
     } else {

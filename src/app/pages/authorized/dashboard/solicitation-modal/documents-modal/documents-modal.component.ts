@@ -91,9 +91,21 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
         this.documentsConfig.documents = this.solicitationData.documents.map((doc: any) => {
             const documentItem: DocumentItem = {
                 id: doc.id,
+                documentType: doc.documentType,
+                opportunityId: doc.opportunityId,
                 label: this.getDocumentLabel(doc.documentType),
-                required: doc.required || false,
-                uploaded: doc.documentStatusEnum !== 'PENDING', // Se não está PENDING, já foi enviado
+                required: doc.required ?? false,
+                initialDocument: doc.initialDocument ?? false,
+                files: doc.files ?? null,
+                dateHourIncluded: doc.dateHourIncluded,
+                dateHourUpdated: doc.dateHourUpdated,
+                userIncludedId: doc.userIncludedId,
+                documentStatusEnum: doc.documentStatusEnum,
+                responsibleUserId: doc.responsibleUserId,
+                comments: doc.comments ?? [],
+                playerIdWhoRequestedDocument: doc.playerIdWhoRequestedDocument,
+                fileCode: doc.fileCode ?? null,
+                uploaded: doc.documentStatusEnum === 'COMPLETED',
                 acceptedFormats: '.pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx'
             };
 
