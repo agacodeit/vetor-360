@@ -16,11 +16,6 @@
     </div>
 
     <div class="dashboard__content">
-        @if (isLoadingKanban) {
-        <p>Carregando solicitações...</p>
-        } @else if (errorMessage) {
-        <p>{{ errorMessage }}</p>
-        } @else if (shouldShowKanban) {
         <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)" [columnsLoading]="columnsLoading"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
@@ -58,17 +53,6 @@
             </ng-template>
 
         </ds-kanban>
-        } @else if (shouldShowEmptyState) {
-
-        <div class="welcome-msg">
-            <i class="fa-regular fa-file"></i>
-
-            <p class="bold">Ainda não há solicitações cadastradas.</p>
-
-            <ds-button label="Criar solicitação" icon="fa-regular fa-square-plus" iconSize="20"
-                (onClickEmitter)="openCreateSolicitationModal()" [rounded]="true" />
-        </div>
-        }
     </div>
 
 </div>
