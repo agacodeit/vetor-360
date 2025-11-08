@@ -65,8 +65,8 @@ export class Dashboard implements OnInit, OnDestroy {
   };
 
   // Filters
-  filterClientName: string = 'ACME LTDA';
-  filterStatus: OpportunityStatus | '' = 'PENDING_DOCUMENTS';
+  filterClientName: string = '';
+  filterStatus: OpportunityStatus | '' = '';
   statusFilterOptions: SelectOption[] = [
     { value: '', label: 'Todos os status' },
     ...this.STATUS_CONFIG.map(config => ({ value: config.status, label: config.title }))
@@ -129,8 +129,7 @@ export class Dashboard implements OnInit, OnDestroy {
       size: this.pagination.size,
       status: this.filterStatus ? this.filterStatus : undefined,
       customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
-      userId: this.user.id,
-      dataCriacao: "2025-10-01 00:00:00",
+      userId: this.user.id
     };
 
     this.opportunityService.searchOpportunities(request).subscribe({
