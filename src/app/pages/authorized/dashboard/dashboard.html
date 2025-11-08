@@ -22,9 +22,9 @@
         <p>{{ errorMessage }}</p>
         } @else if (shouldShowKanban) {
         <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
-            (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)"
+            (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)" [columnsLoading]="columnsLoading"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
-            (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event.card)">
+            (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event)">
 
             <ng-template #cardTemplate let-card let-column="column">
                 <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">

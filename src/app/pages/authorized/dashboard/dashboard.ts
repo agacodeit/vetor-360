@@ -42,6 +42,7 @@ export class Dashboard implements OnInit, OnDestroy {
   isCreateModalOpen: boolean = false;
   isDetailsModalOpen: boolean = false;
   isDocumentsModalOpen: boolean = false;
+  columnsLoading: string[] = [];
   documentsSolicitationData: any = null;
 
   kanbanColumns: KanbanColumn[] = [];
@@ -385,7 +386,14 @@ export class Dashboard implements OnInit, OnDestroy {
     this.loadOpportunities(this.pagination.page + 1);
   }
 
-  async onCardClick(card: KanbanCard) {
+  async onCardClick(event: { card: KanbanCard; column: KanbanColumn }) {
+    const { card, column } = event;
+    const columnId = column.id;
+
+    if (!this.columnsLoading.includes(columnId)) {
+      this.columnsLoading = [...this.columnsLoading, columnId];
+    }
+
     try {
       const opportunity = await this.opportunityService.getOpportunityById(card.id);
       card.data.opportunity = opportunity;
@@ -402,6 +410,8 @@ export class Dashboard implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Erro ao carregar oportunidade:', error);
       this.toastService.error('Erro ao carregar oportunidade. Tente novamente.');
+    } finally {
+      this.columnsLoading = this.columnsLoading.filter(id => id !== columnId);
     }
 
   }
@@ -444,9 +454,6 @@ export class Dashboard implements OnInit, OnDestroy {
     console.log('Documentos enviados:', data);
     this.modalService.close('documents-modal');
     this.documentsSolicitationData = null;
-
-    // Aqui você pode adicionar lógica adicional após o envio dos documentos
-    // Por exemplo, atualizar o status da solicitação no kanban
   }
 
   // Método público para abrir o modal de documentos (chamado pelo modal de solicitação)

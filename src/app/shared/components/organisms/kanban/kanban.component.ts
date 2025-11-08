@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { CardComponent } from '../../organisms/card/card.component';
+import { SpinnerComponent } from "../../atoms/spinner/spinner.component";
 
 export interface KanbanCard {
     id: string;
@@ -30,7 +31,7 @@ export interface KanbanColumn {
 @Component({
     selector: 'ds-kanban',
     standalone: true,
-    imports: [CommonModule, FormsModule, CdkDrag, CdkDropList, CardComponent, ButtonComponent, IconComponent],
+    imports: [CommonModule, FormsModule, CdkDrag, CdkDropList, CardComponent, ButtonComponent, IconComponent, SpinnerComponent],
     templateUrl: './kanban.component.html',
     encapsulation: ViewEncapsulation.None
 })
@@ -45,6 +46,7 @@ export class KanbanComponent {
     @Input() allowEditColumns: boolean = false;
     @Input() showCardCount: boolean = true;
     @Input() maxColumns: number = 10;
+    @Input() columnsLoading: string[] = [];
 
     @Output() cardMoved = new EventEmitter<{
         card: KanbanCard;
@@ -278,5 +280,9 @@ export class KanbanComponent {
 
     private generateId(): string {
         return Math.random().toString(36).substr(2, 9);
+    }
+
+    isColumnLoading(columnId: string): boolean {
+        return this.columnsLoading.includes(columnId);
     }
 }
