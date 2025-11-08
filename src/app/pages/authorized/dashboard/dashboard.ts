@@ -3,11 +3,21 @@ import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
-import { OpportunityService, OpportunitySummary, OpportunityStatus } from '../../../shared/services/opportunity/opportunity.service';
+import { OpportunityService, OpportunitySummary, OpportunityStatus, OpportunitySearchResponse } from '../../../shared/services/opportunity/opportunity.service';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 import { SolicitationDetails } from "./solicitation-details/solicitation-details";
 import { DocumentsModalComponent } from "./solicitation-modal/documents-modal/documents-modal.component";
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+type ColumnPaginationState = {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+};
 
 @Component({
   selector: 'app-dashboard',
@@ -76,17 +86,27 @@ export class Dashboard implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   private hasLoadedKanban: boolean = false;
 
-  pagination = {
-    page: 0,
-    size: 10,
-    totalElements: 0,
-    totalPages: 0,
-    first: true,
-    last: true
-  };
+  private readonly DEFAULT_PAGE_SIZE = 10;
+
+  columnPagination: Record<OpportunityStatus, ColumnPaginationState> = this.initializeColumnPagination();
+  private columnOpportunities: Record<OpportunityStatus, OpportunitySummary[]> = this.initializeColumnOpportunities();
 
   get user(): User {
     return this.authService.getCurrentUser();
+  }
+
+  private initializeColumnPagination(): Record<OpportunityStatus, ColumnPaginationState> {
+    return this.STATUS_CONFIG.reduce((acc, config) => {
+      acc[config.status] = this.createPaginationState();
+      return acc;
+    }, {} as Record<OpportunityStatus, ColumnPaginationState>);
+  }
+
+  private initializeColumnOpportunities(): Record<OpportunityStatus, OpportunitySummary[]> {
+    return this.STATUS_CONFIG.reduce((acc, config) => {
+      acc[config.status] = [];
+      return acc;
+    }, {} as Record<OpportunityStatus, OpportunitySummary[]>);
   }
 
   private filterDebounceTimer: any = null;
@@ -119,63 +139,195 @@ export class Dashboard implements OnInit, OnDestroy {
     }
   }
 
-  private loadOpportunities(page: number = 0): void {
+  private loadOpportunities(): void {
     this.isLoadingKanban = true;
     this.errorMessage = null;
     this.hasLoadedKanban = false;
 
-    const request = {
-      page,
-      size: this.pagination.size,
-      status: this.filterStatus ? this.filterStatus : undefined,
-      customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
-      userId: this.user.id
-    };
+    const statusesToLoad = this.getStatusesToLoad();
 
-    this.opportunityService.searchOpportunities(request).subscribe({
-      next: response => {
+    if (statusesToLoad.length === 0) {
+      this.resetAllColumns();
+      this.isLoadingKanban = false;
+      this.hasLoadedKanban = true;
+      return;
+    }
+
+    this.columnsLoading = statusesToLoad
+      .map(status => this.getColumnIdByStatus(status))
+      .filter((columnId): columnId is string => !!columnId);
+
+    const requests = statusesToLoad.map(status => {
+      const pagination = this.columnPagination[status] ?? this.createPaginationState();
+      const requestPayload = this.buildOpportunitySearchRequest(status, pagination.page, pagination.size);
+
+      return this.opportunityService.searchOpportunities(requestPayload).pipe(
+        map(response => ({ status, response }))
+      );
+    });
+
+    forkJoin(requests).subscribe({
+      next: results => {
+        results.forEach(({ status, response }) => {
+          this.updateColumnFromResponse(status, response);
+        });
+
+        this.resetUnloadedStatuses(statusesToLoad);
+        this.refreshKanbanColumns();
+
         this.hasLoadedKanban = true;
-        this.pagination = {
-          page: response.page,
-          size: response.size,
-          totalElements: response.totalElements,
-          totalPages: response.totalPages,
-          first: response.first,
-          last: response.last
-        };
-
-        this.buildColumnsFromOpportunities(response.content);
         this.isLoadingKanban = false;
+        this.errorMessage = null;
+        this.columnsLoading = [];
       },
       error: error => {
         console.error('Erro ao carregar oportunidades:', error);
         this.hasLoadedKanban = true;
         this.isLoadingKanban = false;
         this.errorMessage = error?.error?.message || 'Não foi possível carregar as oportunidades.';
-        this.kanbanColumns = this.createEmptyColumns();
-        this.allKanbanColumns = this.kanbanColumns;
+        this.resetAllColumns();
       }
     });
   }
 
-  private buildColumnsFromOpportunities(opportunities: OpportunitySummary[]): void {
-    const columns = this.createEmptyColumns();
+  private getStatusesToLoad(): OpportunityStatus[] {
+    if (this.filterStatus) {
+      return [this.filterStatus];
+    }
 
-    opportunities.forEach(opportunity => {
-      const config = this.STATUS_CONFIG.find(item => item.status === opportunity.status);
-      if (!config) {
-        return;
-      }
+    return this.STATUS_CONFIG.map(config => config.status);
+  }
 
-      const card = this.mapOpportunityToCard(opportunity);
-      const column = columns.find(col => col.id === config.columnId);
-      if (column) {
-        column.cards.push(card);
+  private createPaginationState(overrides: Partial<ColumnPaginationState> = {}): ColumnPaginationState {
+    return {
+      page: 0,
+      size: this.DEFAULT_PAGE_SIZE,
+      totalElements: 0,
+      totalPages: 0,
+      first: true,
+      last: true,
+      ...overrides
+    };
+  }
+
+  private buildOpportunitySearchRequest(status: OpportunityStatus, page: number, size: number) {
+    return {
+      page,
+      size,
+      status,
+      customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
+      userId: this.user.id
+    };
+  }
+
+  private updateColumnFromResponse(status: OpportunityStatus, response: OpportunitySearchResponse): void {
+    this.columnPagination[status] = {
+      page: response.page,
+      size: response.size,
+      totalElements: response.totalElements,
+      totalPages: response.totalPages,
+      first: response.first,
+      last: response.last
+    };
+
+    const existing = this.columnOpportunities[status] ?? [];
+    const shouldAppend = response.page > 0 && existing.length > 0;
+    const newContent = response.content ?? [];
+
+    this.columnOpportunities[status] = shouldAppend ? [...existing, ...newContent] : newContent;
+  }
+
+  private resetUnloadedStatuses(loadedStatuses: OpportunityStatus[]): void {
+    this.STATUS_CONFIG.forEach(config => {
+      if (!loadedStatuses.includes(config.status)) {
+        const currentSize = this.columnPagination[config.status]?.size ?? this.DEFAULT_PAGE_SIZE;
+        this.columnPagination[config.status] = this.createPaginationState({ size: currentSize });
+        this.columnOpportunities[config.status] = [];
       }
     });
+  }
+
+  private refreshKanbanColumns(): void {
+    const columns = this.STATUS_CONFIG.map(config => ({
+      id: config.columnId,
+      title: config.title,
+      color: config.color,
+      cards: (this.columnOpportunities[config.status] || []).map(opportunity => this.mapOpportunityToCard(opportunity)),
+      pagination: this.columnPagination[config.status]
+    }));
 
     this.allKanbanColumns = columns;
     this.kanbanColumns = columns;
+  }
+
+  private resetAllColumns(): void {
+    this.columnPagination = this.initializeColumnPagination();
+    this.columnOpportunities = this.initializeColumnOpportunities();
+    this.refreshKanbanColumns();
+    this.columnsLoading = [];
+  }
+
+  private getColumnIdByStatus(status: OpportunityStatus): string | undefined {
+    const config = this.STATUS_CONFIG.find(item => item.status === status);
+    return config?.columnId;
+  }
+
+  private getStatusByColumnId(columnId: string): OpportunityStatus | undefined {
+    const config = this.STATUS_CONFIG.find(item => item.columnId === columnId);
+    return config?.status;
+  }
+
+  private addColumnLoading(columnId: string): void {
+    if (!this.columnsLoading.includes(columnId)) {
+      this.columnsLoading = [...this.columnsLoading, columnId];
+    }
+  }
+
+  private removeColumnLoading(columnId: string): void {
+    this.columnsLoading = this.columnsLoading.filter(id => id !== columnId);
+  }
+
+  private loadColumnOpportunities(status: OpportunityStatus, page: number): void {
+    const columnId = this.getColumnIdByStatus(status);
+    if (!columnId) {
+      return;
+    }
+
+    const currentPagination = this.columnPagination[status] ?? this.createPaginationState();
+    if (currentPagination.last && page > currentPagination.page) {
+      return;
+    }
+
+    const previousPagination = { ...currentPagination };
+
+    this.addColumnLoading(columnId);
+    this.errorMessage = null;
+
+    const requestPayload = this.buildOpportunitySearchRequest(status, page, currentPagination.size);
+
+    this.opportunityService.searchOpportunities(requestPayload).subscribe({
+      next: response => {
+        this.updateColumnFromResponse(status, response);
+        this.refreshKanbanColumns();
+        this.removeColumnLoading(columnId);
+        this.hasLoadedKanban = true;
+      },
+      error: error => {
+        console.error(`Erro ao carregar oportunidades para a coluna ${columnId}:`, error);
+        this.removeColumnLoading(columnId);
+        this.errorMessage = error?.error?.message || 'Não foi possível carregar as oportunidades.';
+        this.columnPagination[status] = previousPagination;
+      }
+    });
+  }
+
+  private resetPaginationForAllColumns(): void {
+    this.STATUS_CONFIG.forEach(config => {
+      const current = this.columnPagination[config.status] ?? this.createPaginationState();
+      this.columnPagination[config.status] = this.createPaginationState({
+        size: current.size
+      });
+    });
   }
 
   private createEmptyColumns(): KanbanColumn[] {
@@ -183,7 +335,8 @@ export class Dashboard implements OnInit, OnDestroy {
       id: config.columnId,
       title: config.title,
       color: config.color,
-      cards: []
+      cards: [],
+      pagination: this.columnPagination[config.status] ?? this.createPaginationState()
     }));
   }
 
@@ -294,6 +447,25 @@ export class Dashboard implements OnInit, OnDestroy {
     }
   }
 
+  onColumnLoadMore(columnId: string): void {
+    const status = this.getStatusByColumnId(columnId);
+    if (!status) {
+      return;
+    }
+
+    if (this.columnsLoading.includes(columnId)) {
+      return;
+    }
+
+    const pagination = this.columnPagination[status] ?? this.createPaginationState();
+    if (pagination.last) {
+      return;
+    }
+
+    const nextPage = pagination.page + 1;
+    this.loadColumnOpportunities(status, nextPage);
+  }
+
 
   openCreateSolicitationModal() {
     this.isCreateModalOpen = true;
@@ -341,7 +513,15 @@ export class Dashboard implements OnInit, OnDestroy {
    * Conta o total de solicitações em todas as colunas
    */
   get totalSolicitations(): number {
-    return this.pagination.totalElements || this.kanbanColumns.reduce((total, column) => total + column.cards.length, 0);
+    const totalFromPagination = Object.values(this.columnPagination || {}).reduce((total, pagination) => {
+      return total + (pagination?.totalElements || 0);
+    }, 0);
+
+    if (totalFromPagination > 0) {
+      return totalFromPagination;
+    }
+
+    return this.kanbanColumns.reduce((total, column) => total + column.cards.length, 0);
   }
 
   get shouldShowEmptyState(): boolean {
@@ -356,12 +536,13 @@ export class Dashboard implements OnInit, OnDestroy {
    * Limpa todas as solicitações (para teste)
    */
   clearAllSolicitations() {
-    this.kanbanColumns = this.createEmptyColumns();
-    this.allKanbanColumns = this.kanbanColumns;
-    this.pagination = {
-      ...this.pagination,
-      totalElements: 0
-    };
+    this.STATUS_CONFIG.forEach(config => {
+      const currentSize = this.columnPagination[config.status]?.size ?? this.DEFAULT_PAGE_SIZE;
+      this.columnPagination[config.status] = this.createPaginationState({ size: currentSize });
+      this.columnOpportunities[config.status] = [];
+    });
+
+    this.refreshKanbanColumns();
   }
 
   /**
@@ -369,20 +550,6 @@ export class Dashboard implements OnInit, OnDestroy {
    */
   restoreExampleSolicitations() {
     this.loadOpportunities();
-  }
-
-  goToPreviousPage(): void {
-    if (this.pagination.first || this.isLoadingKanban) {
-      return;
-    }
-    this.loadOpportunities(this.pagination.page - 1);
-  }
-
-  goToNextPage(): void {
-    if (this.pagination.last || this.isLoadingKanban) {
-      return;
-    }
-    this.loadOpportunities(this.pagination.page + 1);
   }
 
   async onCardClick(event: { card: KanbanCard; column: KanbanColumn }) {
@@ -431,14 +598,14 @@ export class Dashboard implements OnInit, OnDestroy {
 
   // Apply filters to columns/cards
   applyFilters() {
-    this.pagination.page = 0;
+    this.resetPaginationForAllColumns();
 
     if (this.filterDebounceTimer) {
       clearTimeout(this.filterDebounceTimer);
     }
 
     this.filterDebounceTimer = setTimeout(() => {
-      this.loadOpportunities(0);
+      this.loadOpportunities();
       this.filterDebounceTimer = null;
     }, 500);
   }

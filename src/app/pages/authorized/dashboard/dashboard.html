@@ -24,7 +24,8 @@
         <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)" [columnsLoading]="columnsLoading"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
-            (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event)">
+            (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event)"
+            (columnLoadMore)="onColumnLoadMore($event)">
 
             <ng-template #cardTemplate let-card let-column="column">
                 <ds-card class="kanban-card" size="sm" variant="bordered" borderRadius="md">
@@ -70,14 +71,6 @@
         }
     </div>
 
-    @if (!isLoadingKanban && !errorMessage && pagination.totalPages > 1) {
-    <div class="dashboard__pagination">
-        <ds-button label="Anterior" variant="outline" [disabled]="pagination.first"
-            (onClickEmitter)="goToPreviousPage()" />
-        <span>Página {{ pagination.page + 1 }} de {{ pagination.totalPages }}</span>
-        <ds-button label="Próxima" variant="outline" [disabled]="pagination.last" (onClickEmitter)="goToNextPage()" />
-    </div>
-    }
 </div>
 
 @if(isCreateModalOpen) {

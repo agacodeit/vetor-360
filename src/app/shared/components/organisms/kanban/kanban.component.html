@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="kanban__column-content">
+            <div class="kanban__column-content" (scroll)="onColumnScroll($event, column)">
 
                 <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
                     [cdkDragData]="card" (cdkDragStarted)="onDragStarted()" (cdkDragMoved)="onDragMoved($event)"

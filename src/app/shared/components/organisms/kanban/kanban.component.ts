@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDragMove, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../atoms/button/button.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
@@ -20,12 +20,22 @@ export interface KanbanCard {
     data?: any;
 }
 
+export interface KanbanColumnPagination {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    first: boolean;
+    last: boolean;
+}
+
 export interface KanbanColumn {
     id: string;
     title: string;
     cards: KanbanCard[];
     color?: string;
     maxCards?: number;
+    pagination?: KanbanColumnPagination;
 }
 
 @Component({
@@ -35,7 +45,7 @@ export interface KanbanColumn {
     templateUrl: './kanban.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class KanbanComponent {
+export class KanbanComponent implements OnChanges {
     @ViewChild('kanbanBoard', { static: false }) kanbanBoard!: ElementRef<HTMLElement>;
     @ContentChild('cardTemplate', { static: false }) cardTemplate!: TemplateRef<any>;
 
@@ -70,6 +80,7 @@ export class KanbanComponent {
     @Output() columnRemoved = new EventEmitter<string>();
     @Output() columnRenamed = new EventEmitter<{ columnId: string; newTitle: string }>();
     @Output() cardClicked = new EventEmitter<{ card: KanbanCard; column: KanbanColumn }>();
+    @Output() columnLoadMore = new EventEmitter<string>();
 
     newColumnTitle: string = '';
     isAddingColumn: boolean = false;
@@ -83,6 +94,18 @@ export class KanbanComponent {
     private scrollSpeed = 50;
     private scrollZone = 200; // pixels from edge to start scrolling
     private scrollInterval: any = null;
+    private pendingLoadColumns = new Set<string>();
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['columnsLoading']) {
+            const loading: string[] = changes['columnsLoading'].currentValue ?? [];
+            for (const columnId of Array.from(this.pendingLoadColumns)) {
+                if (!loading.includes(columnId)) {
+                    this.pendingLoadColumns.delete(columnId);
+                }
+            }
+        }
+    }
 
     onCardDrop(event: CdkDragDrop<KanbanCard[]>) {
 
@@ -276,6 +299,29 @@ export class KanbanComponent {
         }
 
         this.cardClicked.emit({ card, column });
+    }
+
+    onColumnScroll(event: Event, column: KanbanColumn) {
+        if (!column.pagination || column.pagination.last) {
+            return;
+        }
+
+        if (this.isColumnLoading(column.id) || this.pendingLoadColumns.has(column.id)) {
+            return;
+        }
+
+        const target = event.target as HTMLElement | null;
+        if (!target) {
+            return;
+        }
+
+        const threshold = 150;
+        const distanceToBottom = target.scrollHeight - target.scrollTop - target.clientHeight;
+
+        if (distanceToBottom <= threshold) {
+            this.pendingLoadColumns.add(column.id);
+            this.columnLoadMore.emit(column.id);
+        }
     }
 
     private generateId(): string {
