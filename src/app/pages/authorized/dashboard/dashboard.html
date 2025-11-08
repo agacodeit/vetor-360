@@ -12,6 +12,10 @@
 
             <ds-select label="Status" width="200px" placeholder="Selecione" [options]="statusFilterOptions"
                 [(ngModel)]="filterStatus" (selectionChanged)="applyFilters()" />
+
+            @if (hasFiltersApplied) {
+            <ds-button label="Limpar filtros" variant="ghost" (onClickEmitter)="clearFilters()"></ds-button>
+            }
         </div>
     </div>
 

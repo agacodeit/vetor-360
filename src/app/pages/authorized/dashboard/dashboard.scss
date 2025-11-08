@@ -49,6 +49,7 @@
 
         .filters-grid {
             display: flex;
+            align-items: flex-end;
             gap: $padding-md;
 
             @media (max-width: 768px) {

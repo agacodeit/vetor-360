@@ -95,6 +95,10 @@ export class Dashboard implements OnInit, OnDestroy {
     return this.authService.getCurrentUser();
   }
 
+  get hasFiltersApplied(): boolean {
+    return !!this.filterClientName?.trim() || !!this.filterStatus;
+  }
+
   private initializeColumnPagination(): Record<OpportunityStatus, ColumnPaginationState> {
     return this.STATUS_CONFIG.reduce((acc, config) => {
       acc[config.status] = this.createPaginationState();
@@ -608,6 +612,24 @@ export class Dashboard implements OnInit, OnDestroy {
       this.loadOpportunities();
       this.filterDebounceTimer = null;
     }, 500);
+  }
+
+  clearFilters(): void {
+
+    if (!this.hasFiltersApplied) {
+      return;
+    }
+
+    this.filterClientName = '';
+    this.filterStatus = '';
+
+    if (this.filterDebounceTimer) {
+      clearTimeout(this.filterDebounceTimer);
+      this.filterDebounceTimer = null;
+    }
+
+    this.resetPaginationForAllColumns();
+    this.loadOpportunities();
   }
 
   // Métodos para controlar o modal de documentos
