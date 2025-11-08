@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent } from '../../../shared';
+import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { OpportunityService, OpportunitySummary, OpportunityStatus } from '../../../shared/services/opportunity/opportunity.service';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
@@ -74,16 +74,20 @@ export class Dashboard implements OnInit, OnDestroy {
 
   pagination = {
     page: 0,
-    size: 20,
+    size: 10,
     totalElements: 0,
     totalPages: 0,
     first: true,
     last: true
   };
 
+  get user(): User {
+    return this.authService.getCurrentUser();
+  }
+
   private filterDebounceTimer: any = null;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     effect(() => {
       const createModalInstance = this.modalService.modals().find(m => m.id === 'create-solicitation');
       this.isCreateModalOpen = createModalInstance ? createModalInstance.isOpen : false;
@@ -121,7 +125,7 @@ export class Dashboard implements OnInit, OnDestroy {
       size: this.pagination.size,
       status: this.filterStatus ? this.filterStatus : undefined,
       customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
-      userId: 'user-123',
+      userId: this.user.id,
       dataCriacao: "2025-10-01 00:00:00",
     };
 
