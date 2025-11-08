@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface OpportunityCreateRequest {
@@ -123,5 +123,11 @@ export class OpportunityService {
             `${this.apiUrl}/secure/opportunity-vetor360/search`,
             payload
         );
+    }
+
+    async getOpportunityById(id: string): Promise<OpportunitySummary> {
+        return await lastValueFrom(this.http.get<OpportunitySummary>(
+            `${this.apiUrl}/secure/opportunity-vetor360/${id}`
+        ));
     }
 }

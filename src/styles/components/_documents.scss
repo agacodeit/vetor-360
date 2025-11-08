@@ -37,6 +37,14 @@
             line-height: 1.4;
         }
     }
+
+    &__empty {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-sm;
+        font-weight: $font-weight-md;
+        color: var(--secondary);
+        text-align: center;
+    }
 }
 
 .accordion-content-inner {

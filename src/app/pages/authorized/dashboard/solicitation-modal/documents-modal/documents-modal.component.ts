@@ -348,15 +348,7 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
         return this.solicitationData?.customerName || 'XPTO';
     }
 
-    /**
-     * Obtém o label do status atual
-     */
     getStatusLabel(): string {
-        if (!this.solicitationData?.status) {
-            return 'Pendente de documentos';
-        }
-        // Converte o status para o formato esperado (ex: PENDING_DOCUMENTS -> pending-documents)
-        const statusKey = this.solicitationData.status.toLowerCase().replace(/_/g, '-');
-        return SolicitationStatusUtil.getLabel(statusKey) || 'Pendente de documentos';
+        return SolicitationStatusUtil.getLabel(this.solicitationData.status);
     }
 }

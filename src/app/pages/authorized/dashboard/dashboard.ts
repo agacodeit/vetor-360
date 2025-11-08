@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService } from '../../../shared';
+import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { OpportunityService, OpportunitySummary, OpportunityStatus } from '../../../shared/services/opportunity/opportunity.service';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
 import { SolicitationDetails } from "./solicitation-details/solicitation-details";
 import { DocumentsModalComponent } from "./solicitation-modal/documents-modal/documents-modal.component";
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,8 @@ import { DocumentsModalComponent } from "./solicitation-modal/documents-modal/do
 export class Dashboard implements OnInit, OnDestroy {
   private modalService = inject(ModalService);
   private opportunityService = inject(OpportunityService);
+  private toastService = inject(ToastService);
+
   isCreateModalOpen: boolean = false;
   isDetailsModalOpen: boolean = false;
   isDocumentsModalOpen: boolean = false;
@@ -382,28 +385,39 @@ export class Dashboard implements OnInit, OnDestroy {
     this.loadOpportunities(this.pagination.page + 1);
   }
 
-  onCardClick(card: KanbanCard) {
+  async onCardClick(card: KanbanCard) {
+    try {
+      const opportunity = await this.opportunityService.getOpportunityById(card.id);
+      card.data.opportunity = opportunity;
 
-    if (card.status !== 'PENDING_DOCUMENTS') {
-      const opportunityData = card.data?.opportunity || card;
-      this.openDocumentsModal(opportunityData);
-    } else {
-
-      this.isDetailsModalOpen = true;
-
-      this.modalService.open({
-        id: "solicitation-details",
-        title: "Visão geral",
-        size: "fullscreen",
-        showHeader: true,
-        showCloseButton: true,
-        closeOnBackdropClick: true,
-        closeOnEscapeKey: true,
-        data: card
-      });
+      if (card.status === 'PENDING_DOCUMENTS') {
+        const opportunityData = card.data?.opportunity || card;
+        const modal = this.openDocumentsModal(opportunityData);
+        modal.subscribe(() => {
+          this.openDetailsModal(card);
+        });
+      } else {
+        this.openDetailsModal(card);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar oportunidade:', error);
+      this.toastService.error('Erro ao carregar oportunidade. Tente novamente.');
     }
 
+  }
 
+  openDetailsModal(card: KanbanCard) {
+    this.isDetailsModalOpen = true;
+    this.modalService.open({
+      id: "solicitation-details",
+      title: "Visão geral",
+      size: "fullscreen",
+      showHeader: true,
+      showCloseButton: true,
+      closeOnBackdropClick: true,
+      closeOnEscapeKey: true,
+      data: card
+    });
   }
 
   // Apply filters to columns/cards
@@ -436,9 +450,9 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   // Método público para abrir o modal de documentos (chamado pelo modal de solicitação)
-  openDocumentsModal(solicitationData: any): void {
+  openDocumentsModal(solicitationData: any): Subject<any> {
     this.documentsSolicitationData = solicitationData;
-    this.modalService.open({
+    const closeSubject = this.modalService.open({
       id: 'documents-modal',
       title: 'Documentos Necessários',
       subtitle: 'Para completar sua solicitação, envie os documentos necessários.',
@@ -447,5 +461,6 @@ export class Dashboard implements OnInit, OnDestroy {
         solicitationData: solicitationData
       }
     });
+    return closeSubject;
   }
 }
