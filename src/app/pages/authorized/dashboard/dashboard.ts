@@ -134,6 +134,7 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.refreshKanbanColumns();
     this.loadOpportunities();
   }
 

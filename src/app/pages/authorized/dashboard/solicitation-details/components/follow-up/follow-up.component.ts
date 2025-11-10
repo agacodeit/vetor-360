@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem } from '../../../../../../shared';
+import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem, CommentService, CommentDTO, ToastService, AuthService } from '../../../../../../shared';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-follow-up',
@@ -10,11 +11,19 @@ import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsCompone
     styleUrl: './follow-up.component.scss'
 })
 export class FollowUpComponent {
+    private commentService = inject(CommentService);
+    private toastService = inject(ToastService);
+    private authService = inject(AuthService);
+
     private _cardData: KanbanCard | null = null;
+    private currentOpportunityId: string | null = null;
+    private isSendingMessage = false;
+    isLoadingMessages = false;
 
     @Input() set cardData(value: KanbanCard | null) {
         this._cardData = value;
         this.updateDocumentsFromOpportunity();
+        this.handleOpportunityChange(value);
     }
 
     get cardData(): KanbanCard | null {
@@ -32,14 +41,42 @@ export class FollowUpComponent {
     messages: Message[] = [];
 
     onMessageSent(text: string): void {
-        const newMessage: Message = {
-            id: Date.now().toString(),
-            author: 'Você',
-            text: text,
-            timestamp: 'Agora',
-            isOwn: true
+        if (this.isSendingMessage) {
+            return;
+        }
+
+        const opportunityId = this.currentOpportunityId;
+        if (!opportunityId) {
+            this.toastService.error('Não foi possível identificar a oportunidade.');
+            return;
+        }
+
+        const payload = {
+            text: text.trim(),
+            opportunityId,
+            responseMail: false
         };
-        this.messages = [...this.messages, newMessage];
+
+        if (!payload.text) {
+            return;
+        }
+
+        this.isSendingMessage = true;
+
+        this.commentService.addComment(payload).pipe(
+            finalize(() => {
+                this.isSendingMessage = false;
+            })
+        ).subscribe({
+            next: comment => {
+                const message = this.mapCommentToMessage(comment);
+                this.messages = [...this.messages, message];
+            },
+            error: error => {
+                console.error('Erro ao enviar comentário:', error);
+                this.toastService.error('Não foi possível enviar a mensagem. Tente novamente.');
+            }
+        });
     }
 
     onMinimized(isMinimized: boolean): void {
@@ -113,6 +150,103 @@ export class FollowUpComponent {
             ...this.documentsConfig,
             documents: mappedDocuments
         };
+    }
+
+    private handleOpportunityChange(card: KanbanCard | null): void {
+        const opportunityId = this.extractOpportunityId(card);
+
+        if (!opportunityId) {
+            this.currentOpportunityId = null;
+            this.messages = [];
+            return;
+        }
+
+        if (opportunityId === this.currentOpportunityId && this.messages.length > 0) {
+            return;
+        }
+
+        this.currentOpportunityId = opportunityId;
+        this.loadMessages(opportunityId);
+    }
+
+    private extractOpportunityId(card: KanbanCard | null): string | null {
+        if (!card) {
+            return null;
+        }
+
+        return card.data?.opportunity?.id ?? card.id ?? null;
+    }
+
+    private loadMessages(opportunityId: string): void {
+        this.isLoadingMessages = true;
+
+        this.commentService.listComments(opportunityId).pipe(
+            finalize(() => {
+                this.isLoadingMessages = false;
+            })
+        ).subscribe({
+            next: comments => {
+                const sorted = [...comments].sort((a, b) => this.getCommentTime(a) - this.getCommentTime(b));
+                this.messages = sorted.map(comment => this.mapCommentToMessage(comment));
+            },
+            error: error => {
+                console.error('Erro ao carregar comentários:', error);
+                this.toastService.error('Não foi possível carregar as mensagens.');
+                this.messages = [];
+            }
+        });
+    }
+
+    private mapCommentToMessage(comment: CommentDTO): Message {
+        const currentUserId = this.authService.getCurrentUser()?.id ?? null;
+
+        return {
+            id: comment.id ?? this.generateTempId(),
+            author: comment.userNameIncluded || 'Usuário',
+            text: comment.text,
+            timestamp: this.formatTimestamp(comment.dateHourIncluded),
+            isOwn: comment.userIncludedId === currentUserId
+        };
+    }
+
+    private getCommentTime(comment: CommentDTO): number {
+        const dateString = comment.dateHourIncluded;
+        if (!dateString) {
+            return 0;
+        }
+
+        const normalized = dateString.replace(' ', 'T');
+        const date = new Date(normalized);
+        if (!isNaN(date.getTime())) {
+            return date.getTime();
+        }
+
+        const fallback = new Date(dateString);
+        return fallback.getTime() || 0;
+    }
+
+    private formatTimestamp(dateString?: string): string {
+        if (!dateString) {
+            return '';
+        }
+
+        const normalized = dateString.replace(' ', 'T');
+        const date = new Date(normalized);
+        if (isNaN(date.getTime())) {
+            return dateString;
+        }
+
+        return date.toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    private generateTempId(): string {
+        return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
     private formatDocumentLabel(documentType: string): string {
