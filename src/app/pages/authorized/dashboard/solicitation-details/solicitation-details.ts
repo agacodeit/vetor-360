@@ -4,11 +4,10 @@ import { UserProfile } from '../../../../shared/types/profile.types';
 import {
   ClientDataComponent,
   CreditOperationComponent,
-  FinancialAgentComponent,
-  FinancialSummaryComponent,
   FollowUpComponent,
   RatingComponent,
-  SolicitationDataComponent
+  SolicitationDataComponent,
+  SolicitationMatchingComponent
 } from './components';
 
 @Component({
@@ -19,9 +18,8 @@ import {
     FollowUpComponent,
     ClientDataComponent,
     RatingComponent,
-    FinancialAgentComponent,
-    CreditOperationComponent,
-    FinancialSummaryComponent
+    SolicitationMatchingComponent,
+    CreditOperationComponent
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'

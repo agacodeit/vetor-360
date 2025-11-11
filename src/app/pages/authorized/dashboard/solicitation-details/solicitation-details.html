@@ -14,15 +14,10 @@
             <!-- Agente financeiro e Operação de Crédito - apenas para Gestor -->
             @if(isGestor) {
             <div class="d-grid columns-2 gap-48 mt-24">
-                <app-financial-agent [cardData]="cardData" />
+                <app-solicitation-matching [cardData]="cardData" />
                 <app-credit-operation [cardData]="cardData" />
             </div>
             }
-            <!-- Resumo financeiro - visível para todos -->
-            <div class="d-grid columns-2 gap-48 mt-24">
-                <app-financial-summary [cardData]="cardData" />
-                <!-- Gráfico de fluxo de caixa removido conforme critérios -->
-            </div>
         </div>
     </div>
 </article>

@@ -499,6 +499,7 @@ export class Dashboard implements OnInit, OnDestroy {
     setTimeout(() => {
       if (result && result.id) {
         this.openDocumentsModal(result);
+        this.loadOpportunities();
       }
     }, 300);
   }

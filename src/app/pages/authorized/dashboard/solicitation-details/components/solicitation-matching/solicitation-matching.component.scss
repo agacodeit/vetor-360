@@ -1,0 +1,15 @@
+@use '../../../../../../../styles/abstracts/variables' as *;
+
+.solicitation-matching {
+    &__content {
+        background: var(--white);
+        border-radius: $border-radius-md;
+        padding: $padding-md;
+        box-shadow: var(--shadow-box);
+        display: flex;
+        flex-direction: column;
+        gap: $padding-xs;
+        line-height: 1.5;
+        color: var(--primary-dark);
+    }
+}
