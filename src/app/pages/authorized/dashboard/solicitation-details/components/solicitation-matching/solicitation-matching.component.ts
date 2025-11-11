@@ -12,8 +12,33 @@ import { KanbanCard } from '../../../../../../shared';
 export class SolicitationMatchingComponent {
     @Input() cardData: KanbanCard | null = null;
 
-    get analysisLines(): string[] {
-        const opportunity = this.cardData?.data?.opportunity;
+    get analysisParagraphs(): string[] {
+        const latestAnalysis = this.getLatestAnalysisText();
+
+        if (latestAnalysis) {
+            return latestAnalysis
+                .split(/\n{2,}/)
+                .map(paragraph => paragraph.replace(/\s*\n\s*/g, ' ').trim())
+                .filter(Boolean);
+        }
+
+        return this.buildFallbackAnalysis();
+    }
+
+    private getLatestAnalysisText(): string | null {
+        const opportunity = this.getOpportunity();
+        const analyses = opportunity?.matchingAnalyses;
+
+        if (Array.isArray(analyses) && analyses.length > 0) {
+            const latest = analyses[analyses.length - 1];
+            return latest?.analysisText ?? null;
+        }
+
+        return null;
+    }
+
+    private buildFallbackAnalysis(): string[] {
+        const opportunity = this.getOpportunity();
         const customerName = opportunity?.customerName || this.cardData?.title || 'O cliente';
         const statusLabel = this.cardData?.data?.statusLabel || this.cardData?.status || 'em análise';
         const operationLabel = this.cardData?.data?.operationLabel || opportunity?.operation || 'operação não informada';
@@ -31,6 +56,10 @@ export class SolicitationMatchingComponent {
             `O valor pleiteado gira em torno de ${valueLabel}, com ${documentProgress}.`,
             `Recomenda-se priorizar agentes alinhados ao perfil e comunicar pendências para acelerar o avanço.`
         ];
+    }
+
+    private getOpportunity(): any {
+        return this.cardData?.data?.opportunity ?? this.cardData?.data ?? null;
     }
 }
 

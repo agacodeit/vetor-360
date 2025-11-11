@@ -1,9 +1,11 @@
 <section class="solicitation-matching d-grid columns-1 gap-12">
-    <h2 class="title-semibold mb-12">
+    <h2 class="title-semibold mb-8">
         Matching
     </h2>
 
     <article class="solicitation-matching__content body">
-        <p *ngFor="let line of analysisLines">{{ line }}</p>
+        <p *ngFor="let paragraph of analysisParagraphs">
+            {{ paragraph }}
+        </p>
     </article>
 </section>

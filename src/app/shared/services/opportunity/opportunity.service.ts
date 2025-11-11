@@ -127,7 +127,7 @@ export class OpportunityService {
 
     async getOpportunityById(id: string): Promise<OpportunitySummary> {
         return await lastValueFrom(this.http.get<OpportunitySummary>(
-            `${this.apiUrl}/secure/opportunity-vetor360/${id}`
+            `${this.apiUrl}/secure/opportunity-vetor360/${id}?mock=1`
         ));
     }
 }

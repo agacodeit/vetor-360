@@ -1,23 +1,32 @@
 <article class="solicitation-details">
     <div class="solicitation-details__container mt-24">
-        <div class="solicitation-details__content">
-            <!-- Dados da solicitação - visível para todos -->
-            <app-solicitation-data [cardData]="cardData" />
-            <app-follow-up [cardData]="cardData" />
+        <ds-tabs [tabs]="tabs" [activeTabId]="activeTabId" (tabChange)="onTabChange($event)">
+            @if(activeTabId === 'general') {
+            <div class="solicitation-details__content">
+                <!-- Dados da solicitação - visível para todos -->
+                <app-solicitation-data [cardData]="cardData" />
+                <app-follow-up [cardData]="cardData" />
 
-            <!-- Dados do cliente e rating - visível para todos -->
-            <div class="d-grid columns-2 gap-48 mt-24">
-                <app-client-data [cardData]="cardData" />
-                <app-rating [cardData]="cardData" />
-            </div>
+                <!-- Dados do cliente e rating - visível para todos -->
+                <div class="d-grid columns-2 gap-48 mt-24">
+                    <app-client-data [cardData]="cardData" />
+                    <app-rating [cardData]="cardData" />
+                </div>
 
-            <!-- Agente financeiro e Operação de Crédito - apenas para Gestor -->
-            @if(isGestor) {
-            <div class="d-grid columns-2 gap-48 mt-24">
-                <app-solicitation-matching [cardData]="cardData" />
-                <app-credit-operation [cardData]="cardData" />
+                <!-- Operação de Crédito - apenas para Gestor -->
+                @if(isGestor) {
+                <div class="mt-24">
+                    <app-credit-operation [cardData]="cardData" />
+                </div>
+                }
             </div>
             }
-        </div>
+
+            @if(activeTabId === 'matching') {
+            <div class="solicitation-details__content">
+                <app-solicitation-matching [cardData]="cardData" />
+            </div>
+            }
+        </ds-tabs>
     </div>
 </article>
