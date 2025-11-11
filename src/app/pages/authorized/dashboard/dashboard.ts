@@ -568,11 +568,25 @@ export class Dashboard implements OnInit, OnDestroy {
         const modal = this.openDocumentsModal(opportunityData);
         modal.subscribe(() => {
           setTimeout(() => {
-            this.openDetailsModal(card);
+            const detailsModal = this.openDetailsModal(card);
+            detailsModal.subscribe(async (result: any) => {
+              if (result && result.reload) {
+                const opportunity = await this.opportunityService.getOpportunityById(card.id);
+                card.data.opportunity = opportunity;
+                this.onCardClick({ card, column });
+              }
+            });
           }, 300);
         });
       } else {
-        this.openDetailsModal(card);
+        const detailsModal = this.openDetailsModal(card);
+        detailsModal.subscribe(async (result: any) => {
+          if (result && result.reload) {
+            const opportunity = await this.opportunityService.getOpportunityById(card.id);
+            card.data.opportunity = opportunity;
+            this.onCardClick({ card, column });
+          }
+        });
       }
     } catch (error) {
       console.error('Erro ao carregar oportunidade:', error);
@@ -585,7 +599,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
   openDetailsModal(card: KanbanCard) {
     this.isDetailsModalOpen = true;
-    this.modalService.open({
+    const closeSubject = this.modalService.open({
       id: "solicitation-details",
       title: "Visão geral",
       size: "fullscreen",
@@ -595,6 +609,7 @@ export class Dashboard implements OnInit, OnDestroy {
       closeOnEscapeKey: true,
       data: card
     });
+    return closeSubject;
   }
 
   // Apply filters to columns/cards

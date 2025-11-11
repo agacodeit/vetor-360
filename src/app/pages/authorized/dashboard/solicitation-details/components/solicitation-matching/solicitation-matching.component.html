@@ -1,11 +1,13 @@
 <section class="solicitation-matching d-grid columns-1 gap-12">
-    <h2 class="title-semibold mb-8">
-        Matching
-    </h2>
+
 
     <article class="solicitation-matching__content body">
-        <p *ngFor="let paragraph of analysisParagraphs">
-            {{ paragraph }}
-        </p>
+        <p [innerHTML]="matchAnalysis?.analysisText"></p>
+        <p class="text-right">{{matchAnalysis?.analysisDate | date:'dd/MM/yyyy HH:mm'}}</p>
     </article>
+
+    <div class="solicitation-matching__actions">
+        <ds-button label="Analisar" variant="fill" [isLoading]="isRequestingAnalysis"
+            (onClickEmitter)="triggerAnalysis()"></ds-button>
+    </div>
 </section>

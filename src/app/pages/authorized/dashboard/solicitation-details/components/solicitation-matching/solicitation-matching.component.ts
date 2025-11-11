@@ -1,61 +1,74 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KanbanCard } from '../../../../../../shared';
+import { ButtonComponent, KanbanCard, ModalService, ToastService } from '../../../../../../shared';
+import { MatchingAnalysis, MatchingService } from '../../../../../../shared/services/matching/matching.service';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-solicitation-matching',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, ButtonComponent],
     templateUrl: './solicitation-matching.component.html',
     styleUrl: './solicitation-matching.component.scss'
 })
 export class SolicitationMatchingComponent {
     @Input() cardData: KanbanCard | null = null;
+    @Output() analysisRequested = new EventEmitter<MatchingAnalysis>();
 
-    get analysisParagraphs(): string[] {
-        const latestAnalysis = this.getLatestAnalysisText();
+    private matchingService = inject(MatchingService);
+    private toastService = inject(ToastService);
+    private modalService = inject(ModalService);
+    isRequestingAnalysis = false;
+    private latestAnalysisOverride: MatchingAnalysis | null = null;
 
-        if (latestAnalysis) {
-            return latestAnalysis
-                .split(/\n{2,}/)
-                .map(paragraph => paragraph.replace(/\s*\n\s*/g, ' ').trim())
-                .filter(Boolean);
+    get matchAnalysis(): MatchingAnalysis | null {
+        if (this.latestAnalysisOverride) {
+            return this.latestAnalysisOverride;
         }
 
-        return this.buildFallbackAnalysis();
-    }
-
-    private getLatestAnalysisText(): string | null {
         const opportunity = this.getOpportunity();
-        const analyses = opportunity?.matchingAnalyses;
+        const analyses = opportunity?.matchingAnalyses as MatchingAnalysis[] | undefined;
 
         if (Array.isArray(analyses) && analyses.length > 0) {
-            const latest = analyses[analyses.length - 1];
-            return latest?.analysisText ?? null;
+            return analyses[analyses.length - 1] ?? null;
         }
 
         return null;
     }
 
-    private buildFallbackAnalysis(): string[] {
-        const opportunity = this.getOpportunity();
-        const customerName = opportunity?.customerName || this.cardData?.title || 'O cliente';
-        const statusLabel = this.cardData?.data?.statusLabel || this.cardData?.status || 'em análise';
-        const operationLabel = this.cardData?.data?.operationLabel || opportunity?.operation || 'operação não informada';
-        const valueLabel = this.cardData?.data?.valueLabel || '-';
-        const documentsSummary = this.cardData?.data?.documentsSummary;
-        const completedDocs = documentsSummary?.completed ?? 0;
-        const totalDocs = documentsSummary?.total ?? 0;
-        const documentProgress = totalDocs > 0
-            ? `${completedDocs}/${totalDocs} documentos entregues`
-            : 'nenhum documento entregue até o momento';
+    get analysisParagraphs(): MatchingAnalysis | null {
+        const latestAnalysis = this.matchAnalysis;
 
-        return [
-            `${customerName} está atualmente na etapa ${statusLabel.toString().toLowerCase()}.`,
-            `A análise indica maior afinidade com operações do tipo ${operationLabel.toLowerCase()}.`,
-            `O valor pleiteado gira em torno de ${valueLabel}, com ${documentProgress}.`,
-            `Recomenda-se priorizar agentes alinhados ao perfil e comunicar pendências para acelerar o avanço.`
-        ];
+        return latestAnalysis;
+    }
+
+    triggerAnalysis(): void {
+        const opportunityId = this.getOpportunity()?.id || this.cardData?.id;
+
+        if (!opportunityId) {
+            this.toastService.error('Não foi possível identificar a solicitação.', 'Erro ao analisar');
+            return;
+        }
+
+        if (this.isRequestingAnalysis) {
+            return;
+        }
+
+        this.isRequestingAnalysis = true;
+
+        this.matchingService.executeAnalysis(opportunityId)
+            .pipe(finalize(() => (this.isRequestingAnalysis = false)))
+            .subscribe({
+                next: (analysis) => {
+                    this.latestAnalysisOverride = analysis;
+                    this.modalService.close('solicitation-details', { reload: true });
+                    this.toastService.success('Análise solicitada com sucesso!', 'Matching');
+                },
+                error: (error) => {
+                    const message = error?.error?.message || 'Não foi possível solicitar uma nova análise.';
+                    this.toastService.error(message, 'Erro ao analisar');
+                }
+            });
     }
 
     private getOpportunity(): any {
