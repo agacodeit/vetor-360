@@ -4,8 +4,6 @@
     &__content {
         background: var(--white);
         border-radius: $border-radius-md;
-        padding: $padding-md;
-        box-shadow: var(--shadow-box);
         display: flex;
         flex-direction: column;
         gap: $padding-xs;

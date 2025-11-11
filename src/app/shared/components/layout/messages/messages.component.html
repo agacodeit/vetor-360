@@ -62,7 +62,7 @@
     <!-- Input -->
     <div class="messages__input-container">
         <input type="text" class="messages__input" [(ngModel)]="messageText" (keydown.enter)="sendMessage()"
-            placeholder="Digite sua mensagem... use @ para mencionar" [disabled]="isMinimized || isLoading">
+            placeholder="Digite sua mensagem..." [disabled]="isMinimized || isLoading">
         <div class="messages__input-actions">
             <button class="messages__send-btn" (click)="sendMessage()"
                 [disabled]="!messageText.trim() || isMinimized || isLoading">

@@ -1,10 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, ViewEncapsulation, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToastService, ModalService, DocumentsComponent, ButtonComponent, DocumentsConfig, DocumentItem, IconComponent, DocumentService, LinkMultipleFilesRequest } from '../../../../../shared';
+import { ButtonComponent, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, LinkMultipleFilesRequest, ModalService, OperationRegistryService, ToastService } from '../../../../../shared';
 import { SolicitationStatusUtil } from '../../../../../shared/utils/solicitation-status';
-import { forkJoin, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-documents-modal',
@@ -13,8 +11,7 @@ import { catchError, switchMap } from 'rxjs/operators';
         CommonModule,
         ReactiveFormsModule,
         DocumentsComponent,
-        ButtonComponent,
-        IconComponent
+        ButtonComponent
     ],
     templateUrl: './documents-modal.component.html',
     styleUrls: ['./documents-modal.component.scss'],
@@ -26,14 +23,14 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
     @Output() onSubmit = new EventEmitter<any>();
 
     private toastService = inject(ToastService);
-    private modalService = inject(ModalService);
     private documentService = inject(DocumentService);
+    private operationRegistry = inject(OperationRegistryService);
 
     documentsForm: FormGroup;
     isLoading = false;
     documentsData: any = {};
     isDocumentsValid = true;
-    // Armazena os fileCodes de cada documento
+
     private documentFileCodes: Map<string, string> = new Map();
     documentsConfig: DocumentsConfig = {
         title: 'Documentos da Solicitação',
@@ -54,14 +51,6 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
         'MATRICULA_IMOVEL': 'Matrícula do Imóvel',
         'AVALIACAO_IMOVEL': 'Avaliação do Imóvel',
         'RG_CNH': 'RG ou CNH - Documento de identidade'
-    };
-
-    // Mapeamento de tipos de operação para labels legíveis
-    private operationTypeLabels: { [key: string]: string } = {
-        'WORKING_CAPITAL_LONG_TERM': 'FGI',
-        'WORKING_CAPITAL_SHORT_TERM': 'Capital de Giro',
-        'INVOICE_DISCOUNTING': 'Desconto de Duplicatas',
-        'ANTICIPATION_RECEIVABLES': 'Antecipação de Recebíveis'
     };
 
     constructor(private fb: FormBuilder) {
@@ -335,10 +324,7 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
      * Obtém o label do tipo de operação
      */
     getOperationLabel(): string {
-        if (!this.solicitationData?.operation) {
-            return '';
-        }
-        return this.operationTypeLabels[this.solicitationData.operation] || this.solicitationData.operation;
+        return this.operationRegistry.getOperationLabel(this.solicitationData?.operation);
     }
 
     /**

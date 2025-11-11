@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService } from '../../../shared';
+import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService, OperationRegistryService } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { OpportunityService, OpportunitySummary, OpportunityStatus, OpportunitySearchResponse } from '../../../shared/services/opportunity/opportunity.service';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
@@ -48,6 +48,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private modalService = inject(ModalService);
   private opportunityService = inject(OpportunityService);
   private toastService = inject(ToastService);
+  private operationRegistry = inject(OperationRegistryService);
 
   isCreateModalOpen: boolean = false;
   isDetailsModalOpen: boolean = false;
@@ -65,14 +66,6 @@ export class Dashboard implements OnInit, OnDestroy {
     { status: 'WAITING_PAYMENT', columnId: 'waiting-payment', title: 'Aguardando pagamento', color: '#204FFF' },
     { status: 'FUNDS_RELEASED', columnId: 'released-resources', title: 'Recursos liberados', color: '#00B7FF' },
   ];
-
-  private readonly OPERATION_LABELS: Record<string, string> = {
-    WORKING_CAPITAL_LONG_TERM: 'Capital de Giro (Longo Prazo)',
-    WORKING_CAPITAL_SHORT_TERM: 'Capital de Giro (Curto Prazo)',
-    INVOICE_DISCOUNTING: 'Desconto de Duplicatas',
-    ANTICIPATION_RECEIVABLES: 'Antecipação de Recebíveis',
-    STRUCTURED_REAL_ESTATE_CREDIT: 'Crédito Estruturado Imobiliário'
-  };
 
   // Filters
   filterClientName: string = '';
@@ -373,7 +366,7 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   private getOperationLabel(operation: string): string {
-    return this.OPERATION_LABELS[operation] || operation;
+    return this.operationRegistry.getOperationLabel(operation);
   }
 
   private getDocumentsSummary(documents: OpportunitySummary['documents']): { completed: number; total: number } {
