@@ -37,16 +37,12 @@ export class ModalComponent implements OnInit, OnDestroy {
           this.isVisible = newVisibility;
 
           if (newVisibility) {
-
-            this.shouldShowModal = true;
-
             setTimeout(() => {
+              this.shouldShowModal = true;
               this.animationState = 'in';
             }, 0);
           } else {
-
             this.animationState = 'out';
-
           }
         }
 

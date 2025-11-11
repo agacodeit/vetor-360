@@ -567,7 +567,9 @@ export class Dashboard implements OnInit, OnDestroy {
         const opportunityData = card.data?.opportunity || card;
         const modal = this.openDocumentsModal(opportunityData);
         modal.subscribe(() => {
-          this.openDetailsModal(card);
+          setTimeout(() => {
+            this.openDetailsModal(card);
+          }, 300);
         });
       } else {
         this.openDetailsModal(card);
