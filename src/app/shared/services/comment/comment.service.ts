@@ -26,7 +26,7 @@ export interface CommentCreateRequest {
     providedIn: 'root'
 })
 export class CommentService {
-    private readonly baseUrl = `${environment.apiUrl}/secure/opportunity`;
+    private readonly baseUrl = `${environment.apiUrl}/secure/opportunity-vetor360`;
 
     constructor(private http: HttpClient) { }
 
