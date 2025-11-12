@@ -1,0 +1,13 @@
+<section class="solicitation-matching d-grid columns-1 gap-12">
+
+
+    <article class="solicitation-matching__content body">
+        <p [innerHTML]="matchAnalysis?.analysisText"></p>
+        <p class="text-right">{{matchAnalysis?.analysisDate | date:'dd/MM/yyyy HH:mm'}}</p>
+    </article>
+
+    <div class="solicitation-matching__actions">
+        <ds-button label="Analisar" variant="fill" [isLoading]="isRequestingAnalysis"
+            (onClickEmitter)="triggerAnalysis()"></ds-button>
+    </div>
+</section>

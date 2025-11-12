@@ -5,8 +5,16 @@
             Solicitação
         </h2>
         <p class="body">
-            XPTO
+            {{ cardData?.data?.operationLabel || 'Operação não informada' }}
         </p>
+        <p class="input-label font-weight-regular">
+            ID: {{ cardData?.data?.opportunity?.id || '-' }}
+        </p>
+        @if (cardData?.data?.createdAt) {
+        <p class="input-label font-weight-regular">
+            Incluída em {{ cardData?.data?.createdAt }}
+        </p>
+        }
     </div>
     <div class="solicitation-data__info d-flex flex-column gap-12 align-items-end">
         <div class="solicitation-data__status">

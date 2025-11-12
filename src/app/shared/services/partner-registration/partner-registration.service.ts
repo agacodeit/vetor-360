@@ -70,7 +70,7 @@ export class PartnerRegistrationService {
      */
     createPartner(partnerData: PartnerRegistrationRequest): Observable<PartnerRegistrationResponse> {
         return this.http.post<PartnerRegistrationResponse>(
-            `${this.apiUrl}/secure/user/create`,
+            `${this.apiUrl}/user/create`,
             partnerData
         );
     }

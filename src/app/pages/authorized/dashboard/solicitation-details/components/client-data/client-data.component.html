@@ -7,20 +7,19 @@
         <div class="client-data__data d-flex justify-content-between mb-8">
             <div class="client-data__details d-flex flex-column gap-12">
                 <div class="client-data__block">
-                    <p class="body mb-6">{{cardData?.client}}</p>
-                    <p class="input-label font-weight-regular">{{cardData?.cnpj}}</p>
+                    <p class="body mb-6">{{ cardData?.client || 'Cliente não informado' }}</p>
+                    <p class="input-label font-weight-regular">{{ opportunity?.id || '-' }}</p>
                 </div>
             </div>
             <div class="client-data__details d-flex flex-column">
                 <div class="client-data__block">
-                    <p class="body mb-6">Aberta em {{cardData?.dueDate | date:'dd/MM/yyyy'}}</p>
-                    <p class="body">Tecnologia</p>
+                    <p class="body mb-6">Aberta em {{ createdAt }}</p>
+                    <p class="body">{{ activity }}</p>
                 </div>
             </div>
         </div>
         <address class="client-data__address">
-            <p class="body">Alameda Afonso Schmidt, 119 - Sala 78 - Santa Terezinha, São Paulo - SP,
-                02450-000</p>
+            <p class="body">{{ location }}</p>
         </address>
     </div>
 </section>

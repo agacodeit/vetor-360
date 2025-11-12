@@ -15,55 +15,57 @@
     }
 
     <!-- Messages Container -->
-    <div class="messages__container" #messagesContainer>
-        <div class="messages__list">
-            @for (message of messages; track message.id) {
-            <div class="messages__message" [class.messages__message--own]="message.isOwn">
-                <!-- Avatar -->
-                <div class="messages__avatar">
-                    <ds-icon icon="fa-regular fa-user" fontSize="18px"></ds-icon>
-                </div>
-
-                <!-- Content -->
-                <div class="messages__content">
-                    <!-- Header -->
-                    <div class="messages__message-header">
-                        <span class="messages__author">{{ message.author }}</span>
-                        <span class="messages__timestamp">{{ message.timestamp }}</span>
+    <div class="messages__container-wrapper">
+        <div class="messages__container" #messagesContainer>
+            <div class="messages__list">
+                @for (message of messages; track message.id) {
+                <div class="messages__message" [class.messages__message--own]="message.isOwn">
+                    <!-- Avatar -->
+                    <div class="messages__avatar">
+                        <ds-icon icon="fa-regular fa-user" fontSize="18px"></ds-icon>
                     </div>
 
-                    <!-- Text -->
-                    <div class="messages__text" [innerHTML]="formatMessage(message.text)"></div>
+                    <!-- Content -->
+                    <div class="messages__content">
+                        <!-- Header -->
+                        <div class="messages__message-header">
+                            <span class="messages__author">{{ message.author }}</span>
+                            <span class="messages__timestamp">{{ message.timestamp }}</span>
+                        </div>
 
-                    <!-- Attachment -->
-                    @if (message.attachment) {
-                    <div class="messages__attachment">
-                        <ds-icon icon="fa-regular fa-file" fontSize="18px" color="secondary-medium"></ds-icon>
-                        <span class="messages__attachment-name">{{ message.attachment.name }}</span>
-                        <button class="messages__attachment-download" aria-label="Download">
-                            <ds-icon icon="fa-solid fa-download" fontSize="16px"></ds-icon>
-                        </button>
+                        <!-- Text -->
+                        <div class="messages__text" [innerHTML]="formatMessage(message.text)"></div>
+
+                        <!-- Attachment -->
+                        @if (message.attachment) {
+                        <div class="messages__attachment">
+                            <ds-icon icon="fa-regular fa-file" fontSize="18px" color="secondary-medium"></ds-icon>
+                            <span class="messages__attachment-name">{{ message.attachment.name }}</span>
+                            <button class="messages__attachment-download" aria-label="Download">
+                                <ds-icon icon="fa-solid fa-download" fontSize="16px"></ds-icon>
+                            </button>
+                        </div>
+                        }
                     </div>
-                    }
                 </div>
+                }
             </div>
-            }
         </div>
+
+        @if (isLoading) {
+        <div class="messages__loading">
+            <ds-spinner variant="fill" size="48px"></ds-spinner>
+        </div>
+        }
     </div>
 
     <!-- Input -->
     <div class="messages__input-container">
         <input type="text" class="messages__input" [(ngModel)]="messageText" (keydown.enter)="sendMessage()"
-            placeholder="Digite sua mensagem... use @ para mencionar" [disabled]="isMinimized">
+            placeholder="Digite sua mensagem..." [disabled]="isMinimized || isLoading">
         <div class="messages__input-actions">
-            <button class="messages__input-btn" (click)="openMentions()" aria-label="Mencionar"
-                [disabled]="isMinimized">
-                <ds-icon icon="fa-solid fa-at" fontSize="18px"></ds-icon>
-            </button>
-            <button class="messages__input-btn" (click)="openAttachment()" aria-label="Anexar" [disabled]="isMinimized">
-                <ds-icon icon="fa-solid fa-paperclip" fontSize="18px"></ds-icon>
-            </button>
-            <button class="messages__send-btn" (click)="sendMessage()" [disabled]="!messageText.trim() || isMinimized">
+            <button class="messages__send-btn" (click)="sendMessage()"
+                [disabled]="!messageText.trim() || isMinimized || isLoading">
                 Enviar
                 <ds-icon icon="fa-solid fa-paper-plane" fontSize="16px"></ds-icon>
             </button>

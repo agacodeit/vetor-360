@@ -1,7 +1,8 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { SpinnerComponent } from '../../atoms/spinner/spinner.component';
 
 export interface Message {
     id: string;
@@ -18,13 +19,14 @@ export interface Message {
 @Component({
     selector: 'app-messages',
     standalone: true,
-    imports: [CommonModule, FormsModule, IconComponent],
+    imports: [CommonModule, FormsModule, IconComponent, SpinnerComponent],
     templateUrl: './messages.component.html',
     styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent {
+export class MessagesComponent implements OnChanges {
     @Input() messages: Message[] = [];
     @Input() showHeader = true;
+    @Input() isLoading = false;
     @Output() messageSent = new EventEmitter<string>();
     @Output() minimized = new EventEmitter<boolean>();
 
@@ -33,10 +35,20 @@ export class MessagesComponent {
     messageText = '';
     isMinimized = false;
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['messages'] && this.messages?.length) {
+            this.scrollToBottom();
+        }
+    }
+
     /**
      * Envia uma nova mensagem
      */
     sendMessage(): void {
+        if (this.isLoading || this.isMinimized) {
+            return;
+        }
+
         if (this.messageText.trim()) {
             this.messageSent.emit(this.messageText);
             this.messageText = '';
@@ -50,22 +62,6 @@ export class MessagesComponent {
     toggleMinimize(): void {
         this.isMinimized = !this.isMinimized;
         this.minimized.emit(this.isMinimized);
-    }
-
-    /**
-     * Abre seletor de menções
-     */
-    openMentions(): void {
-        // Implementar lógica de menções
-        console.log('Open mentions');
-    }
-
-    /**
-     * Abre seletor de anexos
-     */
-    openAttachment(): void {
-        // Implementar lógica de anexos
-        console.log('Open attachment');
     }
 
     /**
