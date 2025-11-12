@@ -4,9 +4,8 @@
 .messages {
     display: flex;
     flex-direction: column;
-    height: 500px;
+    height: 400px;
     width: 100%;
-    max-width: 740px;
     background: white;
     border-radius: $border-radius-bg;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -60,11 +59,28 @@
     }
 
 
+    &__container-wrapper {
+        position: relative;
+        flex: 1;
+        display: flex;
+    }
+
     &__container {
         flex: 1;
         overflow-y: auto;
         padding: $padding-xs;
         background: $background;
+    }
+
+    &__loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(1px);
+        pointer-events: none;
     }
 
     &__list {

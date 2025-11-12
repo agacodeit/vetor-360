@@ -17,7 +17,7 @@ export class SpinnerComponent {
   get color() {
     switch (this.variant) {
       case 'fill':
-        return 'white';
+        return 'primary-dark';
       case 'outline':
         return 'tertiary'
       default:

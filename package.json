@@ -7,6 +7,8 @@
     "start:local": "ng serve --configuration local",
     "start:no-proxy": "ng serve",
     "build": "ng build",
+    "build:hml": "ng build --configuration hml",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

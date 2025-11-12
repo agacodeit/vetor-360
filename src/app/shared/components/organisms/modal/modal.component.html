@@ -1,31 +1,39 @@
-<div class="modal-backdrop" (click)="onBackdropClick($event)" *ngIf="shouldShowModal">
+@if(shouldShowModal){
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
 
     <div [class]="getModalClasses()" [@fade]="animationState" (@fade.done)="onAnimationDone($event)"
         (click)="onModalContentClick($event)">
 
         <div class="modal-content">
 
+            @if(modalConfig?.showHeader){
+            <div class="modal-header">
 
-            <div class="modal-header" *ngIf="modalConfig?.showHeader">
-
-                <h4 class="modal-title" *ngIf="modalConfig?.title">
+                @if(modalConfig?.title){
+                <h4 class="modal-title">
                     {{ modalConfig?.title }}
                 </h4>
-
-                <ds-icon (click)="closeModal()" cursorType="pointer" *ngIf="modalConfig?.showCloseButton"
-                    aria-label="Fechar modal" icon="fa-regular fa-circle-xmark" fontSize="20px" color="primary-dark">
+                }
+                @if(modalConfig?.showCloseButton){
+                <ds-icon (click)="closeModal()" cursorType="pointer" aria-label="Fechar modal"
+                    icon="fa-regular fa-circle-xmark" fontSize="20px" color="primary-dark">
                 </ds-icon>
-
+                }
             </div>
 
-            <div class="modal-subtitle" *ngIf="modalConfig?.subtitle">
+            }
+            @if(modalConfig?.subtitle){
+            <div class="modal-subtitle">
                 <p>{{ modalConfig?.subtitle }}</p>
             </div>
+            }
 
-
-            <div class="modal-body" *ngIf="isVisible && animationState === 'in'">
+            @if(isVisible && animationState === 'in'){
+            <div class="modal-body">
                 <ng-content></ng-content>
             </div>
+            }
         </div>
     </div>
 </div>
+}

@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://advisorbank.com.br/acesssebankapi/api/v1/secure',
+    apiUrl: 'https://app.vetorsolucoesfinanceiras.com.br/acessebankapi/api/v1',
     appName: 'Vetor 360',
     version: '1.0.0'
 };
