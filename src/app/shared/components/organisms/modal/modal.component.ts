@@ -40,7 +40,7 @@ export class ModalComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               this.shouldShowModal = true;
               this.animationState = 'in';
-            }, 0);
+            }, 100);
           } else {
             this.animationState = 'out';
           }
