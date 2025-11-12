@@ -193,9 +193,9 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(false);
       });
 
-      it('should render financial-agent component for Gestor', () => {
-        const financialAgent = compiled.querySelector('app-financial-agent');
-        expect(financialAgent).toBeTruthy();
+      it('should render solicitation-matching component for Gestor', () => {
+        const matching = compiled.querySelector('app-solicitation-matching');
+        expect(matching).toBeTruthy();
       });
 
       it('should render credit-operation component for Gestor', () => {
@@ -236,9 +236,9 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(true);
       });
 
-      it('should NOT render financial-agent component for Partner', () => {
-        const financialAgent = compiled.querySelector('app-financial-agent');
-        expect(financialAgent).toBeFalsy();
+      it('should NOT render solicitation-matching component for Partner', () => {
+        const matching = compiled.querySelector('app-solicitation-matching');
+        expect(matching).toBeFalsy();
       });
 
       it('should NOT render credit-operation component for Partner', () => {
@@ -279,9 +279,9 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(false);
       });
 
-      it('should NOT render financial-agent component when no user is set', () => {
-        const financialAgent = compiled.querySelector('app-financial-agent');
-        expect(financialAgent).toBeFalsy();
+      it('should NOT render solicitation-matching component when no user is set', () => {
+        const matching = compiled.querySelector('app-solicitation-matching');
+        expect(matching).toBeFalsy();
       });
 
       it('should NOT render credit-operation component when no user is set', () => {

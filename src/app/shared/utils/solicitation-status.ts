@@ -37,8 +37,13 @@ export class SolicitationStatusUtil {
      * @param status Status da solicitação
      * @returns Label em português
      */
-    static getLabel(status: string): string {
-        return STATUS_LABELS[status as SolicitationStatus] || status;
+    static getLabel(status: string = 'Status inválido'): string {
+        if (!status) {
+            return status;
+        }
+
+        const normalizedStatus = status.trim().toLowerCase().replace(/_/g, '-') as SolicitationStatus;
+        return STATUS_LABELS[normalizedStatus] || status;
     }
 
 

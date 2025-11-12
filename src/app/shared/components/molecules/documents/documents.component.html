@@ -6,6 +6,7 @@
             (itemToggled)="onAccordionItemToggled($event)">
 
             <ng-template accordionItem="documents-section" class="accordion-content-inner">
+                @if (config.documents.length > 0) {
                 @for (document of config.documents; track document.id) {
                 <div class="d-flex gap-8 justify-content-between align-items-center"
                     [style.margin-top]="$index > 0 ? '12px' : '0'">
@@ -40,6 +41,9 @@
                         }
                     </div>
                 </div>
+                }
+                } @else {
+                <p class="ds-documents__empty">Nenhum documento disponível no momento.</p>
                 }
             </ng-template>
         </ds-accordion>

@@ -25,29 +25,7 @@ export class DocumentsStepComponent implements OnInit {
         title: 'Documentos Obrigatórios',
         showAccordion: true,
         allowMultiple: true,
-        documents: [
-            {
-                id: 'rg-cnh',
-                label: 'RG ou CNH - Documento de identidade',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'cpf',
-                label: 'CPF - Cadastro de Pessoa Física',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'comprovante-residencia',
-                label: 'Comprovante de Residência (últimos 3 meses)',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            }
-        ]
+        documents: []
     };
 
     constructor() { }

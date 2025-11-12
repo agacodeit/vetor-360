@@ -1,27 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { KanbanCard, ModalService, ProfileService } from '../../../../shared';
+import { KanbanCard, ModalService, ProfileService, TabsComponent, TabConfig } from '../../../../shared';
 import { UserProfile } from '../../../../shared/types/profile.types';
 import {
   ClientDataComponent,
   CreditOperationComponent,
-  FinancialAgentComponent,
-  FinancialSummaryComponent,
   FollowUpComponent,
   RatingComponent,
-  SolicitationDataComponent
+  SolicitationDataComponent,
+  SolicitationMatchingComponent
 } from './components';
 
 @Component({
   selector: 'app-solicitation-details',
   standalone: true,
   imports: [
+    CommonModule,
+    TabsComponent,
     SolicitationDataComponent,
     FollowUpComponent,
     ClientDataComponent,
     RatingComponent,
-    FinancialAgentComponent,
-    CreditOperationComponent,
-    FinancialSummaryComponent
+    SolicitationMatchingComponent,
+    CreditOperationComponent
   ],
   templateUrl: './solicitation-details.html',
   styleUrl: './solicitation-details.scss'
@@ -32,6 +33,11 @@ export class SolicitationDetails {
   private profileService = inject(ProfileService);
 
   cardData: KanbanCard | null = null;
+  tabs: TabConfig[] = [
+    { id: 'general', label: 'Informações Gerais' },
+    { id: 'matching', label: 'Matching' }
+  ];
+  activeTabId = 'general';
 
   constructor() {
     this.cardData = this.modalService.modals().find(m => m.id === 'solicitation-details')?.config.data;
@@ -49,5 +55,9 @@ export class SolicitationDetails {
    */
   get isPartner(): boolean {
     return this.profileService.getCurrentUser()?.userTypeEnum === UserProfile.PARCEIRO_ACESSEBANK;
+  }
+
+  onTabChange(tabId: string): void {
+    this.activeTabId = tabId;
   }
 }

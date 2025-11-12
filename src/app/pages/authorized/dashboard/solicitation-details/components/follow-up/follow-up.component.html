@@ -7,7 +7,7 @@
         <div class="follow-up__stats body d-flex align-items-center gap-24">
             <p class="body">
                 <ds-icon icon="fa-regular fa-comment-dots" fontSize="16px" color="primary" />
-                2 mensagens
+                {{ messages.length }} {{ messages.length === 1 ? 'mensagem' : 'mensagens' }}
             </p>
             <p class="body">
                 <ds-icon icon="fa-regular fa-folder" fontSize="16px" color="primary" />
@@ -17,8 +17,8 @@
     </div>
 
     <div class="follow-up__visualization d-grid columns-2 gap-24">
-        <app-messages [messages]="messages" [showHeader]="false" (messageSent)="onMessageSent($event)"
-            (minimized)="onMinimized($event)">
+        <app-messages [messages]="messages" [showHeader]="false" [isLoading]="isLoadingMessages"
+            (messageSent)="onMessageSent($event)" (minimized)="onMinimized($event)">
         </app-messages>
 
         <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"

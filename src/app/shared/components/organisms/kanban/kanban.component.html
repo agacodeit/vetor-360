@@ -13,6 +13,11 @@
         <div *ngFor="let column of columns; trackBy: trackByColumnId" class="kanban__column" cdkDropList
             [id]="column.id" [cdkDropListData]="column.cards" [cdkDropListConnectedTo]="getConnectedDropLists()"
             (cdkDropListDropped)="onCardDrop($event)">
+            @if (isColumnLoading(column.id)) {
+            <div class="kanban__column-overlay">
+                <ds-spinner variant="fill" size="32px"></ds-spinner>
+            </div>
+            }
 
             <div class="kanban__column-header" [style.border-color]="column.color">
                 <div class="kanban__column-title">
@@ -45,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="kanban__column-content">
+            <div class="kanban__column-content" (scroll)="onColumnScroll($event, column)">
 
                 <div *ngFor="let card of column.cards; trackBy: trackByCardId" class="kanban__card" cdkDrag
                     [cdkDragData]="card" (cdkDragStarted)="onDragStarted()" (cdkDragMoved)="onDragMoved($event)"

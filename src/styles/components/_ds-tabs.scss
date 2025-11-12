@@ -1,0 +1,140 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/typography' as *;
+
+.ds-tabs-container {
+    display: flex;
+    flex-direction: column;
+    gap: $padding-sm;
+
+    &.size-small {
+        .ds-tab-button {
+            padding: $padding-xs $padding-sm;
+            font-size: $font-xs;
+        }
+    }
+
+    &.size-large {
+        .ds-tab-button {
+            padding: $padding-sm $padding-md;
+            font-size: $font-lg;
+        }
+    }
+
+    &.vertical {
+        flex-direction: row;
+        gap: $padding-md;
+
+        .ds-tabs-header {
+            width: 240px;
+            border-right: 1px solid var(--stroke);
+            border-bottom: none;
+        }
+
+        .ds-tabs-nav {
+            flex-direction: column;
+        }
+
+        .ds-tab-indicator {
+            width: 2px;
+        }
+    }
+}
+
+.ds-tabs-header {
+    position: relative;
+    display: flex;
+    border-bottom: 1px solid var(--stroke);
+    padding-bottom: $padding-xs;
+
+    &.scrollable .ds-tabs-nav {
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+}
+
+.ds-tabs-nav {
+    display: flex;
+    align-items: center;
+    gap: $padding-xs;
+    width: 100%;
+}
+
+.ds-tab-button {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: var(--label);
+    font-family: $font-primary;
+    font-size: $font-md;
+    font-weight: $font-weight-md;
+    padding: $padding-ssm $padding-md;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: $padding-xs;
+
+    &:hover:not(.disabled) {
+        color: var(--primary-dark);
+        background-color: rgba(1, 48, 71, 0.06);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-medium);
+        outline-offset: 2px;
+    }
+
+    &.active {
+        color: var(--primary-dark);
+        font-weight: $font-weight-xbold;
+    }
+
+    &.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
+.ds-tab-icon {
+    font-size: 16px;
+    color: currentColor;
+}
+
+.ds-tab-badge {
+    background-color: rgba(1, 48, 71, 0.1);
+    color: var(--primary-dark);
+    font-size: $font-xs;
+    font-weight: $font-weight-xbold;
+    border-radius: $border-radius-max;
+    padding: 2px 8px;
+    line-height: 1;
+}
+
+.ds-tab-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: $primary-medium;
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+    border-radius: $border-radius-xxs;
+}
+
+.ds-tabs-content {
+    background-color: var(--white);
+    border: 1px solid var(--stroke);
+    border-radius: $border-radius-md;
+    padding: $padding-md;
+    box-shadow: 0 $size-sm $size-lg rgba(1, 48, 71, 0.04);
+
+    &.compact-padding {
+        padding: $padding-sm;
+    }
+
+    &.no-padding {
+        padding: 0;
+    }
+}

@@ -51,19 +51,16 @@ export class DocumentService {
     private getDocumentsPayload(personType: 'F' | 'J'): DocumentPayload[] {
         if (personType === 'F') {
             return [
-                { description: 'Rg ou CNH' },
-                { description: 'CPF' },
-                { description: 'Comprovante de Residência no endereço cadastrado' }
-            ];
-        } else {
-            return [
-                { description: 'CCMEI ou Contrato Social' },
-                { description: 'RG ou CNH dos Sócios' },
-                { description: 'Cartão de CNPJ' },
-                { description: 'Conta de consumo em nome da empresa no endereço cadastrado' },
-                { description: 'Conta de consumo em nome dos sócios' }
+                { description: 'RG ou CNH' },
+                { description: 'Comprovante de endereço' }
             ];
         }
+
+        return [
+            { description: 'Contrato Social' },
+            { description: 'Última alteração contratual consolidada' },
+            { description: 'RG ou CNH' }
+        ];
     }
 
     /**

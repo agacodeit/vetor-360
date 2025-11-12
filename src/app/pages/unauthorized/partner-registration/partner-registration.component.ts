@@ -164,11 +164,22 @@ export class PartnerRegistrationComponent implements OnInit {
 
         this.documentService.createDocument(personType).subscribe({
             next: (documents) => {
-                // Converter resposta da API para DocumentItem
-                const documentItems: DocumentItem[] = documents.map(doc => ({
+                const documentItems: DocumentItem[] = documents.map((doc: any) => ({
                     id: doc.id,
-                    label: doc.description,
+                    documentType: doc.description || doc.id,
+                    opportunityId: undefined,
+                    label: doc.description || doc.id,
                     required: true,
+                    initialDocument: false,
+                    files: [],
+                    dateHourIncluded: undefined,
+                    dateHourUpdated: undefined,
+                    userIncludedId: undefined,
+                    documentStatusEnum: undefined,
+                    responsibleUserId: undefined,
+                    comments: [],
+                    playerIdWhoRequestedDocument: undefined,
+                    fileCode: null,
                     uploaded: false,
                     acceptedFormats: '.pdf,.jpg,.jpeg,.png'
                 }));
@@ -184,86 +195,14 @@ export class PartnerRegistrationComponent implements OnInit {
                 console.error('Erro ao carregar documentos:', error);
                 this.toastService.error('Erro ao carregar documentos. Tente novamente.');
 
-                // Fallback para documentos mock em caso de erro
-                this.setupFallbackDocuments(personType);
+                this.documentsConfig = {
+                    title: 'Documentos Obrigatórios',
+                    showAccordion: true,
+                    allowMultiple: true,
+                    documents: []
+                };
             }
         });
-    }
-
-    private setupFallbackDocuments(personType: 'F' | 'J'): void {
-        const isPersonFisica = personType === 'F';
-        this.documentsConfig = {
-            title: 'Documentos Obrigatórios',
-            showAccordion: true,
-            allowMultiple: true,
-            documents: isPersonFisica ? this.getPersonFisicaDocuments() : this.getPersonJuridicaDocuments()
-        };
-    }
-
-    private getPersonFisicaDocuments(): DocumentItem[] {
-        return [
-            {
-                id: 'rg-cnh',
-                label: 'RG ou CNH - Documento de identidade',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'cpf',
-                label: 'CPF - Cadastro de Pessoa Física',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'comprovante-residencia',
-                label: 'Comprovante de Residência no endereço cadastrado',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            }
-        ];
-    }
-
-    private getPersonJuridicaDocuments(): DocumentItem[] {
-        return [
-            {
-                id: 'ccmei-contrato-social',
-                label: 'CCMEI ou Contrato Social',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'rg-cnh-socios',
-                label: 'RG ou CNH dos Sócios',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'cartao-cnpj',
-                label: 'Cartão de CNPJ',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'conta-consumo-empresa',
-                label: 'Conta de consumo em nome da empresa no endereço cadastrado',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            },
-            {
-                id: 'conta-consumo-socios',
-                label: 'Conta de consumo em nome dos sócios',
-                required: true,
-                uploaded: false,
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-            }
-        ];
     }
 
     private passwordMatchValidator(control: any) {
