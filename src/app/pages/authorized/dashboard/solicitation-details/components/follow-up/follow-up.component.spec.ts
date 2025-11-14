@@ -181,7 +181,7 @@ describe('FollowUpComponent', () => {
         it('should handle documentsChange event', () => {
             spyOn(component, 'onDocumentsChange').and.callThrough();
 
-            const mockEvent = { checkboxes: {}, documents: [] };
+            const mockEvent = { documents: [] };
             component.onDocumentsChange(mockEvent);
 
             expect(component.onDocumentsChange).toHaveBeenCalledWith(mockEvent);

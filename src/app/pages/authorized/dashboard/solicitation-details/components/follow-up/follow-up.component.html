@@ -21,7 +21,7 @@
             (messageSent)="onMessageSent($event)" (minimized)="onMinimized($event)">
         </app-messages>
 
-        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)"
+        <ds-documents [config]="documentsConfig" (documentsChange)="onDocumentsChange($event)" [requireVerification]="true"
             (documentUploaded)="onDocumentUploaded($event)" (documentRemoved)="onDocumentRemoved($event)"
             (formValid)="onFormValid($event)">
         </ds-documents>

@@ -10,13 +10,8 @@
                 @for (document of config.documents; track document.id) {
                 <div class="d-flex gap-8 justify-content-between align-items-center"
                     [style.margin-top]="$index > 0 ? '12px' : '0'">
-                    <div class="ds-documents__checkbox">
-                        <input type="checkbox" [id]="'doc-' + document.id" [checked]="document.uploaded"
-                            (change)="onCheckboxChange(document.id, $event.target.checked)"
-                            class="ds-documents__checkbox-input" />
-                        <label [for]="'doc-' + document.id" class="ds-documents__checkbox-label">
-                            {{ document.label }}
-                        </label>
+                    <div class="ds-documents__label">
+                        {{ document.label }}
                     </div>
                     <div class="d-flex gap-8 align-items-center">
 
@@ -51,12 +46,8 @@
     } @else {
     @for (document of config.documents; track document.id) {
     <div class="d-flex gap-8 justify-content-between align-items-center" [style.margin-top]="$index > 0 ? '12px' : '0'">
-        <div class="ds-documents__checkbox">
-            <input type="checkbox" [id]="'doc-' + document.id" [checked]="document.uploaded"
-                (change)="onCheckboxChange(document.id, $event.target.checked)" class="ds-documents__checkbox-input" />
-            <label [for]="'doc-' + document.id" class="ds-documents__checkbox-label">
-                {{ document.label }}
-            </label>
+        <div class="ds-documents__label">
+            {{ document.label }}
         </div>
         <div class="d-flex gap-8 align-items-center">
             <button type="button" class="ds-documents__upload-btn" [class.uploaded]="document.uploaded"

@@ -84,7 +84,7 @@ describe('DocumentsStepComponent', () => {
             spyOn(component, 'onDocumentsChange').and.callThrough();
             spyOn(component.formDataChange, 'emit');
 
-            const mockEvent = { checkboxes: {}, documents: [] };
+            const mockEvent = { documents: [] };
             component.onDocumentsChange(mockEvent);
 
             expect(component.onDocumentsChange).toHaveBeenCalledWith(mockEvent);
@@ -141,7 +141,7 @@ describe('DocumentsStepComponent', () => {
         it('should emit formDataChange when ds-documents emits documentsChange', () => {
             spyOn(component.formDataChange, 'emit');
 
-            const mockEvent = { checkboxes: { 'rg-cnh': true }, documents: [] };
+            const mockEvent = { documents: [] };
             component.onDocumentsChange(mockEvent);
 
             expect(component.formDataChange.emit).toHaveBeenCalledWith(mockEvent);
@@ -157,7 +157,6 @@ describe('DocumentsStepComponent', () => {
 
         it('should handle formData input correctly', () => {
             const mockFormData = {
-                checkboxes: { 'rg-cnh': true },
                 documents: []
             };
 

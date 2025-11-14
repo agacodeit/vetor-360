@@ -62,7 +62,6 @@ export class DocumentsComponent implements OnInit, OnChanges {
     @Input() initialData: any = {};
 
     @Output() documentsChange = new EventEmitter<{
-        checkboxes: any;
         documents: DocumentItem[];
     }>();
 
@@ -104,11 +103,8 @@ export class DocumentsComponent implements OnInit, OnChanges {
     }
 
     private initializeForm(): void {
-        const formControls: { [key: string]: any } = {};
-        this.config.documents.forEach(doc => {
-            formControls[doc.id] = [false];
-        });
-        this.documentsForm = this.fb.group(formControls);
+        // Formulário não é mais necessário para checkboxes, mas mantido para compatibilidade
+        this.documentsForm = this.fb.group({});
     }
 
     private setupAccordion(): void {
@@ -127,10 +123,6 @@ export class DocumentsComponent implements OnInit, OnChanges {
 
     private loadInitialData(): void {
         if (this.initialData && Object.keys(this.initialData).length > 0) {
-            if (this.initialData.checkboxes) {
-                this.documentsForm.patchValue(this.initialData.checkboxes, { emitEvent: false });
-            }
-
             if (this.initialData.documents) {
                 this.initialData.documents.forEach((savedDoc: DocumentItem) => {
                     const doc = this.config.documents.find(d => d.id === savedDoc.id);
@@ -144,34 +136,14 @@ export class DocumentsComponent implements OnInit, OnChanges {
     }
 
     private setupFormSubscriptions(): void {
-        this.documentsForm.valueChanges.subscribe(value => {
-            this.config.documents.forEach(doc => {
-                doc.uploaded = value[doc.id] || false;
-            });
-
-            this.documentsChange.emit({
-                checkboxes: value,
-                documents: this.config.documents
-            });
-
-            this.formValid.emit(this.documentsForm.valid);
-        });
-
         // Emit initial validity
-        this.formValid.emit(this.documentsForm.valid);
+        this.formValid.emit(true);
     }
 
     onAccordionItemToggled(item: AccordionItem): void {
         // Handle accordion toggle if needed
     }
 
-    onCheckboxChange(documentId: string, value: boolean): void {
-        const document = this.config.documents.find(doc => doc.id === documentId);
-        if (document) {
-            document.uploaded = value;
-            this.documentsForm.patchValue({ [documentId]: value });
-        }
-    }
 
     /**
      * Manipula o upload de arquivo
@@ -237,8 +209,9 @@ export class DocumentsComponent implements OnInit, OnChanges {
                     document.uploaded = true;
                     document.isValidating = false;
 
-                    this.documentsForm.patchValue({
-                        [documentId]: true
+                    // Emite mudança nos documentos
+                    this.documentsChange.emit({
+                        documents: this.config.documents
                     });
 
                     this.documentUploaded.emit({
@@ -267,8 +240,9 @@ export class DocumentsComponent implements OnInit, OnChanges {
             document.uploaded = false;
             document.isValidating = false;
 
-            this.documentsForm.patchValue({
-                [documentId]: false
+            // Emite mudança nos documentos
+            this.documentsChange.emit({
+                documents: this.config.documents
             });
 
             // Emite evento para limpar o input file
@@ -294,8 +268,9 @@ export class DocumentsComponent implements OnInit, OnChanges {
             document.file = undefined;
             document.uploaded = false;
 
-            this.documentsForm.patchValue({
-                [documentId]: false
+            // Emite mudança nos documentos
+            this.documentsChange.emit({
+                documents: this.config.documents
             });
 
             this.documentRemoved.emit(documentId);
@@ -313,8 +288,9 @@ export class DocumentsComponent implements OnInit, OnChanges {
             document.uploaded = false;
             document.isValidating = false;
 
-            this.documentsForm.patchValue({
-                [documentId]: false
+            // Emite mudança nos documentos
+            this.documentsChange.emit({
+                documents: this.config.documents
             });
         }
     }
@@ -335,7 +311,6 @@ export class DocumentsComponent implements OnInit, OnChanges {
      */
     getFormValue(): any {
         return {
-            checkboxes: this.documentsForm.value,
             documents: this.config.documents
         };
     }
@@ -344,10 +319,6 @@ export class DocumentsComponent implements OnInit, OnChanges {
      * Define dados do formulário
      */
     setFormValue(data: any): void {
-        if (data.checkboxes) {
-            this.documentsForm.patchValue(data.checkboxes);
-        }
-
         if (data.documents) {
             data.documents.forEach((savedDoc: DocumentItem) => {
                 const doc = this.config.documents.find(d => d.id === savedDoc.id);
@@ -355,6 +326,11 @@ export class DocumentsComponent implements OnInit, OnChanges {
                     doc.file = savedDoc.file;
                     doc.uploaded = savedDoc.uploaded;
                 }
+            });
+
+            // Emite mudança nos documentos
+            this.documentsChange.emit({
+                documents: this.config.documents
             });
         }
     }

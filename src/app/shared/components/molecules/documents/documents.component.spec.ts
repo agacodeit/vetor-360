@@ -81,11 +81,10 @@ describe('DocumentsComponent', () => {
             });
         });
 
-        it('should initialize form with document controls', () => {
+        it('should initialize form', () => {
             fixture.detectChanges();
 
-            expect(component.documentsForm.get('rg-cnh')).toBeTruthy();
-            expect(component.documentsForm.get('cpf')).toBeTruthy();
+            expect(component.documentsForm).toBeTruthy();
         });
 
         it('should setup accordion items when showAccordion is true', () => {
@@ -129,13 +128,8 @@ describe('DocumentsComponent', () => {
             expect(accordion).toBeFalsy();
         });
 
-        it('should render document checkboxes', () => {
-            const checkboxes = compiled.querySelectorAll('input[type="checkbox"]');
-            expect(checkboxes.length).toBe(2);
-        });
-
         it('should render document labels', () => {
-            const labels = compiled.querySelectorAll('label');
+            const labels = compiled.querySelectorAll('.ds-documents__label');
             expect(labels.length).toBe(2);
         });
 
@@ -155,15 +149,6 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should handle checkbox change', () => {
-            spyOn(component, 'onCheckboxChange').and.callThrough();
-
-            const checkbox = compiled.querySelector('input[type="checkbox"]') as HTMLInputElement;
-            checkbox.checked = true;
-            checkbox.dispatchEvent(new Event('change'));
-
-            expect(component.onCheckboxChange).toHaveBeenCalledWith('rg-cnh', true);
-        });
 
         it('should handle file selection', () => {
             spyOn(component, 'onFileSelected').and.callThrough();
@@ -222,10 +207,16 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should emit documentsChange when form value changes', () => {
+        it('should emit documentsChange when document is uploaded', () => {
             spyOn(component.documentsChange, 'emit');
 
-            component.documentsForm.patchValue({ 'rg-cnh': true });
+            const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+            component.config.documents[0].file = file;
+            component.config.documents[0].uploaded = true;
+            
+            component.documentsChange.emit({
+                documents: component.config.documents
+            });
 
             expect(component.documentsChange.emit).toHaveBeenCalled();
         });
@@ -250,12 +241,12 @@ describe('DocumentsComponent', () => {
             expect(component.documentRemoved.emit).toHaveBeenCalledWith('cpf');
         });
 
-        it('should emit formValid when form validity changes', () => {
+        it('should emit formValid on initialization', () => {
             spyOn(component.formValid, 'emit');
 
-            component.documentsForm.patchValue({ 'rg-cnh': true });
+            component.ngOnInit();
 
-            expect(component.formValid.emit).toHaveBeenCalled();
+            expect(component.formValid.emit).toHaveBeenCalledWith(true);
         });
     });
 
@@ -264,22 +255,7 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should be valid when all required documents are uploaded', () => {
-            component.documentsForm.patchValue({
-                'rg-cnh': true,
-                'cpf': true
-            });
-
-            expect(component.documentsForm.valid).toBe(true);
-        });
-
-        it('should be valid even when required documents are not uploaded (no validators configured)', () => {
-            component.documentsForm.patchValue({
-                'rg-cnh': false,
-                'cpf': false
-            });
-
-            // O formulário é sempre válido porque não há validadores configurados
+        it('should be valid (form is always valid without checkboxes)', () => {
             expect(component.documentsForm.valid).toBe(true);
         });
     });
@@ -287,7 +263,6 @@ describe('DocumentsComponent', () => {
     describe('Initial Data Loading', () => {
         it('should load initial data when provided', () => {
             const initialData = {
-                checkboxes: { 'rg-cnh': true, 'cpf': false },
                 documents: [
                     {
                         id: 'rg-cnh',
@@ -303,8 +278,9 @@ describe('DocumentsComponent', () => {
             component.initialData = initialData;
             component.ngOnInit();
 
-            expect(component.documentsForm.get('rg-cnh')?.value).toBe(true);
-            expect(component.documentsForm.get('cpf')?.value).toBe(false);
+            const doc = component.config.documents.find(d => d.id === 'rg-cnh');
+            expect(doc?.uploaded).toBe(true);
+            expect(doc?.file).toBeTruthy();
         });
     });
 
@@ -316,14 +292,12 @@ describe('DocumentsComponent', () => {
         it('should get form value correctly', () => {
             const formValue = component.getFormValue();
 
-            expect(formValue.checkboxes).toBeDefined();
             expect(formValue.documents).toBeDefined();
             expect(formValue.documents).toEqual(component.config.documents);
         });
 
         it('should set form value correctly', () => {
             const newData = {
-                checkboxes: { 'rg-cnh': true, 'cpf': true },
                 documents: [
                     {
                         id: 'rg-cnh',
@@ -338,8 +312,9 @@ describe('DocumentsComponent', () => {
 
             component.setFormValue(newData);
 
-            expect(component.documentsForm.get('rg-cnh')?.value).toBe(true);
-            expect(component.documentsForm.get('cpf')?.value).toBe(true);
+            const doc = component.config.documents.find(d => d.id === 'rg-cnh');
+            expect(doc?.uploaded).toBe(true);
+            expect(doc?.file).toBeTruthy();
         });
     });
 

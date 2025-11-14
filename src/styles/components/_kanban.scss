@@ -57,8 +57,8 @@
     }
 
     &__column {
-        flex: 0 0 280px; // Fixed width for smaller cards
-        min-width: 280px;
+        flex: 0 0 233px; // Fixed width for smaller cards
+        min-width: 233px;
         background: var(--primary-dark-hover-dark);
         border-radius: $border-radius-xxb;
         display: flex;

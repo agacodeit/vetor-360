@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, LinkMultipleFilesRequest, ModalService, OperationRegistryService, ToastService } from '../../../../../shared';
+import { ButtonComponent, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, LinkMultipleFilesRequest, ModalService, OperationRegistryService, ToastService, ACCEPTED_DOCUMENT_FORMATS } from '../../../../../shared';
 import { SolicitationStatusUtil } from '../../../../../shared/utils/solicitation-status';
 
 @Component({
@@ -95,7 +95,7 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
                 playerIdWhoRequestedDocument: doc.playerIdWhoRequestedDocument,
                 fileCode: doc.fileCode ?? null,
                 uploaded: doc.documentStatusEnum === 'COMPLETED',
-                acceptedFormats: '.pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx'
+                acceptedFormats: ACCEPTED_DOCUMENT_FORMATS
             };
 
             return documentItem;

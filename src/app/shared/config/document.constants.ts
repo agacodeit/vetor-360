@@ -1,0 +1,1 @@
+export const ACCEPTED_DOCUMENT_FORMATS = '.pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx';

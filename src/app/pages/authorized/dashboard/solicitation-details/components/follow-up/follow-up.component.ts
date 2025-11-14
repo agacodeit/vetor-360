@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem, CommentService, CommentDTO, ToastService, AuthService } from '../../../../../../shared';
+import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem, CommentService, CommentDTO, ToastService, AuthService, DocumentService, LinkMultipleFilesRequest, ACCEPTED_DOCUMENT_FORMATS } from '../../../../../../shared';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -14,6 +14,7 @@ export class FollowUpComponent {
     private commentService = inject(CommentService);
     private toastService = inject(ToastService);
     private authService = inject(AuthService);
+    private documentService = inject(DocumentService);
 
     private _cardData: KanbanCard | null = null;
     private currentOpportunityId: string | null = null;
@@ -91,12 +92,75 @@ export class FollowUpComponent {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
+
         // Atualizar o documento como carregado
         const document = this.documentsConfig.documents.find(doc => doc.id === event.documentId);
         if (document) {
             document.uploaded = true;
             document.file = event.file;
         }
+
+        // Chamar API para linkar o arquivo à solicitação
+        this.linkDocumentToOpportunity(event);
+    }
+
+    /**
+     * Linka o documento carregado à oportunidade usando a API linkMultipleFiles
+     */
+    private linkDocumentToOpportunity(event: any): void {
+        const opportunityId = this.currentOpportunityId;
+        const fileCode = event.fileCode || event.uploadResponse?.code || event.uploadResponse?.id;
+        const documentId = event.documentId;
+        debugger
+        // Validações
+        if (!opportunityId) {
+            console.error('Opportunity ID não encontrado');
+            this.toastService.error('Não foi possível identificar a solicitação.');
+            return;
+        }
+
+        if (!fileCode) {
+            console.error('FileCode não encontrado no evento:', event);
+            this.toastService.error('Não foi possível identificar o arquivo carregado.');
+            return;
+        }
+
+        if (!documentId) {
+            console.error('Document ID não encontrado no evento:', event);
+            this.toastService.error('Não foi possível identificar o documento.');
+            return;
+        }
+
+        // Busca o documento para poder reverter em caso de erro
+        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+
+        // Monta o payload para a API
+        const linkRequest: LinkMultipleFilesRequest[] = [{
+            fileCode: fileCode,
+            opportunityId: opportunityId,
+            opportunityDocumentId: documentId
+        }];
+
+        console.log('Linkando documento à solicitação:', linkRequest);
+
+        // Chama a API
+        this.documentService.linkMultipleFiles(linkRequest).subscribe({
+            next: (response: any) => {
+                console.log('Documento linkado com sucesso:', response);
+                this.toastService.success('Documento enviado com sucesso!');
+            },
+            error: (error: any) => {
+                console.error('Erro ao linkar documento:', error);
+                const errorMessage = error?.error?.message || 'Erro ao enviar documento. Tente novamente.';
+                this.toastService.error(errorMessage);
+
+                // Reverte o estado do documento em caso de erro
+                if (document) {
+                    document.uploaded = false;
+                    document.file = undefined;
+                }
+            }
+        });
     }
 
     onDocumentRemoved(documentId: string): void {
@@ -143,7 +207,7 @@ export class FollowUpComponent {
             playerIdWhoRequestedDocument: doc.playerIdWhoRequestedDocument,
             fileCode: doc.fileCode ?? null,
             uploaded: doc.documentStatusEnum === 'COMPLETED',
-            acceptedFormats: '.pdf,.jpg,.jpeg,.png'
+            acceptedFormats: ACCEPTED_DOCUMENT_FORMATS
         }));
 
         this.documentsConfig = {
