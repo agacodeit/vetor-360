@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, OnChanges, Output, SimpleChange
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccordionComponent, AccordionItem, AccordionItemDirective, IconComponent } from '../../index';
-import { DocumentService, ToastService } from '../../../services';
+import { DocumentService, ToastService, ErrorHandlerService } from '../../../services';
 import { DocumentFile } from '../../../types/profile.types';
 
 export interface DocumentItem {
@@ -82,7 +82,8 @@ export class DocumentsComponent implements OnInit, OnChanges {
     constructor(
         private fb: FormBuilder,
         @Inject(DocumentService) private documentService: DocumentService,
-        @Inject(ToastService) private toastService: ToastService
+        @Inject(ToastService) private toastService: ToastService,
+        @Inject(ErrorHandlerService) private errorHandler: ErrorHandlerService
     ) {
         this.documentsForm = this.fb.group({});
     }
@@ -187,7 +188,8 @@ export class DocumentsComponent implements OnInit, OnChanges {
             },
             error: (error) => {
                 console.error('Erro na validação:', error);
-                this.toastService.error('Erro ao validar documento. Tente novamente.');
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage);
                 this.clearDocumentFile(documentId);
             }
         });
@@ -224,7 +226,8 @@ export class DocumentsComponent implements OnInit, OnChanges {
             },
             error: (error) => {
                 console.error('Erro no upload:', error);
-                this.toastService.error('Erro ao enviar documento. Tente novamente.');
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage);
                 this.clearDocumentFile(documentId);
             }
         });

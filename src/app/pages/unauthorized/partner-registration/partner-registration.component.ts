@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveForm
 import { Router } from '@angular/router';
 import { MaskDirective, MaskDirectiveService } from "mask-directive";
 import { lastValueFrom } from 'rxjs';
-import { ACCEPTED_DOCUMENT_FORMATS, ButtonComponent, CepService, DocumentItem, DocumentsConfig, PartnerRegistrationRequest, PartnerRegistrationService, StepperComponent, StepperStep, ToastService} from '../../../shared';
+import { ACCEPTED_DOCUMENT_FORMATS, ButtonComponent, CepService, DocumentItem, DocumentsConfig, PartnerRegistrationRequest, PartnerRegistrationService, StepperComponent, StepperStep, ToastService, ErrorHandlerService} from '../../../shared';
 import { PersonTypeStepComponent } from './steps/person-type-step/person-type-step.component';
 import { BasicInfoStepComponent } from './steps/basic-info-step/basic-info-step.component';
 import { AddressStepComponent } from './steps/address-step/address-step.component';
@@ -106,7 +106,8 @@ export class PartnerRegistrationComponent implements OnInit {
         private router: Router,
         @Inject(ToastService) private toastService: ToastService,
         @Inject(PartnerRegistrationService) private partnerRegistrationService: PartnerRegistrationService,
-        @Inject(CepService) private cepService: CepService
+        @Inject(CepService) private cepService: CepService,
+        @Inject(ErrorHandlerService) private errorHandler: ErrorHandlerService
     ) {
         this.registrationForm = this.fb.group({
             personType: ['', Validators.required],
@@ -412,7 +413,7 @@ export class PartnerRegistrationComponent implements OnInit {
 
         } catch (error: any) {
             console.error('Erro no cadastro:', error);
-            const errorMessage = error?.error?.message || 'Erro ao realizar cadastro. Tente novamente.';
+            const errorMessage = this.errorHandler.getErrorMessage(error);
             this.toastService.error(errorMessage);
         } finally {
             this.isLoading = false;
@@ -448,7 +449,8 @@ export class PartnerRegistrationComponent implements OnInit {
                 },
                 error: (error) => {
                     console.error('Erro ao buscar CEP:', error);
-                    this.toastService.error('Erro ao buscar informações do CEP');
+                    const errorMessage = this.errorHandler.getErrorMessage(error);
+                    this.toastService.error(errorMessage);
                 }
             });
         }

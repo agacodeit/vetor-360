@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, LinkMultipleFilesRequest, ModalService, OperationRegistryService, ToastService, ACCEPTED_DOCUMENT_FORMATS } from '../../../../../shared';
+import { ButtonComponent, DocumentItem, DocumentService, DocumentsComponent, DocumentsConfig, LinkMultipleFilesRequest, ModalService, OperationRegistryService, ToastService, ACCEPTED_DOCUMENT_FORMATS, ErrorHandlerService } from '../../../../../shared';
 import { SolicitationStatusUtil } from '../../../../../shared/utils/solicitation-status';
 
 @Component({
@@ -25,6 +25,7 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
     private toastService = inject(ToastService);
     private documentService = inject(DocumentService);
     private operationRegistry = inject(OperationRegistryService);
+    private errorHandler = inject(ErrorHandlerService);
 
     documentsForm: FormGroup;
     isLoading = false;
@@ -250,10 +251,8 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
                 console.error('Erro ao linkar documentos:', error);
                 console.error('Erro completo:', JSON.stringify(error, null, 2));
                 this.isLoading = false;
-                this.toastService.error(
-                    error.error?.message || 'Erro ao enviar documentos. Tente novamente.',
-                    'Erro'
-                );
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage, 'Erro');
             }
         });
     }

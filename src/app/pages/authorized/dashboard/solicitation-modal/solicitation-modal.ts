@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, ViewChild, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ButtonComponent, ModalService } from '../../../../shared';
+import { ButtonComponent, ModalService, ErrorHandlerService } from '../../../../shared';
 import { StepperComponent, StepperStep } from '../../../../shared/components/atoms/stepper/stepper.component';
 import { BasicInfoStepComponent } from './steps/basic-info/basic-info-step.component';
 import { GuaranteesStepComponent } from './steps/garantees/guarantees-step.component';
@@ -26,6 +26,7 @@ export class SolicitationModal implements OnInit {
   private toastService = inject(ToastService);
   private opportunityService = inject(OpportunityService);
   private modalService = inject(ModalService);
+  private errorHandler = inject(ErrorHandlerService);
 
   @Output() onClose = new EventEmitter<void>();
   @Output() onSubmit = new EventEmitter<any>();
@@ -173,10 +174,8 @@ export class SolicitationModal implements OnInit {
         error: (error) => {
           this.isLoading = false;
           console.error('Erro ao criar oportunidade:', error);
-          this.toastService.error(
-            error.error?.message || 'Erro ao criar oportunidade. Tente novamente.',
-            'Erro'
-          );
+          const errorMessage = this.errorHandler.getErrorMessage(error);
+          this.toastService.error(errorMessage, 'Erro');
         }
       });
     } else {

@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem, CommentService, CommentDTO, ToastService, AuthService, DocumentService, LinkMultipleFilesRequest, ACCEPTED_DOCUMENT_FORMATS } from '../../../../../../shared';
+import { KanbanCard, IconComponent, MessagesComponent, Message, DocumentsComponent, DocumentsConfig, DocumentItem, CommentService, CommentDTO, ToastService, AuthService, DocumentService, LinkMultipleFilesRequest, ACCEPTED_DOCUMENT_FORMATS, ErrorHandlerService } from '../../../../../../shared';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -15,6 +15,7 @@ export class FollowUpComponent {
     private toastService = inject(ToastService);
     private authService = inject(AuthService);
     private documentService = inject(DocumentService);
+    private errorHandler = inject(ErrorHandlerService);
 
     private _cardData: KanbanCard | null = null;
     private currentOpportunityId: string | null = null;
@@ -75,7 +76,8 @@ export class FollowUpComponent {
             },
             error: error => {
                 console.error('Erro ao enviar comentário:', error);
-                this.toastService.error('Não foi possível enviar a mensagem. Tente novamente.');
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage);
             }
         });
     }
@@ -111,7 +113,7 @@ export class FollowUpComponent {
         const opportunityId = this.currentOpportunityId;
         const fileCode = event.fileCode || event.uploadResponse?.code || event.uploadResponse?.id;
         const documentId = event.documentId;
-        debugger
+
         // Validações
         if (!opportunityId) {
             console.error('Opportunity ID não encontrado');
@@ -151,7 +153,7 @@ export class FollowUpComponent {
             },
             error: (error: any) => {
                 console.error('Erro ao linkar documento:', error);
-                const errorMessage = error?.error?.message || 'Erro ao enviar documento. Tente novamente.';
+                const errorMessage = this.errorHandler.getErrorMessage(error);
                 this.toastService.error(errorMessage);
 
                 // Reverte o estado do documento em caso de erro
@@ -255,7 +257,8 @@ export class FollowUpComponent {
             },
             error: error => {
                 console.error('Erro ao carregar comentários:', error);
-                this.toastService.error('Não foi possível carregar as mensagens.');
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage);
                 this.messages = [];
             }
         });
