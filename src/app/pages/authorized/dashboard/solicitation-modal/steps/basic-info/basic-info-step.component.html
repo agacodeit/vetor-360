@@ -1,107 +1,194 @@
 <div class="basic-info-step">
-    <form [formGroup]="basicInfoForm" class="basic-info-step__form">
-        <div class="basic-info-step__content">
+  <form [formGroup]="basicInfoForm" class="basic-info-step__form">
+    <div class="basic-info-step__content">
+      <div class="basic-info-step__field d-grid columns-2 gap-16">
+        <ds-input
+          label="Nome do Cliente"
+          placeholder="Digite o nome do cliente"
+          type="text"
+          formControlName="customerName"
+          [required]="true"
+          [invalid]="!!(customerName?.invalid && customerName?.touched)"
+          [errorMessage]="getFieldErrorMessage('customerName')"
+          [fullWidth]="true"
+        >
+        </ds-input>
 
-            <div class="basic-info-step__field">
-                <ds-input label="Nome do Cliente" placeholder="Digite o nome do cliente" type="text"
-                    formControlName="customerName" [required]="true"
-                    [invalid]="!!(customerName?.invalid && customerName?.touched)" [errorMessage]="customerName?.invalid && customerName?.touched ?
-              (customerName?.errors?.['required'] ? 'Nome do cliente é obrigatório' :
-               customerName?.errors?.['maxlength'] ? 'Máximo de 100 caracteres' : '') : ''" [fullWidth]="true">
-                </ds-input>
-            </div>
+        <ds-input
+          label="CNPJ"
+          placeholder="Digite o CNPJ do cliente"
+          type="text"
+          formControlName="cnpj"
+          [required]="true"
+          [invalid]="!!(cnpj?.invalid && cnpj?.touched)"
+          [errorMessage]="getFieldErrorMessage('cnpj')"
+          libMask="00.000.000/0000-00"
+          [fullWidth]="true"
+        />
+      </div>
 
-            <div class="basic-info-step__field">
-                <ds-textarea label="Finalidade" placeholder="Conte um pouco sobre o objetivo dos recursos..."
-                    formControlName="purpose" [required]="true" [invalid]="!!(purpose?.invalid && purpose?.touched)"
-                    [errorMessage]="purpose?.invalid && purpose?.touched ?
+      <div class="basic-info-step__field">
+        <ds-textarea
+          label="Finalidade"
+          placeholder="Conte um pouco sobre o objetivo dos recursos..."
+          formControlName="purpose"
+          [required]="true"
+          [invalid]="!!(purpose?.invalid && purpose?.touched)"
+          [errorMessage]="purpose?.invalid && purpose?.touched ?
               (purpose?.errors?.['required'] ? 'Finalidade é obrigatória' :
-               purpose?.errors?.['maxlength'] ? 'Máximo de 500 caracteres' : '') : ''" [fullWidth]="true"
-                    [maxlength]="500" resize="vertical">
-                </ds-textarea>
-            </div>
+               purpose?.errors?.['maxlength'] ? 'Máximo de 500 caracteres' : '') : ''"
+          [fullWidth]="true"
+          [maxlength]="500"
+          resize="vertical"
+        >
+        </ds-textarea>
+      </div>
 
-            <div class="d-flex justify-content-center">
-                <ds-button label="Identificar melhor operação" variant="fill" [rounded]="true"
-                    icon="fa-solid fa-circle-plus" (onClickEmitter)="identifyOperation()"
-                    [isLoading]="isLoadingAnalysis" [disabled]="isLoadingAnalysis">
-                </ds-button>
-            </div>
+      <div class="d-flex justify-content-center">
+        <ds-button
+          label="Identificar melhor operação"
+          variant="fill"
+          [rounded]="true"
+          icon="fa-solid fa-circle-plus"
+          (onClickEmitter)="identifyOperation()"
+          [isLoading]="isLoadingAnalysis"
+          [disabled]="isLoadingAnalysis"
+        >
+        </ds-button>
+      </div>
 
-            @if (iaAnalysis) {
-            <div class="basic-info-step__analysis">
-                <p>{{ iaAnalysis }}</p>
-            </div>
-            }
+      @if (iaAnalysis) {
+      <div class="basic-info-step__analysis">
+        <p>{{ iaAnalysis }}</p>
+      </div>
+      } @if (showRestOfForm) {
 
-            @if (showRestOfForm) {
-
-            <div class="basic-info-step__row">
-                <div class="basic-info-step__col basic-info-step__col--operation-type">
-                    <ds-select label="Tipo de Operação" placeholder="Selecione o tipo de operação"
-                        formControlName="operationType" [required]="true"
-                        [invalid]="!!(operationType?.invalid && operationType?.touched)"
-                        [errorMessage]="operationType?.invalid && operationType?.touched ? 'Tipo de operação é obrigatório' : ''"
-                        [options]="operationTypeOptions" [fullWidth]="true">
-                    </ds-select>
-                </div>
-
-                <div class="basic-info-step__col basic-info-step__col--value-currency">
-                    <ds-input label="Valor" placeholder="R$ 0,00" type="text" formControlName="amount" [required]="true"
-                        [libMask]="basicInfoForm.get('currency')?.value || 'BRL'"
-                        [invalid]="!!(amount?.invalid && amount?.touched)" [errorMessage]="amount?.invalid && amount?.touched ?
-                (amount?.errors?.['required'] ? 'Valor é obrigatório' :
-                 amount?.errors?.['min'] ? 'Valor mínimo de R$ 1.000,00' : '') : ''" [fullWidth]="true">
-                    </ds-input>
-
-                    <ds-select label="Moeda" placeholder="Selecione a moeda" formControlName="currency"
-                        [required]="true" [invalid]="!!(currency?.invalid && currency?.touched)"
-                        [errorMessage]="currency?.invalid && currency?.touched ? 'Moeda é obrigatória' : ''"
-                        [options]="currencyOptions" [fullWidth]="true">
-                    </ds-select>
-                </div>
-            </div>
-
-            <div class="basic-info-step__row basic-info-step__row--location">
-                <div class="basic-info-step__col basic-info-step__col--country">
-                    <ds-input label="País" placeholder="Brasil" type="text" formControlName="country" [required]="true"
-                        [readonly]="true" [fullWidth]="true">
-                    </ds-input>
-                </div>
-
-                <div class="basic-info-step__col basic-info-step__col--state">
-                    <ds-input label="Estado" placeholder="SP" type="text" formControlName="state" [required]="true"
-                        [readonly]="true" [fullWidth]="true">
-                    </ds-input>
-                </div>
-
-                <div class="basic-info-step__col basic-info-step__col--city">
-                    <ds-input label="Cidade" placeholder="São Paulo" type="text" formControlName="city"
-                        [required]="true" [readonly]="true" [fullWidth]="true">
-                    </ds-input>
-                </div>
-            </div>
-
-            <div class="basic-info-step__row">
-                <div class="basic-info-step__col basic-info-step__col--business-activity">
-                    <ds-select label="Ramo de Atividade" placeholder="Selecione o ramo de atividade"
-                        formControlName="businessActivity" [required]="true"
-                        [invalid]="!!(businessActivity?.invalid && businessActivity?.touched)"
-                        [errorMessage]="businessActivity?.invalid && businessActivity?.touched ? 'Ramo de atividade é obrigatório' : ''"
-                        [options]="businessActivityOptions" [fullWidth]="true">
-                    </ds-select>
-                </div>
-
-                <div class="basic-info-step__col basic-info-step__col--term">
-                    <ds-input label="Prazo" placeholder="Em meses" type="number" formControlName="term"
-                        [required]="true" [invalid]="!!(term?.invalid && term?.touched)" [errorMessage]="term?.invalid && term?.touched ?
-                  (term?.errors?.['required'] ? 'Prazo é obrigatório' :
-                   term?.errors?.['min'] ? 'Prazo mínimo de 1 mês' : '') : ''" [fullWidth]="true">
-                    </ds-input>
-                </div>
-            </div>
-            }
-
+      <div class="basic-info-step__row">
+        <div class="basic-info-step__col basic-info-step__col--operation-type">
+          <ds-select
+            label="Tipo de Operação"
+            placeholder="Selecione o tipo de operação"
+            formControlName="operationType"
+            [required]="true"
+            [invalid]="!!(operationType?.invalid && operationType?.touched)"
+            [errorMessage]="
+              operationType?.invalid && operationType?.touched
+                ? 'Tipo de operação é obrigatório'
+                : ''
+            "
+            [options]="operationTypeOptions"
+            [fullWidth]="true"
+          >
+          </ds-select>
         </div>
-    </form>
+
+        <div class="basic-info-step__col basic-info-step__col--value-currency">
+          <ds-input
+            label="Valor"
+            placeholder="R$ 0,00"
+            type="text"
+            formControlName="amount"
+            [required]="true"
+            [libMask]="basicInfoForm.get('currency')?.value || 'BRL'"
+            [invalid]="!!(amount?.invalid && amount?.touched)"
+            [errorMessage]="amount?.invalid && amount?.touched ?
+                (amount?.errors?.['required'] ? 'Valor é obrigatório' :
+                 amount?.errors?.['min'] ? 'Valor mínimo de R$ 1.000,00' : '') : ''"
+            [fullWidth]="true"
+          >
+          </ds-input>
+
+          <ds-select
+            label="Moeda"
+            placeholder="Selecione a moeda"
+            formControlName="currency"
+            [required]="true"
+            [invalid]="!!(currency?.invalid && currency?.touched)"
+            [errorMessage]="currency?.invalid && currency?.touched ? 'Moeda é obrigatória' : ''"
+            [options]="currencyOptions"
+            [fullWidth]="true"
+          >
+          </ds-select>
+        </div>
+      </div>
+
+      <div class="basic-info-step__row basic-info-step__row--location">
+        <div class="basic-info-step__col basic-info-step__col--country">
+          <ds-input
+            label="País"
+            placeholder="Brasil"
+            type="text"
+            formControlName="country"
+            [required]="true"
+            [readonly]="true"
+            [fullWidth]="true"
+          >
+          </ds-input>
+        </div>
+
+        <div class="basic-info-step__col basic-info-step__col--state">
+          <ds-input
+            label="Estado"
+            placeholder="SP"
+            type="text"
+            formControlName="state"
+            [required]="true"
+            [readonly]="true"
+            [fullWidth]="true"
+          >
+          </ds-input>
+        </div>
+
+        <div class="basic-info-step__col basic-info-step__col--city">
+          <ds-input
+            label="Cidade"
+            placeholder="São Paulo"
+            type="text"
+            formControlName="city"
+            [required]="true"
+            [readonly]="true"
+            [fullWidth]="true"
+          >
+          </ds-input>
+        </div>
+      </div>
+
+      <div class="basic-info-step__row">
+        <div class="basic-info-step__col basic-info-step__col--business-activity">
+          <ds-select
+            label="Ramo de Atividade"
+            placeholder="Selecione o ramo de atividade"
+            formControlName="businessActivity"
+            [required]="true"
+            [invalid]="!!(businessActivity?.invalid && businessActivity?.touched)"
+            [errorMessage]="
+              businessActivity?.invalid && businessActivity?.touched
+                ? 'Ramo de atividade é obrigatório'
+                : ''
+            "
+            [options]="businessActivityOptions"
+            [fullWidth]="true"
+          >
+          </ds-select>
+        </div>
+
+        <div class="basic-info-step__col basic-info-step__col--term">
+          <ds-input
+            label="Prazo"
+            placeholder="Em meses"
+            type="number"
+            formControlName="term"
+            [required]="true"
+            [invalid]="!!(term?.invalid && term?.touched)"
+            [errorMessage]="term?.invalid && term?.touched ?
+                  (term?.errors?.['required'] ? 'Prazo é obrigatório' :
+                   term?.errors?.['min'] ? 'Prazo mínimo de 1 mês' : '') : ''"
+            [fullWidth]="true"
+          >
+          </ds-input>
+        </div>
+      </div>
+      }
+    </div>
+  </form>
 </div>
