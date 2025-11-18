@@ -21,9 +21,7 @@ import {
 } from '../../../../../../shared/services/identify-operation/identify-operation.service';
 import { ToastService } from '../../../../../../shared/services/toast/toast.service';
 import {
-  OpportunityOptionsService,
-  OperationType,
-  ActivityType,
+  OpportunityOptionsService
 } from '../../../../../../shared/services/opportunity-options/opportunity-options.service';
 
 @Component({
@@ -264,10 +262,35 @@ export class BasicInfoStepComponent implements OnInit {
     const control = this.basicInfoForm.get(fieldName);
     if (control && control.invalid && control.touched) {
       if (control.errors?.['required']) {
-        return 'Este campo é obrigatório';
-      } 
+        const requiredMessages: { [key: string]: string } = {
+          customerName: 'Nome do cliente é obrigatório',
+          cnpj: 'CNPJ é obrigatório',
+          purpose: 'Finalidade é obrigatória',
+          operationType: 'Tipo de operação é obrigatório',
+          amount: 'Valor é obrigatório',
+          currency: 'Moeda é obrigatória',
+          businessActivity: 'Ramo de atividade é obrigatório',
+          term: 'Prazo é obrigatório',
+        };
+        return requiredMessages[fieldName] || 'Este campo é obrigatório';
+      }
       if (control.errors?.['minlength']) {
         return `Mínimo de ${control.errors?.['minlength'].requiredLength} caracteres`;
+      }
+      if (control.errors?.['maxlength']) {
+        if (fieldName === 'purpose') {
+          return 'Máximo de 500 caracteres';
+        }
+        return `Máximo de ${control.errors?.['maxlength'].requiredLength} caracteres`;
+      }
+      if (control.errors?.['min']) {
+        if (fieldName === 'term') {
+          return 'Prazo mínimo de 1 mês';
+        }
+        if (fieldName === 'amount') {
+          return 'Valor mínimo de R$ 1.000,00';
+        }
+        return `Valor mínimo de ${control.errors?.['min'].min}`;
       }
       if (control.errors?.['maskPatternInvalid']) {
         const maskError = control.errors?.['maskPatternInvalid'];

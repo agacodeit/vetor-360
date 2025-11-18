@@ -91,7 +91,7 @@ export class DocumentService {
      */
     linkMultipleFiles(files: LinkMultipleFilesRequest[]): Observable<any> {
         return this.http.post(
-            `${this.apiUrl}/secure/opportunity/linkMultipleFiles`,
+            `${this.apiUrl}/secure/opportunity-vetor360/linkMultipleFiles`,
             files
         );
     }
@@ -101,5 +101,15 @@ export class DocumentService {
      */
     getDocuments(): Observable<DocumentResponse[]> {
         return this.http.get<DocumentResponse[]>(`${this.apiUrl}/list`);
+    }
+
+    /**
+     * Remove um arquivo de documento de oportunidade
+     * @param fileId - ID do arquivo a ser removido
+     */
+    removeDocumentFile(fileId: string): Observable<any> {
+        return this.http.delete(
+            `${this.apiUrl}/secure/opportunity-vetor360/removeDocumentFile?fileId=${fileId}`
+        );
     }
 }

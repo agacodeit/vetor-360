@@ -15,6 +15,7 @@ export interface DocumentItem {
     uploaded: boolean;
     acceptedFormats: string;
     isValidating?: boolean;
+    isRemoving?: boolean;
     initialDocument?: boolean;
     files?: DocumentFile[] | null;
     dateHourIncluded?: string;

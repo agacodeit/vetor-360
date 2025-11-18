@@ -161,15 +161,65 @@ export class DocumentsModalComponent implements OnInit, OnChanges {
     onDocumentRemoved(documentId: string): void {
         console.log('Documento removido:', documentId);
 
+        // Busca o documento
+        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+        
+        if (document) {
+            // Se o documento tem arquivos já carregados (files), precisa remover via API
+            if (document.files && document.files.length > 0) {
+                // Pega o primeiro arquivo (assumindo que há apenas um arquivo por documento)
+                const fileToRemove = document.files[0];
+                const fileId = fileToRemove.id || fileToRemove.code;
+
+                if (fileId) {
+                    // Chama a API para remover o arquivo
+                    this.removeDocumentFileFromOpportunity(fileId, documentId);
+                } else {
+                    console.warn('FileId não encontrado para remover arquivo do documento:', documentId);
+                    this.updateDocumentAfterRemoval(document);
+                }
+            } else {
+                // Se não tem arquivos carregados, apenas atualiza localmente
+                this.updateDocumentAfterRemoval(document);
+            }
+        }
+    }
+
+    /**
+     * Remove o arquivo de documento da oportunidade via API
+     */
+    private removeDocumentFileFromOpportunity(fileId: string, documentId: string): void {
+        this.documentService.removeDocumentFile(fileId).subscribe({
+            next: (response) => {
+                console.log('Arquivo removido com sucesso:', response);
+                this.toastService.success('Arquivo removido com sucesso!');
+                
+                const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+                if (document) {
+                    this.updateDocumentAfterRemoval(document);
+                }
+            },
+            error: (error) => {
+                console.error('Erro ao remover arquivo:', error);
+                const errorMessage = this.errorHandler.getErrorMessage(error);
+                this.toastService.error(errorMessage);
+            }
+        });
+    }
+
+    /**
+     * Atualiza o documento após remoção
+     */
+    private updateDocumentAfterRemoval(document: DocumentItem): void {
         // Remove o fileCode do mapa
-        this.documentFileCodes.delete(documentId);
+        this.documentFileCodes.delete(document.id);
 
         // Atualizar o documento como não carregado
-        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
-        if (document) {
-            document.uploaded = false;
-            document.file = undefined;
-        }
+        document.uploaded = false;
+        document.file = undefined;
+        document.files = null;
+        document.fileCode = null;
+        document.documentStatusEnum = 'PENDING';
     }
 
     onFormValid(isValid: boolean): void {
