@@ -310,6 +310,7 @@
     &__column:has(.kanban__column-content:empty) {
         .cdk-drag-placeholder {
             position: absolute;
+            margin: 0 8px;
             top: 32px;
         }
 
