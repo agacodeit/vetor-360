@@ -13,7 +13,6 @@ function preloadOperationTypes(operationRegistry: OperationRegistryService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync('animations'),
     {
@@ -21,6 +20,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: preloadOperationTypes,
       deps: [OperationRegistryService],
       multi: true
-    }
+    },
+    provideRouter(routes),
   ]
 };
