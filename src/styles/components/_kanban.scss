@@ -308,11 +308,17 @@
 
     // Empty column styles
     &__column:has(.kanban__column-content:empty) {
+        .cdk-drag-placeholder {
+            position: absolute;
+            top: 32px;
+        }
+
         .kanban__column-content {
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            text-align: center;
         }
 
         .kanban__column-content::before {
