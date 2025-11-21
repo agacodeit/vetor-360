@@ -4,6 +4,7 @@ export * from './auth';
 export * from './cep/cep.service';
 export * from './document/document.service';
 export * from './comment/comment.service';
+export * from './error-handler';
 export * from './operation/operation-registry.service';
 export * from './identify-operation/identify-operation.service';
 export * from './image-upload/image-upload.service';

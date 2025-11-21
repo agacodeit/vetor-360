@@ -26,7 +26,7 @@ export class OpportunityOptionsService {
      */
     getOperationTypes(): Observable<OperationType[]> {
         return this.http.get<OperationType[]>(
-            `${this.apiUrl}/secure/opportunity-vetor360/operation-types`
+            `${this.apiUrl}/types/operation-types`
         );
     }
 
@@ -35,7 +35,7 @@ export class OpportunityOptionsService {
      */
     getActivityTypes(): Observable<ActivityType[]> {
         return this.http.get<ActivityType[]>(
-            `${this.apiUrl}/secure/opportunity-vetor360/activity-types`
+            `${this.apiUrl}/types/activity-types`
         );
     }
 }

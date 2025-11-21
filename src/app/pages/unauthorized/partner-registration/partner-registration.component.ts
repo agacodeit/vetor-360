@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveForm
 import { Router } from '@angular/router';
 import { MaskDirective, MaskDirectiveService } from "mask-directive";
 import { lastValueFrom } from 'rxjs';
-import { ButtonComponent, CepService, DocumentItem, DocumentService, DocumentsConfig, PartnerRegistrationRequest, PartnerRegistrationService, StepperComponent, StepperStep, ToastService } from '../../../shared';
+import { ACCEPTED_DOCUMENT_FORMATS, ButtonComponent, CepService, DocumentItem, DocumentsConfig, PartnerRegistrationRequest, PartnerRegistrationService, StepperComponent, StepperStep, ToastService, ErrorHandlerService} from '../../../shared';
 import { PersonTypeStepComponent } from './steps/person-type-step/person-type-step.component';
 import { BasicInfoStepComponent } from './steps/basic-info-step/basic-info-step.component';
 import { AddressStepComponent } from './steps/address-step/address-step.component';
@@ -63,6 +63,7 @@ export class PartnerRegistrationComponent implements OnInit {
     currentStep = 0;
     isLoading = false;
     isUploadingDocument = false;
+    documentFileCodes: Map<string, string> = new Map(); // Armazena fileCode por documentType
 
     registrationForm: FormGroup;
     documentsConfig: DocumentsConfig = {
@@ -106,7 +107,7 @@ export class PartnerRegistrationComponent implements OnInit {
         @Inject(ToastService) private toastService: ToastService,
         @Inject(PartnerRegistrationService) private partnerRegistrationService: PartnerRegistrationService,
         @Inject(CepService) private cepService: CepService,
-        @Inject(DocumentService) private documentService: DocumentService
+        @Inject(ErrorHandlerService) private errorHandler: ErrorHandlerService
     ) {
         this.registrationForm = this.fb.group({
             personType: ['', Validators.required],
@@ -162,47 +163,60 @@ export class PartnerRegistrationComponent implements OnInit {
     private loadDocumentsFromApi(personType: 'F' | 'J'): void {
         if (!personType) return;
 
-        this.documentService.createDocument(personType).subscribe({
-            next: (documents) => {
-                const documentItems: DocumentItem[] = documents.map((doc: any) => ({
-                    id: doc.id,
-                    documentType: doc.description || doc.id,
-                    opportunityId: undefined,
-                    label: doc.description || doc.id,
-                    required: true,
-                    initialDocument: false,
-                    files: [],
-                    dateHourIncluded: undefined,
-                    dateHourUpdated: undefined,
-                    userIncludedId: undefined,
-                    documentStatusEnum: undefined,
-                    responsibleUserId: undefined,
-                    comments: [],
-                    playerIdWhoRequestedDocument: undefined,
-                    fileCode: null,
-                    uploaded: false,
-                    acceptedFormats: '.pdf,.jpg,.jpeg,.png'
-                }));
+        // Documentos fixos baseados no tipo de pessoa
+        const fixedDocuments = this.getFixedDocuments(personType);
+        
+        const documentItems: DocumentItem[] = fixedDocuments.map((docType, index) => ({
+            id: docType, // Usa o documentType como id
+            documentType: docType,
+            opportunityId: undefined,
+            label: this.getDocumentLabel(docType),
+            required: true,
+            initialDocument: false,
+            files: [],
+            dateHourIncluded: undefined,
+            dateHourUpdated: undefined,
+            userIncludedId: undefined,
+            documentStatusEnum: undefined,
+            responsibleUserId: undefined,
+            comments: [],
+            playerIdWhoRequestedDocument: undefined,
+            fileCode: null,
+            uploaded: false,
+            acceptedFormats: ACCEPTED_DOCUMENT_FORMATS
+        }));
 
-                this.documentsConfig = {
-                    title: 'Documentos Obrigatórios',
-                    showAccordion: true,
-                    allowMultiple: true,
-                    documents: documentItems
-                };
-            },
-            error: (error) => {
-                console.error('Erro ao carregar documentos:', error);
-                this.toastService.error('Erro ao carregar documentos. Tente novamente.');
+        this.documentsConfig = {
+            title: 'Documentos Obrigatórios',
+            showAccordion: true,
+            allowMultiple: true,
+            documents: documentItems
+        };
+    }
 
-                this.documentsConfig = {
-                    title: 'Documentos Obrigatórios',
-                    showAccordion: true,
-                    allowMultiple: true,
-                    documents: []
-                };
-            }
-        });
+    /**
+     * Retorna os tipos de documento fixos baseados no tipo de pessoa
+     */
+    private getFixedDocuments(personType: 'F' | 'J'): string[] {
+        if (personType === 'F') {
+            // Pessoa Física: COMPROVANTE_ENDERECO, RG_OU_CNH
+            return ['COMPROVANTE_ENDERECO', 'RG_OU_CNH'];
+        } else {
+            // Pessoa Jurídica: CONTRATO_SOCIAL, COMPROVANTE_ENDERECO, RG_OU_CNH
+            return ['CONTRATO_SOCIAL', 'COMPROVANTE_ENDERECO', 'RG_OU_CNH'];
+        }
+    }
+
+    /**
+     * Retorna o label amigável para o tipo de documento
+     */
+    private getDocumentLabel(documentType: string): string {
+        const labels: { [key: string]: string } = {
+            'CONTRATO_SOCIAL': 'Contrato Social',
+            'COMPROVANTE_ENDERECO': 'Comprovante de Endereço',
+            'RG_OU_CNH': 'RG ou CNH'
+        };
+        return labels[documentType] || documentType;
     }
 
     private passwordMatchValidator(control: any) {
@@ -389,9 +403,9 @@ export class PartnerRegistrationComponent implements OnInit {
         try {
             const formData = this.registrationForm.value;
 
-            // Formatar dados para API
+            // Formatar dados para API incluindo os documentos com fileCodes
             const registrationData: PartnerRegistrationRequest =
-                this.partnerRegistrationService.formatDataForApi(formData);
+                this.partnerRegistrationService.formatDataForApi(formData, this.documentFileCodes);
 
             await lastValueFrom(this.partnerRegistrationService.createPartner(registrationData));
             this.toastService.success('Cadastro realizado com sucesso!');
@@ -399,7 +413,7 @@ export class PartnerRegistrationComponent implements OnInit {
 
         } catch (error: any) {
             console.error('Erro no cadastro:', error);
-            const errorMessage = error?.error?.message || 'Erro ao realizar cadastro. Tente novamente.';
+            const errorMessage = this.errorHandler.getErrorMessage(error);
             this.toastService.error(errorMessage);
         } finally {
             this.isLoading = false;
@@ -435,7 +449,8 @@ export class PartnerRegistrationComponent implements OnInit {
                 },
                 error: (error) => {
                     console.error('Erro ao buscar CEP:', error);
-                    this.toastService.error('Erro ao buscar informações do CEP');
+                    const errorMessage = this.errorHandler.getErrorMessage(error);
+                    this.toastService.error(errorMessage);
                 }
             });
         }
@@ -450,13 +465,36 @@ export class PartnerRegistrationComponent implements OnInit {
 
     onDocumentUploaded(event: any): void {
         console.log('Documento carregado:', event);
-        // A validação e upload agora são feitos diretamente no ds-documents
-        // Este método é apenas para logging/controle se necessário
+        
+        // Captura o fileCode do evento
+        let fileCode = event.fileCode;
+        
+        // Se não veio direto, tenta pegar da resposta do upload
+        if (!fileCode && event.uploadResponse) {
+            fileCode = event.uploadResponse.fileCode ||
+                event.uploadResponse.id ||
+                event.uploadResponse.code ||
+                event.uploadResponse.fileId;
+        }
+        
+        // Armazena o fileCode usando o documentType como chave
+        if (fileCode && event.documentId) {
+            const document = this.documentsConfig.documents.find(doc => doc.id === event.documentId);
+            if (document && document.documentType) {
+                this.documentFileCodes.set(document.documentType, fileCode);
+                console.log(`Armazenando fileCode ${fileCode} para documento ${document.documentType}`);
+            }
+        }
     }
 
     onDocumentRemoved(documentId: string): void {
         console.log('Documento removido:', documentId);
-        // Apenas log - não chama API de delete
+        
+        // Remove o fileCode do mapa quando o documento é removido
+        const document = this.documentsConfig.documents.find(doc => doc.id === documentId);
+        if (document && document.documentType) {
+            this.documentFileCodes.delete(document.documentType);
+        }
     }
 
     onFormValid(isValid: boolean): void {

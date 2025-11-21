@@ -1,11 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CreditOperationComponent } from './credit-operation.component';
-import { MOCK_KANBAN_CARD } from '../../../../../../shared/__mocks__';
+import { KanbanCard } from '../../../../../../shared';
 
 describe('CreditOperationComponent', () => {
     let component: CreditOperationComponent;
     let fixture: ComponentFixture<CreditOperationComponent>;
     let compiled: HTMLElement;
+
+    const mockCardData: KanbanCard = {
+        id: '1',
+        title: 'Test Card',
+        status: 'PENDING_DOCUMENTS',
+        client: 'Cliente Teste',
+        cnpj: '11.222.333/0001-44',
+        data: {
+            opportunity: {
+                id: 'opp-1',
+                term: 36,
+                guarantee: 'Imóvel',
+                value: 800000,
+                valueType: 'BRL'
+            },
+            valueLabel: 'R$ 800.000,00',
+            operationLabel: 'Crédito com cobertura FGI',
+            statusLabel: 'Pendente de documentos'
+        }
+    } as KanbanCard;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -15,6 +35,7 @@ describe('CreditOperationComponent', () => {
 
         fixture = TestBed.createComponent(CreditOperationComponent);
         component = fixture.componentInstance;
+        component.cardData = mockCardData;
         compiled = fixture.nativeElement;
         fixture.detectChanges();
     });
@@ -24,17 +45,17 @@ describe('CreditOperationComponent', () => {
             expect(component).toBeTruthy();
         });
 
-        it('should initialize cardData as null', () => {
-            expect(component.cardData).toBeNull();
+        it('should initialize cardData when set', () => {
+            expect(component.cardData).toEqual(mockCardData);
         });
     });
 
     describe('Input Properties', () => {
         it('should accept cardData input', () => {
-            component.cardData = MOCK_KANBAN_CARD;
+            component.cardData = mockCardData;
             fixture.detectChanges();
 
-            expect(component.cardData).toEqual(MOCK_KANBAN_CARD);
+            expect(component.cardData).toEqual(mockCardData);
         });
 
         it('should handle null cardData', () => {
@@ -45,7 +66,7 @@ describe('CreditOperationComponent', () => {
         });
 
         it('should update when cardData changes', () => {
-            const newData = { ...MOCK_KANBAN_CARD, id: '2' };
+            const newData = { ...mockCardData, id: '2' };
 
             component.cardData = newData;
             fixture.detectChanges();
@@ -73,32 +94,38 @@ describe('CreditOperationComponent', () => {
 
         it('should display credit amount', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Crédito com cobertura FGI');
+            expect(content).toContain('Valor solicitado');
             expect(content).toContain('R$ 800.000,00');
         });
 
-        it('should display intended term', () => {
+        it('should display term', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Prazo pretendido');
+            expect(content).toContain('Prazo');
             expect(content).toContain('36 meses');
         });
 
-        it('should display FGI coverage', () => {
+        it('should display guarantee', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Cobertura FGI');
-            expect(content).toContain('80% (R$ 400.000,00)');
+            expect(content).toContain('Garantia');
+            expect(content).toContain('Imóvel');
         });
 
-        it('should display estimated rate', () => {
+        it('should display client name', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Taxa Estimada');
-            expect(content).toContain('1,1% a.m.');
+            expect(content).toContain('Nome do Cliente');
+            expect(content).toContain('Cliente Teste');
         });
 
-        it('should display grace period', () => {
+        it('should display operation label', () => {
             const content = compiled.textContent || '';
-            expect(content).toContain('Carência');
-            expect(content).toContain('3 meses');
+            expect(content).toContain('Operação');
+            expect(content).toContain('Crédito com cobertura FGI');
+        });
+
+        it('should display status', () => {
+            const content = compiled.textContent || '';
+            expect(content).toContain('Status');
+            expect(content).toContain('Pendente de documentos');
         });
 
         it('should have 2-column grid for data', () => {
@@ -125,12 +152,12 @@ describe('CreditOperationComponent', () => {
     describe('Data Fields', () => {
         it('should display all credit operation labels', () => {
             const infoBlocks = compiled.querySelectorAll('.credit-operation__info .credit-operation__block');
-            expect(infoBlocks.length).toBe(5);
+            expect(infoBlocks.length).toBe(6); // Nome do Cliente, Operação, Valor solicitado, Prazo, Garantia, Status
         });
 
         it('should display all credit operation values', () => {
             const valueBlocks = compiled.querySelectorAll('.credit-operation__values .credit-operation__block');
-            expect(valueBlocks.length).toBe(5);
+            expect(valueBlocks.length).toBe(6); // Nome do Cliente, Operação, Valor solicitado, Prazo, Garantia, Status
         });
 
         it('should have matching number of labels and values', () => {
@@ -142,7 +169,7 @@ describe('CreditOperationComponent', () => {
 
     describe('Integration Tests', () => {
         it('should display complete credit operation information', () => {
-            component.cardData = MOCK_KANBAN_CARD;
+            component.cardData = mockCardData;
             fixture.detectChanges();
 
             const content = compiled.textContent || '';
@@ -150,14 +177,10 @@ describe('CreditOperationComponent', () => {
             expect(content).toContain('Operação de Crédito Solicitada');
             expect(content).toContain('Crédito com cobertura FGI');
             expect(content).toContain('R$ 800.000,00');
-            expect(content).toContain('Prazo pretendido');
             expect(content).toContain('36 meses');
-            expect(content).toContain('Cobertura FGI');
-            expect(content).toContain('80% (R$ 400.000,00)');
-            expect(content).toContain('Taxa Estimada');
-            expect(content).toContain('1,1% a.m.');
-            expect(content).toContain('Carência');
-            expect(content).toContain('3 meses');
+            expect(content).toContain('Imóvel');
+            expect(content).toContain('Cliente Teste');
+            expect(content).toContain('Pendente de documentos');
         });
 
         it('should maintain structure without cardData', () => {
@@ -176,18 +199,13 @@ describe('CreditOperationComponent', () => {
         });
 
         it('should display all financial details correctly', () => {
-            const allValues = [
-                'R$ 800.000,00',
-                '36 meses',
-                '80% (R$ 400.000,00)',
-                '1,1% a.m.',
-                '3 meses'
-            ];
+            component.cardData = mockCardData;
+            fixture.detectChanges();
 
             const content = compiled.textContent || '';
-            allValues.forEach(value => {
-                expect(content).toContain(value);
-            });
+            expect(content).toContain('R$ 800.000,00');
+            expect(content).toContain('36 meses');
+            expect(content).toContain('Imóvel');
         });
     });
 });

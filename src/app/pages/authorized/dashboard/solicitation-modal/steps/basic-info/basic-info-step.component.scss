@@ -69,16 +69,6 @@
         }
     }
 
-    &__row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: $padding-ssm;
-
-        &--location {
-            grid-template-columns: 1fr 1fr 1fr;
-        }
-    }
-
     &__col {
         display: flex;
         flex-direction: column;
@@ -108,10 +98,6 @@
 
         &--term {
             grid-column: 1;
-        }
-
-        &--payment-method {
-            grid-column: 2;
         }
     }
 }

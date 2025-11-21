@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService, OperationRegistryService } from '../../../shared';
+import { ModalComponent, ModalService, SelectOption, InputComponent, SelectComponent, User, AuthService, ToastService, OperationRegistryService, ErrorHandlerService } from '../../../shared';
 import { ButtonComponent, CardComponent, IconComponent, KanbanCard, KanbanColumn, KanbanComponent } from '../../../shared/components';
 import { OpportunityService, OpportunitySummary, OpportunityStatus, OpportunitySearchResponse } from '../../../shared/services/opportunity/opportunity.service';
 import { SolicitationModal } from "./solicitation-modal/solicitation-modal";
@@ -49,6 +49,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private opportunityService = inject(OpportunityService);
   private toastService = inject(ToastService);
   private operationRegistry = inject(OperationRegistryService);
+  private errorHandler = inject(ErrorHandlerService);
 
   isCreateModalOpen: boolean = false;
   isDetailsModalOpen: boolean = false;
@@ -214,7 +215,7 @@ export class Dashboard implements OnInit, OnDestroy {
       size,
       status,
       customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
-      userId: this.user.id
+      userId: this.user?.id
     };
   }
 
@@ -411,8 +412,30 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
-  onCardMoved(event: any) {
+  onCardMoved(event: { card: KanbanCard; fromColumn: string; toColumn: string; fromIndex: number; toIndex: number }) {
+    const { card, toColumn } = event;
+    const opportunityId = card.id;
+    
+    // Converte o columnId para o status correspondente
+    const newStatus = this.getStatusByColumnId(toColumn);
+    
+    if (!newStatus) {
+      console.error('Status não encontrado para a coluna:', toColumn);
+      this.toastService.error('Não foi possível identificar o novo status da solicitação.');
+      return;
+    }
 
+    this.opportunityService.updateOpportunityStatus(opportunityId, newStatus).subscribe({
+      next: () => {
+        card.status = newStatus;
+      },
+      error: (error) => {
+        const errorMessage = this.errorHandler.getErrorMessage(error);
+        this.toastService.error(errorMessage);
+        
+        this.loadOpportunities();
+      }
+    });
   }
 
   onCardAdded(event: any) {

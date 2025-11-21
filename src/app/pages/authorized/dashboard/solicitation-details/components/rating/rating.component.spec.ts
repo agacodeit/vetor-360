@@ -1,6 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RatingComponent } from './rating.component';
 import { MOCK_KANBAN_CARD } from '../../../../../../shared/__mocks__';
+import { KanbanCard } from '../../../../../../shared';
+
+// Mock card with documentsSummary for rating "B" (completed/total >= 0.6 and < 0.8)
+const mockCardWithRating: KanbanCard = {
+    ...MOCK_KANBAN_CARD,
+    data: {
+        documentsSummary: {
+            completed: 6,
+            total: 10
+        }
+    }
+};
 
 describe('RatingComponent', () => {
     let component: RatingComponent;
@@ -72,14 +84,19 @@ describe('RatingComponent', () => {
         });
 
         it('should display rating badge with "B"', () => {
+            component.cardData = mockCardWithRating;
+            fixture.detectChanges();
+            
             const badge = compiled.querySelector('.rating__badge');
             expect(badge?.textContent?.trim()).toBe('B');
         });
 
         it('should display rating description', () => {
+            component.cardData = mockCardWithRating;
+            fixture.detectChanges();
+            
             const content = compiled.textContent || '';
-            expect(content).toContain('Cliente com alguns pontos de atenção');
-            expect(content).toContain('capacidade de pagamento adequada');
+            expect(content).toContain('Boa evolução da documentação.');
         });
 
         it('should have correct CSS classes for text section', () => {
@@ -97,14 +114,14 @@ describe('RatingComponent', () => {
 
     describe('Integration Tests', () => {
         it('should display complete rating information', () => {
-            component.cardData = MOCK_KANBAN_CARD;
+            component.cardData = mockCardWithRating;
             fixture.detectChanges();
 
             const content = compiled.textContent || '';
 
             expect(content).toContain('Rating');
             expect(content).toContain('B');
-            expect(content).toContain('Cliente com alguns pontos de atenção');
+            expect(content).toContain('Boa evolução da documentação.');
         });
 
         it('should maintain structure without cardData', () => {

@@ -15,27 +15,12 @@
         width: 100%;
     }
 
-    &__checkbox {
-        display: flex;
-        align-items: center;
-        gap: $padding-xs;
-
-        &-input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: var(--primary-medium);
-        }
-
-        &-label {
-            font-family: 'Work Sans', sans-serif;
-            font-size: $font-sm;
-            font-weight: $font-weight-md;
-            color: var(--secondary);
-            cursor: pointer;
-            user-select: none;
-            line-height: 1.4;
-        }
+    &__label {
+        font-family: 'Work Sans', sans-serif;
+        font-size: $font-sm;
+        font-weight: $font-weight-md;
+        color: var(--secondary);
+        line-height: 1.4;
     }
 
     &__empty {

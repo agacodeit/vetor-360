@@ -130,4 +130,19 @@ export class OpportunityService {
             `${this.apiUrl}/secure/opportunity-vetor360/${id}?mock=1`
         ));
     }
+
+    /**
+     * Atualiza o status de uma oportunidade
+     */
+    updateOpportunityStatus(opportunityId: string, status: OpportunityStatus): Observable<any> {
+        return this.http.put(
+            `${this.apiUrl}/secure/opportunity-vetor360/${opportunityId}/status`,
+            null,
+            {
+                params: {
+                    status: status
+                }
+            }
+        );
+    }
 }

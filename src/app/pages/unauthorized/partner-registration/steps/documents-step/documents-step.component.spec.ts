@@ -13,17 +13,11 @@ describe('DocumentsStepComponent', () => {
         documents: [
             {
                 id: 'doc1',
+                documentType: 'RG_CNH',
                 label: 'Documento 1',
                 required: true,
                 uploaded: false,
                 acceptedFormats: '.pdf,.jpg'
-            },
-            {
-                id: 'doc2',
-                label: 'Documento 2',
-                required: false,
-                uploaded: false,
-                acceptedFormats: '.pdf'
             }
         ]
     };
@@ -214,23 +208,6 @@ describe('DocumentsStepComponent', () => {
     });
 
     describe('Input Properties', () => {
-        it('should accept documentsConfig input', () => {
-            const newConfig: DocumentsConfig = {
-                documents: [
-                    {
-                        id: 'newDoc',
-                        label: 'Novo Documento',
-                        required: true,
-                        uploaded: false,
-                        acceptedFormats: '.pdf'
-                    }
-                ]
-            };
-
-            component.documentsConfig = newConfig;
-
-            expect(component.documentsConfig).toEqual(newConfig);
-        });
 
         it('should handle documentsConfig with empty documents array', () => {
             const emptyConfig: DocumentsConfig = {
@@ -246,9 +223,9 @@ describe('DocumentsStepComponent', () => {
         it('should handle documentsConfig with multiple documents', () => {
             const multiDocConfig: DocumentsConfig = {
                 documents: [
-                    { id: 'doc1', label: 'Doc 1', required: true, uploaded: false, acceptedFormats: '.pdf' },
-                    { id: 'doc2', label: 'Doc 2', required: false, uploaded: false, acceptedFormats: '.jpg' },
-                    { id: 'doc3', label: 'Doc 3', required: true, uploaded: false, acceptedFormats: '.png' }
+                    { id: 'doc1', documentType: 'DOC1', label: 'Doc 1', required: true, uploaded: false, acceptedFormats: '.pdf' },
+                    { id: 'doc2', documentType: 'DOC2', label: 'Doc 2', required: false, uploaded: false, acceptedFormats: '.jpg' },
+                    { id: 'doc3', documentType: 'DOC3', label: 'Doc 3', required: true, uploaded: false, acceptedFormats: '.png' }
                 ]
             };
 
