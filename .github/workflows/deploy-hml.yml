@@ -1,0 +1,47 @@
+name: Deploy Vetor360 - Homologação
+
+on:
+  push:
+    branches:
+      - homolog
+
+jobs:
+  build-and-deploy:
+    name: Build e Deploy para S3 HML
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Build Vetor360
+        run: npm run build:hml
+        env:
+          NODE_ENV: staging
+          REACT_APP_API_URL: ${{ secrets.HML_API_URL }}
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Deploy to S3
+        run: |
+          aws s3 sync dist/vetor-360/browser/ s3://${{ secrets.S3_BUCKET_HML }} --delete
+      
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "✅ Vetor360 deployed successfully to HML!"
+          echo "🪣 S3 Bucket: ${{ secrets.S3_BUCKET_HML }}"
