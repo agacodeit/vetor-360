@@ -38,7 +38,7 @@ jobs:
       
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_HML }} --delete
+          aws s3 sync dist/vetor-360/browser/ s3://${{ secrets.S3_BUCKET_HML }} --delete
       
       - name: Notify deployment success
         if: success()
