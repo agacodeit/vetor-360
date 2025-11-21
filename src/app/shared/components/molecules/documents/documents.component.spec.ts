@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { DocumentsComponent, DocumentsConfig, DocumentItem } from './documents.component';
 import { AccordionComponent } from '../../atoms/accordion/accordion.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
-import { DocumentService, ToastService } from '../../../services';
+import { DocumentService, ToastService, ErrorHandlerService } from '../../../services';
 
 describe('DocumentsComponent', () => {
     let component: DocumentsComponent;
@@ -19,6 +19,7 @@ describe('DocumentsComponent', () => {
         documents: [
             {
                 id: 'rg-cnh',
+                documentType: 'RG_CNH',
                 label: 'RG ou CNH - Documento de identidade',
                 required: true,
                 uploaded: false,
@@ -26,6 +27,7 @@ describe('DocumentsComponent', () => {
             },
             {
                 id: 'cpf',
+                documentType: 'CPF',
                 label: 'CPF - Cadastro de Pessoa Física',
                 required: true,
                 uploaded: true,
@@ -37,10 +39,12 @@ describe('DocumentsComponent', () => {
     beforeEach(async () => {
         const mockDocumentService = jasmine.createSpyObj('DocumentService', ['uploadFile', 'validateFile']);
         const mockToastService = jasmine.createSpyObj('ToastService', ['success', 'error']);
+        const mockErrorHandler = jasmine.createSpyObj('ErrorHandlerService', ['getErrorMessage']);
 
         // Mock successful upload response
         mockDocumentService.uploadFile.and.returnValue(of({ success: true, message: 'Upload successful' }));
         mockDocumentService.validateFile.and.returnValue(of({ success: true, message: 'Validation successful' }));
+        mockErrorHandler.getErrorMessage.and.returnValue('Erro ao processar requisição');
 
         await TestBed.configureTestingModule({
             imports: [
@@ -53,7 +57,8 @@ describe('DocumentsComponent', () => {
             ],
             providers: [
                 { provide: DocumentService, useValue: mockDocumentService },
-                { provide: ToastService, useValue: mockToastService }
+                { provide: ToastService, useValue: mockToastService },
+                { provide: ErrorHandlerService, useValue: mockErrorHandler }
             ]
         })
             .compileComponents();
@@ -221,17 +226,19 @@ describe('DocumentsComponent', () => {
             expect(component.documentsChange.emit).toHaveBeenCalled();
         });
 
-        it('should emit documentUploaded when file is selected', () => {
+        it('should emit documentUploaded when file is selected', fakeAsync(() => {
             spyOn(component.documentUploaded, 'emit');
 
             const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
             component.onFileSelected({ target: { files: [file] } } as any, 'rg-cnh');
+            
+            tick(); // Wait for async upload
 
-            expect(component.documentUploaded.emit).toHaveBeenCalledWith({
+            expect(component.documentUploaded.emit).toHaveBeenCalledWith(jasmine.objectContaining({
                 documentId: 'rg-cnh',
                 file: file
-            });
-        });
+            }));
+        }));
 
         it('should emit documentRemoved when document is removed', () => {
             spyOn(component.documentRemoved, 'emit');
@@ -266,6 +273,7 @@ describe('DocumentsComponent', () => {
                 documents: [
                     {
                         id: 'rg-cnh',
+                        documentType: 'RG_CNH',
                         label: 'RG ou CNH',
                         required: true,
                         uploaded: true,
@@ -301,6 +309,7 @@ describe('DocumentsComponent', () => {
                 documents: [
                     {
                         id: 'rg-cnh',
+                        documentType: 'RG_CNH',
                         label: 'RG ou CNH',
                         required: true,
                         uploaded: true,

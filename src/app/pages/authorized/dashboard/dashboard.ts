@@ -215,7 +215,7 @@ export class Dashboard implements OnInit, OnDestroy {
       size,
       status,
       customerName: this.filterClientName ? this.filterClientName.trim() : undefined,
-      userId: this.user.id
+      userId: this.user?.id
     };
   }
 

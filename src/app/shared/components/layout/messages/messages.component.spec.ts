@@ -136,7 +136,7 @@ describe('MessagesComponent', () => {
         it('should render input container with input field', () => {
             const input = compiled.querySelector('.messages__input') as HTMLInputElement;
             expect(input).toBeTruthy();
-            expect(input.placeholder).toBe('Digite sua mensagem... use @ para mencionar');
+            expect(input.placeholder).toBe('Digite sua mensagem...');
         });
 
         it('should render send button', () => {
@@ -144,10 +144,7 @@ describe('MessagesComponent', () => {
             expect(sendBtn?.textContent).toContain('Enviar');
         });
 
-        it('should render action buttons (mention and attach)', () => {
-            const inputBtns = compiled.querySelectorAll('.messages__input-btn');
-            expect(inputBtns.length).toBe(2);
-        });
+        // Action buttons (mention and attach) removed from template
     });
 
     describe('Messages Rendering', () => {
@@ -285,37 +282,7 @@ describe('MessagesComponent', () => {
         it('should have all required methods defined', () => {
             expect(component.sendMessage).toBeDefined();
             expect(component.toggleMinimize).toBeDefined();
-            expect(component.openMentions).toBeDefined();
-            expect(component.openAttachment).toBeDefined();
             expect(component.formatMessage).toBeDefined();
-        });
-    });
-
-    describe('openMentions Method', () => {
-        it('should be defined', () => {
-            expect(component.openMentions).toBeDefined();
-        });
-
-        it('should call openMentions when clicking mention button', () => {
-            spyOn(component, 'openMentions');
-            const mentionBtn = compiled.querySelectorAll('.messages__input-btn')[0] as HTMLButtonElement;
-            mentionBtn.click();
-
-            expect(component.openMentions).toHaveBeenCalled();
-        });
-    });
-
-    describe('openAttachment Method', () => {
-        it('should be defined', () => {
-            expect(component.openAttachment).toBeDefined();
-        });
-
-        it('should call openAttachment when clicking attach button', () => {
-            spyOn(component, 'openAttachment');
-            const attachBtn = compiled.querySelectorAll('.messages__input-btn')[1] as HTMLButtonElement;
-            attachBtn.click();
-
-            expect(component.openAttachment).toHaveBeenCalled();
         });
     });
 

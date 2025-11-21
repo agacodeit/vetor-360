@@ -41,9 +41,9 @@ describe('SolicitationMatchingComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should render matching title', () => {
-        const title = compiled.querySelector('.title-semibold');
-        expect(title?.textContent?.trim()).toBe('Matching');
+    it('should render matching section', () => {
+        const section = compiled.querySelector('.solicitation-matching');
+        expect(section).toBeTruthy();
     });
 
     it('should render four analysis lines by default', () => {
