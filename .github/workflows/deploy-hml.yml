@@ -3,7 +3,6 @@ name: Deploy Vetor360 - Homologação
 on:
   push:
     branches:
-      - develop
       - homolog
 
 jobs:
