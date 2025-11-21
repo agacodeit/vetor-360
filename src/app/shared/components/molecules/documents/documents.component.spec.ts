@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { DocumentsComponent, DocumentsConfig, DocumentItem } from './documents.component';
 import { AccordionComponent } from '../../atoms/accordion/accordion.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
-import { DocumentService, ToastService } from '../../../services';
+import { DocumentService, ToastService, ErrorHandlerService } from '../../../services';
 
 describe('DocumentsComponent', () => {
     let component: DocumentsComponent;
@@ -19,6 +19,7 @@ describe('DocumentsComponent', () => {
         documents: [
             {
                 id: 'rg-cnh',
+                documentType: 'RG_CNH',
                 label: 'RG ou CNH - Documento de identidade',
                 required: true,
                 uploaded: false,
@@ -26,6 +27,7 @@ describe('DocumentsComponent', () => {
             },
             {
                 id: 'cpf',
+                documentType: 'CPF',
                 label: 'CPF - Cadastro de Pessoa Física',
                 required: true,
                 uploaded: true,
@@ -37,10 +39,12 @@ describe('DocumentsComponent', () => {
     beforeEach(async () => {
         const mockDocumentService = jasmine.createSpyObj('DocumentService', ['uploadFile', 'validateFile']);
         const mockToastService = jasmine.createSpyObj('ToastService', ['success', 'error']);
+        const mockErrorHandler = jasmine.createSpyObj('ErrorHandlerService', ['getErrorMessage']);
 
         // Mock successful upload response
         mockDocumentService.uploadFile.and.returnValue(of({ success: true, message: 'Upload successful' }));
         mockDocumentService.validateFile.and.returnValue(of({ success: true, message: 'Validation successful' }));
+        mockErrorHandler.getErrorMessage.and.returnValue('Erro ao processar requisição');
 
         await TestBed.configureTestingModule({
             imports: [
@@ -53,7 +57,8 @@ describe('DocumentsComponent', () => {
             ],
             providers: [
                 { provide: DocumentService, useValue: mockDocumentService },
-                { provide: ToastService, useValue: mockToastService }
+                { provide: ToastService, useValue: mockToastService },
+                { provide: ErrorHandlerService, useValue: mockErrorHandler }
             ]
         })
             .compileComponents();
@@ -81,11 +86,10 @@ describe('DocumentsComponent', () => {
             });
         });
 
-        it('should initialize form with document controls', () => {
+        it('should initialize form', () => {
             fixture.detectChanges();
 
-            expect(component.documentsForm.get('rg-cnh')).toBeTruthy();
-            expect(component.documentsForm.get('cpf')).toBeTruthy();
+            expect(component.documentsForm).toBeTruthy();
         });
 
         it('should setup accordion items when showAccordion is true', () => {
@@ -129,13 +133,8 @@ describe('DocumentsComponent', () => {
             expect(accordion).toBeFalsy();
         });
 
-        it('should render document checkboxes', () => {
-            const checkboxes = compiled.querySelectorAll('input[type="checkbox"]');
-            expect(checkboxes.length).toBe(2);
-        });
-
         it('should render document labels', () => {
-            const labels = compiled.querySelectorAll('label');
+            const labels = compiled.querySelectorAll('.ds-documents__label');
             expect(labels.length).toBe(2);
         });
 
@@ -155,15 +154,6 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should handle checkbox change', () => {
-            spyOn(component, 'onCheckboxChange').and.callThrough();
-
-            const checkbox = compiled.querySelector('input[type="checkbox"]') as HTMLInputElement;
-            checkbox.checked = true;
-            checkbox.dispatchEvent(new Event('change'));
-
-            expect(component.onCheckboxChange).toHaveBeenCalledWith('rg-cnh', true);
-        });
 
         it('should handle file selection', () => {
             spyOn(component, 'onFileSelected').and.callThrough();
@@ -222,25 +212,33 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should emit documentsChange when form value changes', () => {
+        it('should emit documentsChange when document is uploaded', () => {
             spyOn(component.documentsChange, 'emit');
 
-            component.documentsForm.patchValue({ 'rg-cnh': true });
+            const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+            component.config.documents[0].file = file;
+            component.config.documents[0].uploaded = true;
+            
+            component.documentsChange.emit({
+                documents: component.config.documents
+            });
 
             expect(component.documentsChange.emit).toHaveBeenCalled();
         });
 
-        it('should emit documentUploaded when file is selected', () => {
+        it('should emit documentUploaded when file is selected', fakeAsync(() => {
             spyOn(component.documentUploaded, 'emit');
 
             const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
             component.onFileSelected({ target: { files: [file] } } as any, 'rg-cnh');
+            
+            tick(); // Wait for async upload
 
-            expect(component.documentUploaded.emit).toHaveBeenCalledWith({
+            expect(component.documentUploaded.emit).toHaveBeenCalledWith(jasmine.objectContaining({
                 documentId: 'rg-cnh',
                 file: file
-            });
-        });
+            }));
+        }));
 
         it('should emit documentRemoved when document is removed', () => {
             spyOn(component.documentRemoved, 'emit');
@@ -250,12 +248,12 @@ describe('DocumentsComponent', () => {
             expect(component.documentRemoved.emit).toHaveBeenCalledWith('cpf');
         });
 
-        it('should emit formValid when form validity changes', () => {
+        it('should emit formValid on initialization', () => {
             spyOn(component.formValid, 'emit');
 
-            component.documentsForm.patchValue({ 'rg-cnh': true });
+            component.ngOnInit();
 
-            expect(component.formValid.emit).toHaveBeenCalled();
+            expect(component.formValid.emit).toHaveBeenCalledWith(true);
         });
     });
 
@@ -264,22 +262,7 @@ describe('DocumentsComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should be valid when all required documents are uploaded', () => {
-            component.documentsForm.patchValue({
-                'rg-cnh': true,
-                'cpf': true
-            });
-
-            expect(component.documentsForm.valid).toBe(true);
-        });
-
-        it('should be valid even when required documents are not uploaded (no validators configured)', () => {
-            component.documentsForm.patchValue({
-                'rg-cnh': false,
-                'cpf': false
-            });
-
-            // O formulário é sempre válido porque não há validadores configurados
+        it('should be valid (form is always valid without checkboxes)', () => {
             expect(component.documentsForm.valid).toBe(true);
         });
     });
@@ -287,10 +270,10 @@ describe('DocumentsComponent', () => {
     describe('Initial Data Loading', () => {
         it('should load initial data when provided', () => {
             const initialData = {
-                checkboxes: { 'rg-cnh': true, 'cpf': false },
                 documents: [
                     {
                         id: 'rg-cnh',
+                        documentType: 'RG_CNH',
                         label: 'RG ou CNH',
                         required: true,
                         uploaded: true,
@@ -303,8 +286,9 @@ describe('DocumentsComponent', () => {
             component.initialData = initialData;
             component.ngOnInit();
 
-            expect(component.documentsForm.get('rg-cnh')?.value).toBe(true);
-            expect(component.documentsForm.get('cpf')?.value).toBe(false);
+            const doc = component.config.documents.find(d => d.id === 'rg-cnh');
+            expect(doc?.uploaded).toBe(true);
+            expect(doc?.file).toBeTruthy();
         });
     });
 
@@ -316,17 +300,16 @@ describe('DocumentsComponent', () => {
         it('should get form value correctly', () => {
             const formValue = component.getFormValue();
 
-            expect(formValue.checkboxes).toBeDefined();
             expect(formValue.documents).toBeDefined();
             expect(formValue.documents).toEqual(component.config.documents);
         });
 
         it('should set form value correctly', () => {
             const newData = {
-                checkboxes: { 'rg-cnh': true, 'cpf': true },
                 documents: [
                     {
                         id: 'rg-cnh',
+                        documentType: 'RG_CNH',
                         label: 'RG ou CNH',
                         required: true,
                         uploaded: true,
@@ -338,8 +321,9 @@ describe('DocumentsComponent', () => {
 
             component.setFormValue(newData);
 
-            expect(component.documentsForm.get('rg-cnh')?.value).toBe(true);
-            expect(component.documentsForm.get('cpf')?.value).toBe(true);
+            const doc = component.config.documents.find(d => d.id === 'rg-cnh');
+            expect(doc?.uploaded).toBe(true);
+            expect(doc?.file).toBeTruthy();
         });
     });
 

@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { KanbanCard, ModalService, ProfileService, TabsComponent, TabConfig } from '../../../../shared';
+import { KanbanCard, ModalService, ProfileService, TabConfig, TabsComponent } from '../../../../shared';
 import { UserProfile } from '../../../../shared/types/profile.types';
 import {
-  ClientDataComponent,
   CreditOperationComponent,
   FollowUpComponent,
-  RatingComponent,
   SolicitationDataComponent,
   SolicitationMatchingComponent
 } from './components';
@@ -19,8 +17,6 @@ import {
     TabsComponent,
     SolicitationDataComponent,
     FollowUpComponent,
-    ClientDataComponent,
-    RatingComponent,
     SolicitationMatchingComponent,
     CreditOperationComponent
   ],

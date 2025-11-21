@@ -1,6 +1,6 @@
 <div class="kanban">
     <div class="kanban__header">
-        <h2 class="kanban__title">Painel de ratings</h2>
+        <h2 class="kanban__title">{{kanbanTitle}}</h2>
         <div class="kanban__actions">
             <ds-button *ngIf="allowAddColumns && columns.length < maxColumns" label="Add Column" variant="outline"
                 icon="add" (onClickEmitter)="isAddingColumn = true">

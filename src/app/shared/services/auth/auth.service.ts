@@ -302,4 +302,28 @@ export class AuthService {
 
         return user;
     }
+
+    /**
+     * Inicializa o carregamento do usuário logado
+     * Usado no APP_INITIALIZER para carregar o usuário antes da aplicação iniciar
+     */
+    async initializeUser(): Promise<void> {
+        const token = this.getToken();
+        
+        if (token && !this.isTokenExpired(token)) {
+            // Se tem token válido, tentar carregar da API
+            const user = await this.loadUserFromAPI();
+            if (user) {
+                return;
+            }
+        }
+
+        // Se não tem token válido ou falhou ao carregar da API,
+        // o ProfileService já carregou do localStorage no construtor
+        // apenas garantir que o AuthService também tenha a referência
+        const localUser = this.profileService.getCurrentUser();
+        if (localUser) {
+            this.currentUserSubject.next(localUser);
+        }
+    }
 }
