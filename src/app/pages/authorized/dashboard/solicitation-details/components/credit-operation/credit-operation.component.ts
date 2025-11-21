@@ -39,5 +39,9 @@ export class CreditOperationComponent {
     get operationLabel(): string {
         return this.cardData?.data?.operationLabel || '-';
     }
+
+    get clientName(): string {
+        return this.cardData?.client || '-';
+    }
 }
 

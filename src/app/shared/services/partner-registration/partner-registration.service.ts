@@ -21,13 +21,18 @@ export interface PartnerRegistrationRequest {
     cellphone: string;
     personType: 'F' | 'J';
     filesToAdd: any[];
-    documents: PartnerDocument[];
+    documents: PartnerDocumentPayload[];
     temporaryPass: boolean;
     address: PartnerAddress;
     activityBranch?: string;
     blockDistributionToPlayers: any[];
     id?: string;
     confirmPassword: string;
+}
+
+export interface PartnerDocumentPayload {
+    documentType: string;
+    fileCode: string;
 }
 
 export interface PartnerDocument {
@@ -167,7 +172,19 @@ export class PartnerRegistrationService {
     /**
      * Formata dados para envio à API
      */
-    formatDataForApi(formData: any): PartnerRegistrationRequest {
+    formatDataForApi(formData: any, documentFileCodes?: Map<string, string>): PartnerRegistrationRequest {
+        // Monta o array de documentos no formato correto
+        const documents: PartnerDocumentPayload[] = [];
+        
+        if (documentFileCodes) {
+            documentFileCodes.forEach((fileCode, documentType) => {
+                documents.push({
+                    documentType: documentType,
+                    fileCode: fileCode
+                });
+            });
+        }
+
         return {
             name: formData.name,
             cpfCnpj: formData.cpfCnpj.replace(/\D/g, ''), // Remove máscara
@@ -187,7 +204,7 @@ export class PartnerRegistrationService {
                 neighbourhood: formData.address.neighbourhood,
                 complement: formData.address.complement || undefined
             },
-            documents: formData.documents || [],
+            documents: documents,
             filesToAdd: [],
             temporaryPass: false,
             blockDistributionToPlayers: []

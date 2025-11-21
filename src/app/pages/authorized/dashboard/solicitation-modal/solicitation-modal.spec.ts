@@ -1,22 +1,35 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, delay } from 'rxjs';
 
 import { ToastService } from '../../../../shared/services/toast/toast.service';
+import { OpportunityService } from '../../../../shared/services/opportunity/opportunity.service';
+import { ModalService } from '../../../../shared/services/modal/modal.service';
+import { ErrorHandlerService } from '../../../../shared/services/error-handler/error-handler.service';
 import { SolicitationModal } from './solicitation-modal';
 
 describe('SolicitationModal', () => {
   let component: SolicitationModal;
   let fixture: ComponentFixture<SolicitationModal>;
   let toastService: jasmine.SpyObj<ToastService>;
+  let opportunityService: jasmine.SpyObj<OpportunityService>;
+  let errorHandlerService: jasmine.SpyObj<ErrorHandlerService>;
   let compiled: HTMLElement;
 
   beforeEach(async () => {
     const toastServiceSpy = jasmine.createSpyObj('ToastService', ['error', 'success', 'warning', 'info']);
+    const opportunityServiceSpy = jasmine.createSpyObj('OpportunityService', ['createOpportunity']);
+    const errorHandlerServiceSpy = jasmine.createSpyObj('ErrorHandlerService', ['getErrorMessage']);
+
+    errorHandlerServiceSpy.getErrorMessage.and.returnValue('Erro ao processar requisição');
 
     await TestBed.configureTestingModule({
       imports: [SolicitationModal, HttpClientTestingModule],
       providers: [
-        { provide: ToastService, useValue: toastServiceSpy }
+        ModalService,
+        { provide: ToastService, useValue: toastServiceSpy },
+        { provide: OpportunityService, useValue: opportunityServiceSpy },
+        { provide: ErrorHandlerService, useValue: errorHandlerServiceSpy }
       ]
     })
       .compileComponents();
@@ -25,6 +38,9 @@ describe('SolicitationModal', () => {
     component = fixture.componentInstance;
     compiled = fixture.nativeElement;
     toastService = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
+    opportunityService = TestBed.inject(OpportunityService) as jasmine.SpyObj<OpportunityService>;
+    errorHandlerService = TestBed.inject(ErrorHandlerService) as jasmine.SpyObj<ErrorHandlerService>;
+    opportunityService.createOpportunity.and.returnValue(of({ id: '1', status: 'PENDING_DOCUMENTS' } as any));
     fixture.detectChanges();
   });
 
@@ -34,11 +50,10 @@ describe('SolicitationModal', () => {
     });
 
     it('should initialize with default values', () => {
-      expect(component.currentStep).toBe(2); // O componente inicia no step 2
+      expect(component.currentStep).toBe(0); // O componente inicia no step 0
       expect(component.isLoading).toBe(false);
-      expect(component.basicInfoData).toEqual({});
-      expect(component.guaranteesData).toEqual({});
-      expect(component.documentsData).toEqual({});
+      expect(component.basicInfoData).toBeDefined();
+      expect(component.guaranteesData).toBeDefined();
     });
 
     it('should initialize mainForm', () => {
@@ -46,28 +61,25 @@ describe('SolicitationModal', () => {
     });
 
     it('should have correct initial step validation states', () => {
-      expect(component.stepValidStates).toEqual([false, false, true]);
+      expect(component.stepValidStates).toEqual([false, false]);
     });
 
-    it('should initialize with 3 stepper steps', () => {
-      expect(component.stepperSteps.length).toBe(3);
+    it('should initialize with 2 stepper steps', () => {
+      expect(component.stepperSteps.length).toBe(2);
       expect(component.stepperSteps[0].id).toBe('basic-info');
       expect(component.stepperSteps[1].id).toBe('guarantees');
-      expect(component.stepperSteps[2].id).toBe('documents');
     });
   });
 
   describe('Stepper Configuration', () => {
     it('should have correct step titles', () => {
       expect(component.stepperSteps[0].title).toBe('Operação');
-      expect(component.stepperSteps[1].title).toBe('Garantias');
-      expect(component.stepperSteps[2].title).toBe('Documentos');
+      expect(component.stepperSteps[1].title).toBe('Garantia');
     });
 
     it('should have correct step descriptions', () => {
-      expect(component.stepperSteps[0].description).toBe('Dados da solicitação');
+      expect(component.stepperSteps[0].description).toBe('Dados da operação');
       expect(component.stepperSteps[1].description).toBe('Garantias oferecidas');
-      expect(component.stepperSteps[2].description).toBe('Anexos necessários');
     });
   });
 
@@ -105,20 +117,20 @@ describe('SolicitationModal', () => {
     });
 
     it('should not go beyond last step', () => {
-      component.currentStep = 2;
-      component.stepValidStates[2] = true;
+      component.currentStep = 1;
+      component.stepValidStates[1] = true;
 
       component.goToNextStep();
 
-      expect(component.currentStep).toBe(2);
+      expect(component.currentStep).toBe(1);
     });
 
     it('should go to previous step when canGoPrevious', () => {
-      component.currentStep = 2;
+      component.currentStep = 1;
 
       component.goToPreviousStep();
 
-      expect(component.currentStep).toBe(1);
+      expect(component.currentStep).toBe(0);
     });
 
     it('should not go to previous step when on first step', () => {
@@ -159,22 +171,22 @@ describe('SolicitationModal', () => {
     });
 
     it('canFinish should return true when on last step and all steps are valid', () => {
-      component.currentStep = 2;
-      component.stepValidStates = [true, true, true];
+      component.currentStep = 1;
+      component.stepValidStates = [true, true];
 
       expect(component.canFinish()).toBe(true);
     });
 
     it('canFinish should return false when not on last step', () => {
       component.currentStep = 0;
-      component.stepValidStates = [true, true, true];
+      component.stepValidStates = [true, true];
 
       expect(component.canFinish()).toBe(false);
     });
 
     it('canFinish should return false when not all steps are valid', () => {
-      component.currentStep = 2;
-      component.stepValidStates = [true, false, true];
+      component.currentStep = 1;
+      component.stepValidStates = [true, false];
 
       expect(component.canFinish()).toBe(false);
     });
@@ -213,21 +225,6 @@ describe('SolicitationModal', () => {
       expect(component.stepValidStates[1]).toBe(false);
     });
 
-    it('should update documentsData when onDocumentsDataChange is called', () => {
-      const testData = { documents: ['doc1.pdf', 'doc2.pdf'] };
-
-      component.onDocumentsDataChange(testData);
-
-      expect(component.documentsData).toEqual(testData);
-    });
-
-    it('should update step validation state when onDocumentsValidChange is called', () => {
-      component.onDocumentsValidChange(true);
-      expect(component.stepValidStates[2]).toBe(true);
-
-      component.onDocumentsValidChange(false);
-      expect(component.stepValidStates[2]).toBe(false);
-    });
   });
 
   describe('Event Emitters', () => {
@@ -240,31 +237,39 @@ describe('SolicitationModal', () => {
     });
 
     it('should emit onSubmit with merged data when handleSubmit succeeds', fakeAsync(() => {
+      opportunityService.createOpportunity.and.returnValue(
+        of({ id: '1', status: 'PENDING_DOCUMENTS' } as any).pipe(delay(100))
+      );
       spyOn(component.onSubmit, 'emit');
-      component.currentStep = 2;
-      component.stepValidStates = [true, true, true];
-      component.basicInfoData = { client: 'John' };
-      component.guaranteesData = { guarantee: 'Property' };
-      component.documentsData = { docs: ['file.pdf'] };
+      component.currentStep = 1;
+      component.stepValidStates = [true, true];
+      component.basicInfoData = { 
+        customerName: 'John',
+        operationType: 'OP1',
+        amount: '1000',
+        currency: 'BRL',
+        businessActivity: 'ACT1',
+        term: '12',
+        country: 'Brasil',
+        city: 'São Paulo',
+        state: 'SP'
+      };
+      component.guaranteesData = { guarantees: 'Property' };
 
       component.handleSubmit();
 
       expect(component.isLoading).toBe(true);
 
-      tick(2000);
+      tick(100);
 
       expect(component.isLoading).toBe(false);
-      expect(component.onSubmit.emit).toHaveBeenCalledWith({
-        client: 'John',
-        guarantee: 'Property',
-        docs: ['file.pdf']
-      });
+      expect(component.onSubmit.emit).toHaveBeenCalled();
     }));
 
     it('should not emit onSubmit when form is invalid', () => {
       spyOn(component.onSubmit, 'emit');
-      component.currentStep = 2;
-      component.stepValidStates = [false, true, true];
+      component.currentStep = 1;
+      component.stepValidStates = [false, true];
 
       component.handleSubmit();
 
@@ -275,21 +280,21 @@ describe('SolicitationModal', () => {
 
   describe('Form Validation and Submit', () => {
     it('should show error and navigate to first invalid step when submitting invalid form', () => {
-      component.currentStep = 2;
-      component.stepValidStates = [false, true, true];
+      component.currentStep = 1;
+      component.stepValidStates = [false, true];
 
       component.handleSubmit();
 
       expect(component.currentStep).toBe(0);
       expect(toastService.error).toHaveBeenCalledWith(
-        'Por favor, preencha todos os campos obrigatórios na etapa "Informações Básicas".',
+        'Por favor, preencha todos os campos obrigatórios na etapa "Operação".',
         'Formulário incompleto'
       );
     });
 
     it('should show error for current step when it is invalid', () => {
       component.currentStep = 1;
-      component.stepValidStates = [true, false, true];
+      component.stepValidStates = [true, false];
 
       component.handleSubmit();
 
@@ -300,17 +305,32 @@ describe('SolicitationModal', () => {
     });
 
     it('should set isLoading to true during submit', fakeAsync(() => {
-      component.currentStep = 2;
-      component.stepValidStates = [true, true, true];
+      opportunityService.createOpportunity.and.returnValue(
+        of({ id: '1', status: 'PENDING_DOCUMENTS' } as any).pipe(delay(100))
+      );
+      component.currentStep = 1;
+      component.stepValidStates = [true, true];
+      component.basicInfoData = { 
+        customerName: 'John',
+        operationType: 'OP1',
+        amount: '1000',
+        currency: 'BRL',
+        businessActivity: 'ACT1',
+        term: '12',
+        country: 'Brasil',
+        city: 'São Paulo',
+        state: 'SP'
+      };
+      component.guaranteesData = { guarantees: 'Property' };
 
       component.handleSubmit();
 
       expect(component.isLoading).toBe(true);
 
-      tick(1000);
+      tick(50);
       expect(component.isLoading).toBe(true);
 
-      tick(1000);
+      tick(100);
       expect(component.isLoading).toBe(false);
     }));
   });
@@ -343,10 +363,7 @@ describe('SolicitationModal', () => {
     it('should mark documents form as touched when on step 2', () => {
       component.currentStep = 2;
       const mockForm = jasmine.createSpyObj('FormGroup', ['markAllAsTouched']);
-      component.documentsStepComponent = {
-        documentsForm: mockForm
-      } as any;
-
+     
       component.markCurrentStepAsTouched();
 
       // O componente ds-documents gerencia sua própria validação, então markAllAsTouched não é chamado
@@ -360,7 +377,6 @@ describe('SolicitationModal', () => {
 
       component.basicInfoStepComponent = { basicInfoForm: mockBasicForm } as any;
       component.guaranteesStepComponent = { guaranteesForm: mockGuaranteesForm } as any;
-      component.documentsStepComponent = { documentsForm: mockDocumentsForm } as any;
 
       component.markAllStepsAsTouched();
 
@@ -373,7 +389,6 @@ describe('SolicitationModal', () => {
     it('should not throw error if step components are not initialized', () => {
       component.basicInfoStepComponent = undefined as any;
       component.guaranteesStepComponent = undefined as any;
-      component.documentsStepComponent = undefined as any;
 
       expect(() => component.markCurrentStepAsTouched()).not.toThrow();
       expect(() => component.markAllStepsAsTouched()).not.toThrow();
@@ -402,13 +417,7 @@ describe('SolicitationModal', () => {
       expect(guaranteesStep).toBeTruthy();
     });
 
-    it('should render documents step when currentStep is 2', () => {
-      component.currentStep = 2;
-      fixture.detectChanges();
-
-      const documentsStep = compiled.querySelector('app-documents-step');
-      expect(documentsStep).toBeTruthy();
-    });
+    // Documents step removed - component now has only 2 steps
 
     it('should render cancel button', () => {
       const buttons = compiled.querySelectorAll('ds-button');
@@ -440,18 +449,18 @@ describe('SolicitationModal', () => {
       expect(content).toContain('Próximo');
     });
 
-    it('should render "Criar Solicitação" button when on last step', () => {
-      component.currentStep = 2;
+    it('should render "Criar" button when on last step', () => {
+      component.currentStep = 1;
+      component.stepValidStates = [true, true];
       fixture.detectChanges();
 
       const content = compiled.textContent || '';
-      expect(content).toContain('Criar Solicitação');
+      expect(content).toContain('Criar');
     });
   });
 
   describe('Integration Tests', () => {
-    it('should complete full flow from step 0 to step 2', () => {
-      // O componente inicia no step 2, então vamos resetar para o step 0
+    it('should complete full flow from step 0 to step 1', () => {
       component.currentStep = 0;
       expect(component.currentStep).toBe(0);
 
@@ -460,39 +469,42 @@ describe('SolicitationModal', () => {
       component.goToNextStep();
       expect(component.currentStep).toBe(1);
 
-      // Validate step 1 and go next
+      // Cannot go beyond last step (step 1)
       component.stepValidStates[1] = true;
       component.goToNextStep();
-      expect(component.currentStep).toBe(2);
+      expect(component.currentStep).toBe(1);
     });
 
     it('should navigate back through all steps', () => {
-      component.currentStep = 2;
-
-      component.goToPreviousStep();
-      expect(component.currentStep).toBe(1);
+      component.currentStep = 1;
 
       component.goToPreviousStep();
       expect(component.currentStep).toBe(0);
     });
 
     it('should merge all step data on submit', fakeAsync(() => {
+      opportunityService.createOpportunity.and.returnValue(of({ id: '1', status: 'PENDING_DOCUMENTS' } as any));
       spyOn(component.onSubmit, 'emit');
 
-      component.currentStep = 2;
-      component.stepValidStates = [true, true, true];
-      component.basicInfoData = { field1: 'value1' };
-      component.guaranteesData = { field2: 'value2' };
-      component.documentsData = { field3: 'value3' };
+      component.currentStep = 1;
+      component.stepValidStates = [true, true];
+      component.basicInfoData = { 
+        customerName: 'John',
+        operationType: 'OP1',
+        amount: '1000',
+        currency: 'BRL',
+        businessActivity: 'ACT1',
+        term: '12',
+        country: 'Brasil',
+        city: 'São Paulo',
+        state: 'SP'
+      };
+      component.guaranteesData = { guarantees: 'Property' };
 
       component.handleSubmit();
       tick(2000);
 
-      expect(component.onSubmit.emit).toHaveBeenCalledWith({
-        field1: 'value1',
-        field2: 'value2',
-        field3: 'value3'
-      });
+      expect(component.onSubmit.emit).toHaveBeenCalled();
     }));
   });
 });

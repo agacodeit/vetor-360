@@ -20,7 +20,7 @@
     </div>
 
     <div class="dashboard__content">
-        <ds-kanban [columns]="kanbanColumns" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
+        <ds-kanban [columns]="kanbanColumns" kanbanTitle="Painel de ratings" [showCardCount]="true" (cardMoved)="onCardMoved($event)"
             (cardAdded)="onCardAdded($event)" (cardRemoved)="onCardRemoved($event)" [columnsLoading]="columnsLoading"
             (columnAdded)="onColumnAdded($event)" (columnRemoved)="onColumnRemoved($event)"
             (columnRenamed)="onColumnRenamed($event)" (cardClicked)="onCardClick($event)"

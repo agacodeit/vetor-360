@@ -64,6 +64,7 @@ export class SelectComponent implements OnInit, OnDestroy, OnChanges, ControlVal
   uniqueId: string = '';
   searchTerm: string = '';
   filteredOptions: SelectOption[] = [];
+  dynamicPlacement: 'top' | 'bottom' = 'bottom';
 
 
   private onChange = (value: any) => { };
@@ -134,13 +135,146 @@ export class SelectComponent implements OnInit, OnDestroy, OnChanges, ControlVal
   openDropdown(): void {
     if (this.disabled || this.readonly) return;
 
+    // Calcula o posicionamento dinâmico baseado no espaço disponível
+    this.calculatePlacement();
+
     this.isOpen = true;
     this.isFocused = true;
     this.opened.emit();
 
+    // Recalcula após o dropdown ser renderizado para ajuste fino
     setTimeout(() => {
+      this.recalculatePlacementAfterRender();
       document.addEventListener('click', this.handleOutsideClick.bind(this));
-    });
+    }, 0);
+  }
+
+  private calculatePlacement(): void {
+    // Usa o placement padrão inicialmente
+    this.dynamicPlacement = this.placement;
+
+    const selectElement = document.getElementById(this.uniqueId);
+    if (!selectElement) return;
+
+    const selectRect = selectElement.getBoundingClientRect();
+    
+    // Encontra o container com scroll (modal-body ou outro)
+    const scrollableContainer = this.findScrollableContainer(selectElement);
+    
+    // Altura estimada do dropdown (máximo 300px conforme CSS)
+    const estimatedDropdownHeight = Math.min(300, this.filteredOptions.length * 40 + (this.searchable ? 50 : 0));
+    
+    if (scrollableContainer) {
+      const containerRect = scrollableContainer.getBoundingClientRect();
+      const containerScrollTop = scrollableContainer.scrollTop;
+      const containerScrollHeight = scrollableContainer.scrollHeight;
+      
+      // Posição do select relativa ao topo do container
+      const selectTopInContainer = selectRect.top - containerRect.top + containerScrollTop;
+      const selectBottomInContainer = selectTopInContainer + selectRect.height;
+      
+      // Espaço disponível abaixo do select dentro do container
+      const spaceBelow = containerScrollHeight - selectBottomInContainer;
+      
+      // Se não houver espaço suficiente abaixo, verifica se pode abrir para cima
+      if (spaceBelow < estimatedDropdownHeight + 10) {
+        // Espaço disponível acima do select
+        const spaceAbove = selectTopInContainer;
+        
+        if (spaceAbove >= estimatedDropdownHeight + 10) {
+          this.dynamicPlacement = 'top';
+        } else {
+          // Se não houver espaço nem acima nem abaixo, mantém o padrão
+          this.dynamicPlacement = this.placement;
+        }
+      } else {
+        this.dynamicPlacement = 'bottom';
+      }
+    } else {
+      // Se não encontrar container com scroll, usa viewport
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - selectRect.bottom;
+      
+      if (spaceBelow < estimatedDropdownHeight + 10) {
+        const spaceAbove = selectRect.top;
+        if (spaceAbove >= estimatedDropdownHeight + 10) {
+          this.dynamicPlacement = 'top';
+        } else {
+          this.dynamicPlacement = this.placement;
+        }
+      } else {
+        this.dynamicPlacement = 'bottom';
+      }
+    }
+  }
+
+  private recalculatePlacementAfterRender(): void {
+    const selectElement = document.getElementById(this.uniqueId);
+    const dropdownElement = selectElement?.parentElement?.querySelector('.select-dropdown') as HTMLElement;
+    
+    if (!selectElement || !dropdownElement) return;
+
+    const selectRect = selectElement.getBoundingClientRect();
+    const dropdownRect = dropdownElement.getBoundingClientRect();
+    const scrollableContainer = this.findScrollableContainer(selectElement);
+    
+    if (scrollableContainer) {
+      const containerRect = scrollableContainer.getBoundingClientRect();
+      const containerScrollTop = scrollableContainer.scrollTop;
+      const containerScrollHeight = scrollableContainer.scrollHeight;
+      
+      const selectBottomInContainer = selectRect.bottom - containerRect.top + containerScrollTop;
+      const dropdownHeight = dropdownRect.height;
+      
+      // Verifica se o dropdown está cortado na parte inferior
+      const spaceBelow = containerScrollHeight - selectBottomInContainer;
+      
+      if (this.dynamicPlacement === 'bottom' && spaceBelow < dropdownHeight + 10) {
+        const selectTopInContainer = selectRect.top - containerRect.top + containerScrollTop;
+        const spaceAbove = selectTopInContainer;
+        
+        if (spaceAbove >= dropdownHeight + 10) {
+          this.dynamicPlacement = 'top';
+        }
+      } else if (this.dynamicPlacement === 'top') {
+        const selectTopInContainer = selectRect.top - containerRect.top + containerScrollTop;
+        const spaceAbove = selectTopInContainer;
+        
+        // Se abriu para cima mas não há espaço suficiente, tenta abrir para baixo
+        if (spaceAbove < dropdownHeight + 10) {
+          const spaceBelow = containerScrollHeight - (selectRect.bottom - containerRect.top + containerScrollTop);
+          if (spaceBelow >= dropdownHeight + 10) {
+            this.dynamicPlacement = 'bottom';
+          }
+        }
+      }
+    } else {
+      // Usa viewport
+      if (this.dynamicPlacement === 'bottom' && dropdownRect.bottom > window.innerHeight - 10) {
+        if (selectRect.top >= dropdownRect.height + 10) {
+          this.dynamicPlacement = 'top';
+        }
+      } else if (this.dynamicPlacement === 'top' && dropdownRect.top < 10) {
+        if (window.innerHeight - selectRect.bottom >= dropdownRect.height + 10) {
+          this.dynamicPlacement = 'bottom';
+        }
+      }
+    }
+  }
+
+  private findScrollableContainer(element: HTMLElement): HTMLElement | null {
+    let parent = element.parentElement;
+    
+    while (parent && parent !== document.body) {
+      const style = window.getComputedStyle(parent);
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll' || 
+          style.overflow === 'auto' || style.overflow === 'scroll') {
+        return parent;
+      }
+      parent = parent.parentElement;
+    }
+    
+    return null;
   }
 
   closeDropdown(): void {
@@ -295,7 +429,7 @@ export class SelectComponent implements OnInit, OnDestroy, OnChanges, ControlVal
 
   get dropdownClasses(): string {
     const classes = ['select-dropdown'];
-    classes.push(`placement-${this.placement}`);
+    classes.push(`placement-${this.dynamicPlacement}`);
     return classes.join(' ');
   }
 

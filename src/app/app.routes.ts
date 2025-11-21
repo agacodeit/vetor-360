@@ -11,7 +11,20 @@ export const routes: Routes = [
     {
         path: '',
         canActivate: [authGuard],
-        children: []
+        children: [],
+        component: class DummyComponent {},
+        resolve: {
+            redirect: () => {
+                const token = localStorage.getItem('bearerToken');
+                const router = window.location;
+                if (token) {
+                    router.replace('/authorized/dashboard');
+                } else {
+                    router.replace('/unauthorized/login');
+                }
+                return null;
+            }
+        }
     },
     {
         path: 'unauthorized',

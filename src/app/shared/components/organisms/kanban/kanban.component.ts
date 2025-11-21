@@ -49,6 +49,7 @@ export class KanbanComponent implements OnChanges {
     @ViewChild('kanbanBoard', { static: false }) kanbanBoard!: ElementRef<HTMLElement>;
     @ContentChild('cardTemplate', { static: false }) cardTemplate!: TemplateRef<any>;
 
+    @Input() kanbanTitle: string = 'Kanban';
     @Input() columns: KanbanColumn[] = [];
     @Input() allowAddCards: boolean = false;
     @Input() allowAddColumns: boolean = false;

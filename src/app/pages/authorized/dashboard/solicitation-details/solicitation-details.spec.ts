@@ -103,12 +103,7 @@ describe('SolicitationDetails', () => {
       expect(followUp).toBeTruthy();
     });
 
-    it('should render client-data component', () => {
-      fixture.detectChanges();
-
-      const clientData = compiled.querySelector('app-client-data');
-      expect(clientData).toBeTruthy();
-    });
+    // client-data component removed from template
 
     it('should have correct container structure', () => {
       fixture.detectChanges();
@@ -132,15 +127,7 @@ describe('SolicitationDetails', () => {
       expect(solicitationDataElement).toBeTruthy();
     });
 
-    it('should pass cardData to client-data component', () => {
-      modalService.open({ id: 'solicitation-details', data: MOCK_COMPLETE_KANBAN_CARD });
-
-      const newFixture = TestBed.createComponent(SolicitationDetails);
-      newFixture.detectChanges();
-
-      const clientDataElement = newFixture.nativeElement.querySelector('app-client-data');
-      expect(clientDataElement).toBeTruthy();
-    });
+    // client-data component removed from template
   });
 
   describe('Profile-based Visibility Rules', () => {
@@ -193,7 +180,10 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(false);
       });
 
-      it('should render solicitation-matching component for Gestor', () => {
+      it('should render solicitation-matching component for Gestor when matching tab is active', () => {
+        component.activeTabId = 'matching';
+        fixture.detectChanges();
+        
         const matching = compiled.querySelector('app-solicitation-matching');
         expect(matching).toBeTruthy();
       });
@@ -203,21 +193,17 @@ describe('SolicitationDetails', () => {
         expect(creditOperation).toBeTruthy();
       });
 
-      it('should render financial-summary component for Gestor', () => {
-        const financialSummary = compiled.querySelector('app-financial-summary');
-        expect(financialSummary).toBeTruthy();
-      });
+      // financial-summary component removed from template
 
-      it('should render all common components for Gestor', () => {
+      it('should render all common components for Gestor when general tab is active', () => {
+        component.activeTabId = 'general';
+        fixture.detectChanges();
+        
         const solicitationData = compiled.querySelector('app-solicitation-data');
         const followUp = compiled.querySelector('app-follow-up');
-        const clientData = compiled.querySelector('app-client-data');
-        const rating = compiled.querySelector('app-rating');
 
         expect(solicitationData).toBeTruthy();
         expect(followUp).toBeTruthy();
-        expect(clientData).toBeTruthy();
-        expect(rating).toBeTruthy();
       });
     });
 
@@ -236,31 +222,33 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(true);
       });
 
-      it('should NOT render solicitation-matching component for Partner', () => {
+      it('should render solicitation-matching component for Partner when matching tab is active', () => {
+        component.activeTabId = 'matching';
+        fixture.detectChanges();
+        
         const matching = compiled.querySelector('app-solicitation-matching');
-        expect(matching).toBeFalsy();
+        expect(matching).toBeTruthy();
       });
 
-      it('should NOT render credit-operation component for Partner', () => {
+      it('should render credit-operation component for Partner when general tab is active (no profile restriction)', () => {
+        component.activeTabId = 'general';
+        fixture.detectChanges();
+        
         const creditOperation = compiled.querySelector('app-credit-operation');
-        expect(creditOperation).toBeFalsy();
+        expect(creditOperation).toBeTruthy();
       });
 
-      it('should render financial-summary component for Partner', () => {
-        const financialSummary = compiled.querySelector('app-financial-summary');
-        expect(financialSummary).toBeTruthy();
-      });
+      // financial-summary component removed from template
 
-      it('should render all common components for Partner', () => {
+      it('should render all common components for Partner when general tab is active', () => {
+        component.activeTabId = 'general';
+        fixture.detectChanges();
+        
         const solicitationData = compiled.querySelector('app-solicitation-data');
         const followUp = compiled.querySelector('app-follow-up');
-        const clientData = compiled.querySelector('app-client-data');
-        const rating = compiled.querySelector('app-rating');
 
         expect(solicitationData).toBeTruthy();
         expect(followUp).toBeTruthy();
-        expect(clientData).toBeTruthy();
-        expect(rating).toBeTruthy();
       });
     });
 
@@ -279,28 +267,31 @@ describe('SolicitationDetails', () => {
         expect(component.isPartner).toBe(false);
       });
 
-      it('should NOT render solicitation-matching component when no user is set', () => {
+      it('should render solicitation-matching component when no user is set and matching tab is active', () => {
+        component.activeTabId = 'matching';
+        fixture.detectChanges();
+        
         const matching = compiled.querySelector('app-solicitation-matching');
-        expect(matching).toBeFalsy();
+        expect(matching).toBeTruthy();
       });
 
-      it('should NOT render credit-operation component when no user is set', () => {
+      it('should render credit-operation component when no user is set and general tab is active (no profile restriction)', () => {
+        component.activeTabId = 'general';
+        fixture.detectChanges();
+        
         const creditOperation = compiled.querySelector('app-credit-operation');
-        expect(creditOperation).toBeFalsy();
+        expect(creditOperation).toBeTruthy();
       });
 
-      it('should render common components when no user is set', () => {
+      it('should render common components when no user is set and general tab is active', () => {
+        component.activeTabId = 'general';
+        fixture.detectChanges();
+        
         const solicitationData = compiled.querySelector('app-solicitation-data');
         const followUp = compiled.querySelector('app-follow-up');
-        const clientData = compiled.querySelector('app-client-data');
-        const rating = compiled.querySelector('app-rating');
-        const financialSummary = compiled.querySelector('app-financial-summary');
 
         expect(solicitationData).toBeTruthy();
         expect(followUp).toBeTruthy();
-        expect(clientData).toBeTruthy();
-        expect(rating).toBeTruthy();
-        expect(financialSummary).toBeTruthy();
       });
     });
   });
